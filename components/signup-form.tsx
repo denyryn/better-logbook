@@ -15,11 +15,11 @@ import {
 } from "@/components/ui/field";
 import { Input } from "@/components/ui/input";
 
+import { authClient } from "@/lib/auth-client";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { signUpSchema } from "@/schemas/sign-up";
 import { z } from "zod";
-import { api } from "@/lib/axios";
 
 type SignupFormData = z.infer<typeof signUpSchema>;
 
@@ -37,7 +37,7 @@ export function SignupForm({
   });
 
   const onSubmit = (data: SignupFormData) => {
-    api.post("api/auth/sign-up", data);
+    authClient.signUp.email(data);
   };
 
   return (
