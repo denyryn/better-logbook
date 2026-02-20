@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from "next/server";
-import { success, error, status } from "@/lib/api.response";
+import { success, error } from "@/lib/api.response";
 import { prisma } from "@/lib/prisma";
 import { StatusCodes } from "http-status-codes";
 import { Company } from "@/generated/prisma/client";
@@ -11,29 +11,18 @@ export async function GET(request: NextRequest) {
 
     if (!company) {
       return NextResponse.json(
-        error(
-          undefined,
-          "Company not found",
-          status.ERROR,
-          StatusCodes.NOT_FOUND,
-        ),
+        error(undefined, "Company not found", StatusCodes.NOT_FOUND),
       );
     }
 
     return NextResponse.json(
-      success(
-        company,
-        "Company fetched successfully",
-        status.SUCCESS,
-        StatusCodes.OK,
-      ),
+      success(company, "Company fetched successfully", StatusCodes.OK),
     );
   } catch (e) {
     return NextResponse.json(
       error(
         undefined,
         "Something went wrong",
-        status.ERROR,
         StatusCodes.INTERNAL_SERVER_ERROR,
       ),
     );
@@ -51,29 +40,18 @@ export async function PUT(request: NextRequest) {
 
     if (!company) {
       return NextResponse.json(
-        error(
-          undefined,
-          "Company not found",
-          status.ERROR,
-          StatusCodes.NOT_FOUND,
-        ),
+        error(undefined, "Company not found", StatusCodes.NOT_FOUND),
       );
     }
 
     return NextResponse.json(
-      success(
-        company,
-        "Company updated successfully",
-        status.SUCCESS,
-        StatusCodes.OK,
-      ),
+      success(company, "Company updated successfully", StatusCodes.OK),
     );
   } catch (e) {
     return NextResponse.json(
       error(
         undefined,
         "Something went wrong",
-        status.ERROR,
         StatusCodes.INTERNAL_SERVER_ERROR,
       ),
     );
@@ -86,23 +64,19 @@ export async function DELETE(request: NextRequest) {
     const company = await prisma.company.delete({ where: { id } });
 
     if (!company) {
-      throw new Error("Company not found");
+      return NextResponse.json(
+        error(undefined, "Company not found", StatusCodes.NOT_FOUND),
+      );
     }
 
     return NextResponse.json(
-      success(
-        company,
-        "Company deleted successfully",
-        status.SUCCESS,
-        StatusCodes.OK,
-      ),
+      success(company, "Company deleted successfully", StatusCodes.OK),
     );
   } catch (e) {
     return NextResponse.json(
       error(
         undefined,
         "Something went wrong",
-        status.ERROR,
         StatusCodes.INTERNAL_SERVER_ERROR,
       ),
     );

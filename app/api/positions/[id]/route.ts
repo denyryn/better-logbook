@@ -11,29 +11,18 @@ export async function GET(request: NextRequest) {
 
     if (!position) {
       return NextResponse.json(
-        error(
-          undefined,
-          "Position not found",
-          status.ERROR,
-          StatusCodes.NOT_FOUND,
-        ),
+        error(undefined, "Position not found", StatusCodes.NOT_FOUND),
       );
     }
 
     return NextResponse.json(
-      success(
-        position,
-        "Position fetched successfully",
-        status.SUCCESS,
-        StatusCodes.OK,
-      ),
+      success(position, "Position fetched successfully", StatusCodes.OK),
     );
   } catch (e) {
     return NextResponse.json(
       error(
         undefined,
         "Something went wrong",
-        status.ERROR,
         StatusCodes.INTERNAL_SERVER_ERROR,
       ),
     );
@@ -51,29 +40,18 @@ export async function PUT(request: NextRequest) {
 
     if (!position) {
       return NextResponse.json(
-        error(
-          undefined,
-          "Position not found",
-          status.ERROR,
-          StatusCodes.NOT_FOUND,
-        ),
+        error(undefined, "Position not found", StatusCodes.NOT_FOUND),
       );
     }
 
     return NextResponse.json(
-      success(
-        position,
-        "Position updated successfully",
-        status.SUCCESS,
-        StatusCodes.OK,
-      ),
+      success(position, "Position updated successfully", StatusCodes.OK),
     );
   } catch (e) {
     return NextResponse.json(
       error(
         undefined,
         "Something went wrong",
-        status.ERROR,
         StatusCodes.INTERNAL_SERVER_ERROR,
       ),
     );
@@ -90,19 +68,13 @@ export async function DELETE(request: NextRequest) {
     }
 
     return NextResponse.json(
-      success(
-        position,
-        "Position deleted successfully",
-        status.SUCCESS,
-        StatusCodes.OK,
-      ),
+      success(position, "Position deleted successfully", StatusCodes.OK),
     );
   } catch (e) {
     return NextResponse.json(
       error(
         undefined,
         "Something went wrong",
-        status.ERROR,
         StatusCodes.INTERNAL_SERVER_ERROR,
       ),
     );

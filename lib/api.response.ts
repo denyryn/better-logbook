@@ -13,13 +13,12 @@ export type ApiResponse<T> = {
 export function success<T>(
   data: T,
   message = "Success",
-  status: status.SUCCESS,
   code = 200,
 ): ApiResponse<T> {
   return {
     data,
     message,
-    status,
+    status: status.SUCCESS,
     code,
   };
 }
@@ -27,13 +26,12 @@ export function success<T>(
 export function error<T>(
   data: T,
   message = "Something went wrong",
-  status: status.ERROR,
   code = 500,
 ): ApiResponse<T> {
   return {
     data,
     message,
-    status,
+    status: status.ERROR,
     code,
   };
 }
