@@ -1,0 +1,3 @@
+interface AIInstance {
+  token: string;
+}

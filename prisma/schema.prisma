@@ -24,6 +24,8 @@ model User {
   sessions      Session[]
   accounts      Account[]
   positions   Position[]
+  projects    Project[]
+  companies   Company[]
 
   @@unique([email])
   @@map("user")
@@ -78,29 +80,88 @@ model Verification {
 }
 
 model Company {
-  id          Int       @id @default(autoincrement())
-  name        String
-  positions   Position[]
+  id          String    @id @default(uuid())
+  user        User      @relation(fields: [userId], references: [id])
+  userId      String
+  name        String    @unique
   createdAt   DateTime  @default(now())
   updatedAt   DateTime  @updatedAt
+
+  positions   Position[]
+  projects    Project[]
+
+  @@map("company")
+}
+
+model Project {
+  id          String    @id @default(uuid())
+  user        User      @relation(fields: [userId], references: [id])
+  userId      String
+  name        String
+  company     Company   @relation(fields: [companyId], references: [id])
+  companyId   String
+  scopedRole   String?
+
+  createdAt   DateTime  @default(now())
+  updatedAt   DateTime  @updatedAt
+
+  logbooks    Logbook[]
+
+  @@index([companyId])
+  @@map("project")
 }
 
 model Position {
-  id          Int       @id @default(autoincrement())
+  id          String       @id @default(uuid())
   role        String?
   user        User      @relation(fields: [userId], references: [id])
   userId      String
   company     Company   @relation(fields: [companyId], references: [id])
-  companyId   Int
+  companyId   String
 
-  logbooks    Logbook[]
+  @@map("position")
 }
 
 model Logbook {
-  id          Int       @id @default(autoincrement())
-  position    Position  @relation(fields: [positionId], references: [id])
-  positionId  Int
+  id          String       @id @default(uuid())
+  project     Project      @relation(fields: [projectId], references: [id])
+  projectId   String
+
+  title       String?
   content     String
+  logDate     DateTime
+
   createdAt   DateTime  @default(now())
   updatedAt   DateTime  @updatedAt
+  deletedAt   DateTime?
+  
+  tags        LogbookTag[]
+
+  @@index([projectId, logDate])
+  @@unique([projectId, logDate])
+
+  @@map("logbook")
+}
+
+model Tag {
+  id          String       @id @default(uuid())
+  name        String
+  logbooks    LogbookTag[]
+
+  @@unique([name])
+
+  @@map("tag")
+}
+
+model LogbookTag {
+  logbookId String
+  tagId     String
+
+  logbook   Logbook @relation(fields: [logbookId], references: [id], onDelete: Cascade)
+  tag       Tag     @relation(fields: [tagId], references: [id], onDelete: Cascade)
+
+  @@id([logbookId, tagId])
+  @@index([tagId])
+  
+  @@map("logbook_tag")
 }

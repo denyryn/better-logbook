@@ -1,3 +1,5 @@
+"use client";
+
 import { cn } from "@/lib/utils";
 import { Button } from "@/components/ui/button";
 import {
@@ -15,11 +17,12 @@ import {
 } from "@/components/ui/field";
 import { Input } from "@/components/ui/input";
 
-import { authClient } from "@/lib/auth-client";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { signUpSchema } from "@/schemas/sign-up";
 import { z } from "zod";
+import { useAuth } from "@/app/_providers/auth/auth.provider";
+import Link from "next/link";
 
 type SignupFormData = z.infer<typeof signUpSchema>;
 
@@ -36,8 +39,10 @@ export function SignupForm({
     mode: "onBlur",
   });
 
-  const onSubmit = (data: SignupFormData) => {
-    authClient.signUp.email(data);
+  const { signUp } = useAuth();
+
+  const onSubmit = async (data: SignupFormData) => {
+    await signUp(data);
   };
 
   return (
@@ -107,7 +112,8 @@ export function SignupForm({
                   {isSubmitting || isLoading ? "Creating..." : "Create Account"}
                 </Button>
                 <FieldDescription className="text-center">
-                  Already have an account? <a href="#">Sign in</a>
+                  Already have an account?{" "}
+                  <Link href="/auth/sign-in">Sign in</Link>
                 </FieldDescription>
               </Field>
             </FieldGroup>

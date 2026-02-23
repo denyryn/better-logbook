@@ -1,5 +1,3 @@
-"use client";
-
 import { ScrollText } from "lucide-react";
 
 import { config } from "@/lib/config";

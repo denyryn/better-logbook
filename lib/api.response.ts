@@ -35,3 +35,5 @@ export function error<T>(
     code,
   };
 }
+
+export { success as successResponse, error as errorResponse };
