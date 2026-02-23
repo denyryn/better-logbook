@@ -28,7 +28,8 @@ export async function POST(request: Request) {
     return NextResponse.json(
       success(company, "Company created successfully", StatusCodes.CREATED),
     );
-  } catch (e) {
+  } catch (err) {
+    console.error("Error creating company:", err);
     return NextResponse.json(
       error(
         undefined,

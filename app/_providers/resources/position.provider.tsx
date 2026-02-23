@@ -1,5 +1,5 @@
 import { Position } from "@/generated/prisma/client";
-import { createContext, useContext, useState } from "react";
+import { createContext, useContext, useState, useEffect, useRef } from "react";
 import { PositionService } from "@/services/position";
 import { useAuth } from "../auth/auth.provider";
 import { status } from "@/lib/api.response";
@@ -7,6 +7,7 @@ import { toast } from "sonner";
 
 interface PositionContextType {
   positions: Position[];
+  isLoading: boolean;
   getPositions: () => Promise<void>;
   addPosition: (position: Partial<Position>) => Promise<void>;
   updatePosition: (position: Partial<Position>) => Promise<void>;
@@ -16,13 +17,27 @@ interface PositionContextType {
 export const PositionContext = createContext<PositionContextType | null>(null);
 
 export function PositionProvider({ children }: { children: React.ReactNode }) {
-  const { user } = useAuth();
-  const service = new PositionService(user!.id);
+  const { user, isLoading: authLoading } = useAuth();
   const [positions, setPositions] = useState<Position[]>([]);
+  const [isLoading, setIsLoading] = useState(true);
+  const serviceRef = useRef<PositionService | null>(null);
+
+  // Initialize service once user is available
+  useEffect(() => {
+    try {
+      if (user?.id && !serviceRef.current) {
+        serviceRef.current = new PositionService(user.id);
+      }
+    } finally {
+      setIsLoading(false);
+    }
+  }, [user, authLoading]);
 
   const getPositions = async () => {
+    if (!serviceRef.current) return;
+
     try {
-      const response = await service.get();
+      const response = await serviceRef.current.get();
       if (Array.isArray(response.data)) {
         setPositions(response.data);
       }
@@ -33,7 +48,12 @@ export function PositionProvider({ children }: { children: React.ReactNode }) {
   };
 
   const addPosition = async (position: Partial<Position>) => {
-    const response = await service.post(position);
+    if (!serviceRef.current) {
+      toast.error("User not authenticated");
+      return;
+    }
+
+    const response = await serviceRef.current.post(position);
 
     if (response.status === status.ERROR) {
       console.error("Failed to add position:", response.message);
@@ -42,11 +62,16 @@ export function PositionProvider({ children }: { children: React.ReactNode }) {
     }
 
     toast.success("Position added successfully!");
-    getPositions();
+    await getPositions();
   };
 
   const updatePosition = async (position: Partial<Position>) => {
-    const response = await service.put(position);
+    if (!serviceRef.current) {
+      toast.error("User not authenticated");
+      return;
+    }
+
+    const response = await serviceRef.current.put(position);
 
     if (response.status === status.ERROR) {
       console.error("Failed to update position:", response.message);
@@ -55,11 +80,16 @@ export function PositionProvider({ children }: { children: React.ReactNode }) {
     }
 
     toast.success("Position updated successfully!");
-    getPositions();
+    await getPositions();
   };
 
   const deletePosition = async () => {
-    const response = await service.delete();
+    if (!serviceRef.current) {
+      toast.error("User not authenticated");
+      return;
+    }
+
+    const response = await serviceRef.current.delete();
 
     if (response.status === status.ERROR) {
       console.error("Failed to delete position:", response.message);
@@ -68,13 +98,14 @@ export function PositionProvider({ children }: { children: React.ReactNode }) {
     }
 
     toast.success("Position deleted successfully!");
-    getPositions();
+    await getPositions();
   };
 
   return (
     <PositionContext.Provider
       value={{
         positions,
+        isLoading,
         getPositions,
         addPosition,
         updatePosition,

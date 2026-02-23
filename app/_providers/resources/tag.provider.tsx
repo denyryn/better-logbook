@@ -1,11 +1,13 @@
 import { Tag } from "@/generated/prisma/client";
-import { createContext, useContext, useState } from "react";
+import { createContext, useContext, useState, useEffect, useRef } from "react";
 import { TagService } from "@/services/tag";
+import { useAuth } from "../auth/auth.provider";
 import { status } from "@/lib/api.response";
 import { toast } from "sonner";
 
 interface TagContextType {
   tags: Tag[];
+  isLoading: boolean;
   getTags: () => Promise<void>;
   addTag: (tag: Partial<Tag>) => Promise<void>;
   updateTag: (tagId: string, tag: Partial<Tag>) => Promise<void>;
@@ -14,12 +16,27 @@ interface TagContextType {
 export const TagContext = createContext<TagContextType | null>(null);
 
 export function TagProvider({ children }: { children: React.ReactNode }) {
-  const service = new TagService();
+  const { user, isLoading: authLoading } = useAuth();
   const [tags, setTags] = useState<Tag[]>([]);
+  const [isLoading, setIsLoading] = useState(true);
+  const serviceRef = useRef<TagService | null>(null);
+
+  // Initialize service once user is available
+  useEffect(() => {
+    try {
+      if (user?.id && !serviceRef.current) {
+        serviceRef.current = new TagService();
+      }
+    } finally {
+      setIsLoading(false);
+    }
+  }, [user, authLoading]);
 
   const getTags = async () => {
+    if (!serviceRef.current) return;
+
     try {
-      const response = await service.get();
+      const response = await serviceRef.current.get();
       if (response.data && response.data.tags) {
         setTags(response.data.tags);
       }
@@ -30,7 +47,12 @@ export function TagProvider({ children }: { children: React.ReactNode }) {
   };
 
   const addTag = async (tag: Partial<Tag>) => {
-    const response = await service.post(tag);
+    if (!serviceRef.current) {
+      toast.error("User not authenticated");
+      return;
+    }
+
+    const response = await serviceRef.current.post(tag);
 
     if (response.status === status.ERROR) {
       console.error("Failed to add tag:", response.message);
@@ -39,11 +61,16 @@ export function TagProvider({ children }: { children: React.ReactNode }) {
     }
 
     toast.success("Tag added successfully!");
-    getTags();
+    await getTags();
   };
 
   const updateTag = async (tagId: string, tag: Partial<Tag>) => {
-    const response = await service.put(tagId, tag);
+    if (!serviceRef.current) {
+      toast.error("User not authenticated");
+      return;
+    }
+
+    const response = await serviceRef.current.put(tagId, tag);
 
     if (response.status === status.ERROR) {
       console.error("Failed to update tag:", response.message);
@@ -52,11 +79,13 @@ export function TagProvider({ children }: { children: React.ReactNode }) {
     }
 
     toast.success("Tag updated successfully!");
-    getTags();
+    await getTags();
   };
 
   return (
-    <TagContext.Provider value={{ tags, getTags, addTag, updateTag }}>
+    <TagContext.Provider
+      value={{ tags, isLoading, getTags, addTag, updateTag }}
+    >
       {children}
     </TagContext.Provider>
   );

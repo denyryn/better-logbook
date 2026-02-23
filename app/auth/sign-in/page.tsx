@@ -1,6 +1,6 @@
 import { ScrollText } from "lucide-react";
 
-import { LoginForm } from "@/components/login-form";
+import { LoginForm } from "@/app/auth/sign-in/_components/login-form";
 import { config } from "@/lib/config";
 
 export default function LoginPage() {

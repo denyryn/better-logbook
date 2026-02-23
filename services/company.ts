@@ -1,12 +1,19 @@
 import { Company } from "@/generated/prisma/client";
 import { ApiResponse } from "@/lib/api.response";
 import { api } from "@/lib/axios";
+import { CompanyWithProjects } from "@/types/prisma/companies";
 
 export class CompanyService {
-  async get(companyId: string): Promise<ApiResponse<Company>> {
+  private userId: string;
+
+  constructor(userId: string) {
+    this.userId = userId;
+  }
+
+  async get(): Promise<ApiResponse<CompanyWithProjects[]>> {
     try {
-      const { data } = await api.get<ApiResponse<Company>>(
-        `/api/companies/${companyId}`,
+      const { data } = await api.get<ApiResponse<CompanyWithProjects[]>>(
+        `/api/users/${this.userId}/companies`,
       );
       return data;
     } catch (error) {
@@ -18,7 +25,7 @@ export class CompanyService {
   async post(companyData: Partial<Company>): Promise<ApiResponse<Company>> {
     try {
       const { data } = await api.post<ApiResponse<Company>>(
-        `/api/companies`,
+        `/api/users/${this.userId}/companies`,
         companyData,
       );
       return data;
@@ -34,7 +41,7 @@ export class CompanyService {
   ): Promise<ApiResponse<Company>> {
     try {
       const { data } = await api.put<ApiResponse<Company>>(
-        `/api/companies/${companyId}`,
+        `/api/users/${this.userId}/companies/${companyId}`,
         companyData,
       );
       return data;
@@ -47,7 +54,7 @@ export class CompanyService {
   async delete(companyId: string): Promise<ApiResponse<null>> {
     try {
       const { data } = await api.delete<ApiResponse<null>>(
-        `/api/companies/${companyId}`,
+        `/api/users/${this.userId}/companies/${companyId}`,
       );
       return data;
     } catch (error) {

@@ -1,4 +1,5 @@
 import { toast } from "sonner";
+import { UseFormReturn } from "react-hook-form";
 import { FormData } from "../page";
 import { useAi } from "@/app/_providers/ai/ai.provider";
 import { Card, CardHeader, CardTitle, CardContent } from "@/components/ui/card";
@@ -7,24 +8,34 @@ import { Loader2, Save, Sparkles } from "lucide-react";
 import { useLogbook } from "@/app/_providers/resources/logbook.provider";
 
 interface SidebarProps {
-  formData: FormData;
+  form: UseFormReturn<FormData>;
 }
 
-export function Sidebar({ formData }: SidebarProps) {
+export function Sidebar({ form }: SidebarProps) {
   const { state, improve } = useAi();
   const { addLogbook } = useLogbook();
+  const { watch } = form;
+  const formData = watch();
 
-  function handleSave() {
+  async function handleSave() {
     if (!formData.content.trim()) {
       toast.error("Please enter logbook content");
       return;
     }
-    if (!formData.positionId) {
-      toast.error("Please select a position");
+    if (!formData.projectId) {
+      toast.error("Please select a project");
       return;
     }
-    addLogbook(formData);
-    toast.success("Logbook saved successfully!");
+    try {
+      const logbookData = {
+        ...formData,
+        logDate: new Date(formData.logDate),
+      };
+      await addLogbook(logbookData);
+      toast.success("Logbook saved successfully!");
+    } catch {
+      toast.error("Failed to save logbook");
+    }
   }
 
   async function improveText() {

@@ -1,4 +1,5 @@
 import { useState } from "react";
+import { UseFormReturn } from "react-hook-form";
 import { FormData } from "../page";
 
 import {
@@ -29,32 +30,32 @@ import {
 } from "@/components/ui/select";
 
 interface LogbookDetailsProps {
-  formData: FormData;
-  setFormData: React.Dispatch<React.SetStateAction<FormData>>;
+  form: UseFormReturn<FormData>;
   newTag: string;
   setNewTag: React.Dispatch<React.SetStateAction<string>>;
 }
 
 export function LogbookDetails({
-  formData,
-  setFormData,
+  form,
   newTag,
   setNewTag,
 }: LogbookDetailsProps) {
+  const { register, watch, setValue } = form;
+  const tags = watch("tags");
   const [isDetailsCollapsed, setIsDetailsCollapsed] = useState(true);
 
   function handleAddTag() {
-    if (newTag.trim() && !formData.tags.includes(newTag.trim())) {
-      setFormData({ ...formData, tags: [...formData.tags, newTag.trim()] });
+    if (newTag.trim() && !tags.includes(newTag.trim())) {
+      setValue("tags", [...tags, newTag.trim()]);
       setNewTag("");
     }
   }
 
   function handleRemoveTag(tagToRemove: string) {
-    setFormData({
-      ...formData,
-      tags: formData.tags.filter((tag) => tag !== tagToRemove),
-    });
+    setValue(
+      "tags",
+      tags.filter((tag) => tag !== tagToRemove),
+    );
   }
 
   return (
@@ -90,10 +91,7 @@ export function LogbookDetails({
               id="title"
               type="text"
               placeholder="e.g., Sprint Planning Meeting"
-              value={formData.title || ""}
-              onChange={(e) =>
-                setFormData({ ...formData, title: e.target.value })
-              }
+              {...register("title")}
             />
           </Field>
 
@@ -103,36 +101,20 @@ export function LogbookDetails({
                 <Calendar className="inline h-4 w-4 mr-1" />
                 Date
               </FieldLabel>
-              <Input
-                id="logDate"
-                type="date"
-                value={
-                  formData.logDate
-                    ? new Date(formData.logDate).toISOString().split("T")[0]
-                    : ""
-                }
-                onChange={(e) =>
-                  setFormData({
-                    ...formData,
-                    logDate: new Date(e.target.value),
-                  })
-                }
-              />
+              <Input id="logDate" type="date" {...register("logDate")} />
             </Field>
 
             <Field>
-              <FieldLabel htmlFor="position">
+              <FieldLabel htmlFor="project">
                 <Briefcase className="inline h-4 w-4 mr-1" />
-                Position
+                Project
               </FieldLabel>
               <Select
-                value={formData.positionId}
-                onValueChange={(value) =>
-                  setFormData({ ...formData, positionId: value })
-                }
+                value={watch("projectId") || ""}
+                onValueChange={(value) => setValue("projectId", value)}
               >
-                <SelectTrigger id="position">
-                  <SelectValue placeholder="Select position" />
+                <SelectTrigger id="project">
+                  <SelectValue placeholder="Select project" />
                 </SelectTrigger>
                 <SelectContent>
                   <SelectItem value="pos1">
@@ -170,13 +152,13 @@ export function LogbookDetails({
                 Add
               </Button>
             </div>
-            {formData.tags.length > 0 && (
+            {tags.length > 0 && (
               <div className="flex flex-wrap gap-2 mt-2">
-                {formData.tags.map((tag) => (
+                {tags.map((tag) => (
                   <Badge
                     key={tag}
                     variant="secondary"
-                    className="cursor-pointer"
+                    className="cursor-pointer hover:bg-secondary/80"
                     onClick={() => handleRemoveTag(tag)}
                   >
                     {tag} ×

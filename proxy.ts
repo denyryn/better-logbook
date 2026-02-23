@@ -14,7 +14,6 @@ export async function proxy(request: NextRequest) {
   }
 
   if (request.nextUrl.pathname.startsWith("/dashboard")) {
-    console.log("Auth check for dashboard access:", { isAuthenticated });
     if (isAuthenticated) return NextResponse.next();
     destination = new URL("/auth/sign-in", request.url);
   }

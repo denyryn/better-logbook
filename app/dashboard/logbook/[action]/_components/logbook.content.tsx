@@ -1,4 +1,5 @@
 import { useState } from "react";
+import { UseFormReturn } from "react-hook-form";
 import { FormData } from "../page";
 import { toast } from "sonner";
 
@@ -16,18 +17,19 @@ import { Button } from "@/components/ui/button";
 import { useAi } from "@/app/_providers/ai/ai.provider";
 
 interface LogbookContentProps {
-  formData: FormData;
-  setFormData: React.Dispatch<React.SetStateAction<FormData>>;
+  form: UseFormReturn<FormData>;
 }
 
-export function LogbookContent({ formData, setFormData }: LogbookContentProps) {
+export function LogbookContent({ form }: LogbookContentProps) {
+  const { register, watch, setValue } = form;
   const { state, response } = useAi();
+  const content = watch("content");
   const [activeTab, setActiveTab] = useState("edit");
 
   // Update content when AI improves it
   function handleUseImprovedText() {
     if (response) {
-      setFormData({ ...formData, content: response });
+      setValue("content", response);
       toast.success("Applied improved text");
     }
   }
@@ -49,17 +51,11 @@ export function LogbookContent({ formData, setFormData }: LogbookContentProps) {
           <TabsContent value="edit" className="space-y-4">
             <Textarea
               disabled={state === "loading"}
-              value={formData.content}
-              onChange={(e) =>
-                setFormData({
-                  ...formData,
-                  content: e.target.value,
-                })
-              }
+              {...register("content")}
               placeholder="Describe what you worked on today..."
               className="min-h-75 resize-y"
             />
-            {response && response !== formData.content && (
+            {response && response !== content && (
               <div className="rounded-lg border border-primary/20 bg-primary/5 p-4">
                 <div className="flex items-center justify-between mb-2">
                   <span className="text-sm font-medium flex items-center gap-2">
@@ -82,10 +78,8 @@ export function LogbookContent({ formData, setFormData }: LogbookContentProps) {
           </TabsContent>
           <TabsContent value="preview">
             <div className="min-h-75 rounded-lg border bg-muted/30 p-4">
-              {formData.content ? (
-                <p className="whitespace-pre-wrap text-sm">
-                  {formData.content}
-                </p>
+              {content ? (
+                <p className="whitespace-pre-wrap text-sm">{content}</p>
               ) : (
                 <p className="text-muted-foreground text-sm">
                   No content to preview. Start writing in the Edit tab.

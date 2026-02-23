@@ -23,7 +23,6 @@ model User {
   updatedAt     DateTime  @updatedAt
   sessions      Session[]
   accounts      Account[]
-  positions   Position[]
   projects    Project[]
   companies   Company[]
 
@@ -114,8 +113,6 @@ model Project {
 model Position {
   id          String       @id @default(uuid())
   role        String?
-  user        User      @relation(fields: [userId], references: [id])
-  userId      String
   company     Company   @relation(fields: [companyId], references: [id])
   companyId   String
 

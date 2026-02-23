@@ -1,5 +1,5 @@
 import { Logbook } from "@/generated/prisma/client";
-import { createContext, useContext, useState } from "react";
+import { createContext, useContext, useState, useEffect, useRef } from "react";
 import { LogbookService } from "@/services/logbook";
 import { useAuth } from "../auth/auth.provider";
 import { status } from "@/lib/api.response";
@@ -7,6 +7,7 @@ import { toast } from "sonner";
 
 interface LogbookContextType {
   logbooks: Logbook[];
+  isLoading: boolean;
   getLogbooks: () => Promise<void>;
   addLogbook: (logbook: Partial<Logbook>) => Promise<void>;
   updateLogbook: (
@@ -19,22 +20,43 @@ interface LogbookContextType {
 export const LogbookContext = createContext<LogbookContextType | null>(null);
 
 export function LogbookProvider({ children }: { children: React.ReactNode }) {
-  const { user } = useAuth();
-
-  if (!user) {
-    throw new Error("LogbookProvider requires an authenticated user");
-  }
-
-  const service = new LogbookService(user?.id);
+  const { user, isLoading: authLoading } = useAuth();
   const [logbooks, setLogbooks] = useState<Logbook[]>([]);
+  const [isLoading, setIsLoading] = useState(true);
+  const serviceRef = useRef<LogbookService | null>(null);
+
+  // Initialize service once user is available
+  useEffect(() => {
+    try {
+      if (user?.id && !serviceRef.current) {
+        serviceRef.current = new LogbookService(user.id);
+      }
+    } finally {
+      setIsLoading(false);
+    }
+  }, [user, authLoading]);
 
   const getLogbooks = async () => {
-    const response = await service.get();
-    setLogbooks(response.data.logbooks);
+    if (!serviceRef.current) return;
+
+    try {
+      const response = await serviceRef.current.get();
+      if (response.data?.logbooks) {
+        setLogbooks(response.data.logbooks);
+      }
+    } catch (error) {
+      console.error("Failed to fetch logbooks:", error);
+      toast.error("Failed to fetch logbooks");
+    }
   };
 
   const addLogbook = async (logbook: Partial<Logbook>) => {
-    const response = await service.post(logbook);
+    if (!serviceRef.current) {
+      toast.error("User not authenticated");
+      return;
+    }
+
+    const response = await serviceRef.current.post(logbook);
 
     if (response.status === status.ERROR) {
       console.error("Failed to add logbook entry:", response.message);
@@ -43,11 +65,16 @@ export function LogbookProvider({ children }: { children: React.ReactNode }) {
     }
 
     toast.success("Logbook entry added successfully!");
-    getLogbooks();
+    await getLogbooks();
   };
 
   const updateLogbook = async (id: string, logbook: Partial<Logbook>) => {
-    const response = await service.put(logbook, id);
+    if (!serviceRef.current) {
+      toast.error("User not authenticated");
+      return;
+    }
+
+    const response = await serviceRef.current.put(logbook, id);
 
     if (response.status === status.ERROR) {
       console.error("Failed to update logbook entry:", response.message);
@@ -56,11 +83,16 @@ export function LogbookProvider({ children }: { children: React.ReactNode }) {
     }
 
     toast.success("Logbook entry updated successfully!");
-    getLogbooks();
+    await getLogbooks();
   };
 
   const deleteLogbook = async (logbookId: string) => {
-    const response = await service.delete(logbookId);
+    if (!serviceRef.current) {
+      toast.error("User not authenticated");
+      return;
+    }
+
+    const response = await serviceRef.current.delete(logbookId);
 
     if (response.status === status.ERROR) {
       console.error("Failed to delete logbook entry:", response.message);
@@ -69,13 +101,14 @@ export function LogbookProvider({ children }: { children: React.ReactNode }) {
     }
 
     toast.success("Logbook entry deleted successfully!");
-    getLogbooks();
+    await getLogbooks();
   };
 
   return (
     <LogbookContext.Provider
       value={{
         logbooks,
+        isLoading,
         getLogbooks,
         addLogbook,
         updateLogbook,

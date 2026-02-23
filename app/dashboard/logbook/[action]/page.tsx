@@ -5,23 +5,27 @@ import { useState } from "react";
 import { LogbookDetails } from "./_components/logbook.details";
 import { LogbookContent } from "./_components/logbook.content";
 import { Sidebar } from "./_components/sidebar";
-import { Logbook } from "@/generated/prisma/client";
+import { useForm } from "react-hook-form";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { logbookSchema } from "@/schemas/logbook";
+import z from "zod";
+import { LogbookHistory } from "./_components/logbook.history";
 
-export type FormData = Omit<
-  Logbook,
-  "id" | "createdAt" | "updatedAt" | "deletedAt" | "userId"
-> & {
-  tags: string[];
-};
+export type FormData = z.infer<typeof logbookSchema>;
 
 export default function Page() {
-  const [formData, setFormData] = useState<FormData>({
-    title: "",
-    content: "",
-    logDate: new Date(),
-    positionId: "",
-    tags: [] as string[],
+  const form = useForm<FormData>({
+    resolver: zodResolver(logbookSchema),
+    mode: "onBlur",
+    defaultValues: {
+      title: "",
+      content: "",
+      logDate: new Date().toISOString().split("T")[0],
+      projectId: "",
+      tags: [],
+    },
   });
+
   const [newTag, setNewTag] = useState("");
 
   return (
@@ -35,20 +39,20 @@ export default function Page() {
               <div className="flex flex-col gap-6">
                 {/* Logbook Details */}
                 <LogbookDetails
-                  formData={formData}
-                  setFormData={setFormData}
+                  form={form}
                   newTag={newTag}
                   setNewTag={setNewTag}
                 />
 
                 {/* Logbook Content */}
-                <LogbookContent formData={formData} setFormData={setFormData} />
+                <LogbookContent form={form} />
 
                 {/* Logbook Histories */}
+                <LogbookHistory />
               </div>
 
               {/* Sidebar Actions */}
-              <Sidebar formData={formData} />
+              <Sidebar form={form} />
             </div>
           </div>
         </div>
