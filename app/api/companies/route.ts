@@ -1,16 +1,25 @@
-import { NextResponse } from "next/server";
+import { NextRequest, NextResponse } from "next/server";
 import { prisma } from "@/lib/prisma";
 import { Company } from "@/generated/prisma/client";
 import { success, error } from "@/lib/api.response";
 import { StatusCodes } from "http-status-codes";
+import { auth } from "@/lib/auth";
+import { companyWithPositionsQuery } from "@/types/prisma/companies";
 
-export async function GET() {
+export async function GET(request: NextRequest) {
   try {
-    const companies = await prisma.company.findMany();
+    const session = await auth.api.getSession({ headers: request.headers });
+
+    const companies = await prisma.company.findMany({
+      where: { userId: session?.user.id },
+      ...companyWithPositionsQuery,
+    });
+
     return NextResponse.json(
       success(companies, "Companies fetched successfully", StatusCodes.OK),
     );
-  } catch (e) {
+  } catch (err) {
+    console.error("Error fetching companies:", err);
     return NextResponse.json(
       error(
         undefined,
@@ -21,10 +30,15 @@ export async function GET() {
   }
 }
 
-export async function POST(request: Request) {
+export async function POST(request: NextRequest) {
   try {
     const body = await request.json();
-    const company = await prisma.company.create({ data: body as Company });
+    const session = await auth.api.getSession({ headers: request.headers });
+
+    const company = await prisma.company.create({
+      data: { ...body, userId: session?.user.id } as Company,
+    });
+
     return NextResponse.json(
       success(company, "Company created successfully", StatusCodes.CREATED),
     );

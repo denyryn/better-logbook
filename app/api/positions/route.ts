@@ -1,16 +1,21 @@
-import { NextResponse } from "next/server";
+import { NextRequest, NextResponse } from "next/server";
 import { prisma } from "@/lib/prisma";
 import { Position } from "@/generated/prisma/client";
 import { success, error } from "@/lib/api.response";
 import { StatusCodes } from "http-status-codes";
+import { auth } from "@/lib/auth";
 
-export async function GET() {
+export async function GET(request: NextRequest) {
   try {
-    const positions = await prisma.position.findMany();
+    const session = await auth.api.getSession({ headers: request.headers });
+    const positions = await prisma.position.findMany({
+      where: { company: { userId: session?.user.id } },
+    });
     return NextResponse.json(
       success(positions, "Positions fetched successfully", StatusCodes.OK),
     );
-  } catch (e) {
+  } catch (err) {
+    console.error("Error fetching positions:", err);
     return NextResponse.json(
       error(
         undefined,
@@ -24,11 +29,17 @@ export async function GET() {
 export async function POST(request: Request) {
   try {
     const body = await request.json();
-    const position = await prisma.position.create({ data: body as Position });
+    const session = await auth.api.getSession({ headers: request.headers });
+
+    const position = await prisma.position.create({
+      data: { ...body } as Position,
+    });
+
     return NextResponse.json(
       success(position, "Position created successfully", StatusCodes.CREATED),
     );
-  } catch (e) {
+  } catch (err) {
+    console.error("Error creating position:", err);
     return NextResponse.json(
       error(
         undefined,

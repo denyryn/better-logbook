@@ -1,14 +1,22 @@
+"use client";
+
 import { Project } from "@/generated/prisma/client";
-import { createContext, useContext, useState, useEffect, useRef } from "react";
+import {
+  createContext,
+  useContext,
+  useState,
+  useEffect,
+  useRef,
+  useCallback,
+} from "react";
 import { ProjectService } from "@/services/project";
 import { useAuth } from "../auth/auth.provider";
-import { status } from "@/lib/api.response";
+import { ApiResponse, status } from "@/lib/api.response";
 import { toast } from "sonner";
 
 interface ProjectContextType {
   projects: Project[];
-  isLoading: boolean;
-  getProjects: () => Promise<void>;
+  getProjects: (positionId?: string) => Promise<void>;
   addProject: (project: Partial<Project>) => Promise<void>;
   updateProject: (
     projectId: string,
@@ -22,33 +30,32 @@ export const ProjectContext = createContext<ProjectContextType | null>(null);
 export function ProjectProvider({ children }: { children: React.ReactNode }) {
   const { user, isLoading: authLoading } = useAuth();
   const [projects, setProjects] = useState<Project[]>([]);
-  const [isLoading, setIsLoading] = useState(true);
   const serviceRef = useRef<ProjectService | null>(null);
 
-  // Initialize service once user is available
   useEffect(() => {
-    try {
-      if (user?.id && !serviceRef.current) {
-        serviceRef.current = new ProjectService(user.id);
-      }
-    } finally {
-      setIsLoading(false);
+    serviceRef.current = new ProjectService();
+  }, []);
+
+  const getProjects = useCallback(async (positionId?: string) => {
+    if (!serviceRef.current) {
+      console.error("ProjectService not initialized");
+      toast.error("Service not available. Please try again later.");
+      return;
     }
-  }, [user, authLoading]);
-
-  const getProjects = async () => {
-    if (!serviceRef.current) return;
 
     try {
-      const response = await serviceRef.current.get();
-      if (response.data?.projects) {
-        setProjects(response.data.projects);
-      }
+      const response: ApiResponse<Project[]> = positionId
+        ? await serviceRef.current.getByPosition(positionId)
+        : await serviceRef.current.get();
+
+      const projects = response.data;
+
+      setProjects(projects);
     } catch (error) {
       console.error("Failed to fetch projects:", error);
       toast.error("Failed to fetch projects");
     }
-  };
+  }, []);
 
   const addProject = async (project: Partial<Project>) => {
     if (!serviceRef.current) {
@@ -111,7 +118,6 @@ export function ProjectProvider({ children }: { children: React.ReactNode }) {
     <ProjectContext.Provider
       value={{
         projects,
-        isLoading,
         getProjects,
         addProject,
         updateProject,

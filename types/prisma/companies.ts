@@ -9,3 +9,13 @@ export const companyWithProjectsQuery = {
 export type CompanyWithProjects = Prisma.CompanyGetPayload<
   typeof companyWithProjectsQuery
 >;
+
+export const companyWithPositionsQuery = {
+  include: {
+    positions: true,
+  },
+};
+
+export type CompanyWithPositions = Prisma.CompanyGetPayload<
+  typeof companyWithPositionsQuery
+>;

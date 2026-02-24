@@ -4,10 +4,15 @@ import { prisma } from "@/lib/prisma";
 import { StatusCodes } from "http-status-codes";
 import { Company } from "@/generated/prisma/client";
 
-export async function GET(request: NextRequest) {
+export async function GET(
+  request: NextRequest,
+  { params }: { params: { companyId: string } },
+) {
   try {
-    const id = Number(request.nextUrl.searchParams.get("id"));
-    const company = await prisma.company.findUnique({ where: { id } });
+    const { companyId } = params;
+    const company = await prisma.company.findUnique({
+      where: { id: companyId },
+    });
 
     if (!company) {
       return NextResponse.json(
@@ -18,7 +23,8 @@ export async function GET(request: NextRequest) {
     return NextResponse.json(
       success(company, "Company fetched successfully", StatusCodes.OK),
     );
-  } catch (e) {
+  } catch (err) {
+    console.error("Error fetching company:", err);
     return NextResponse.json(
       error(
         undefined,
@@ -29,13 +35,16 @@ export async function GET(request: NextRequest) {
   }
 }
 
-export async function PUT(request: NextRequest) {
+export async function PUT(
+  request: NextRequest,
+  { params }: { params: { companyId: string } },
+) {
   try {
-    const id = Number(request.nextUrl.searchParams.get("id"));
+    const { companyId } = params;
     const body = await request.json();
     const company = await prisma.company.update({
       data: body as Company,
-      where: { id },
+      where: { id: companyId },
     });
 
     if (!company) {
@@ -47,7 +56,8 @@ export async function PUT(request: NextRequest) {
     return NextResponse.json(
       success(company, "Company updated successfully", StatusCodes.OK),
     );
-  } catch (e) {
+  } catch (err) {
+    console.error("Error updating company:", err);
     return NextResponse.json(
       error(
         undefined,
@@ -58,10 +68,13 @@ export async function PUT(request: NextRequest) {
   }
 }
 
-export async function DELETE(request: NextRequest) {
+export async function DELETE(
+  request: NextRequest,
+  { params }: { params: { companyId: string } },
+) {
   try {
-    const id = Number(request.nextUrl.searchParams.get("id"));
-    const company = await prisma.company.delete({ where: { id } });
+    const { companyId } = params;
+    const company = await prisma.company.delete({ where: { id: companyId } });
 
     if (!company) {
       return NextResponse.json(
@@ -72,7 +85,8 @@ export async function DELETE(request: NextRequest) {
     return NextResponse.json(
       success(company, "Company deleted successfully", StatusCodes.OK),
     );
-  } catch (e) {
+  } catch (err) {
+    console.error("Error deleting company:", err);
     return NextResponse.json(
       error(
         undefined,

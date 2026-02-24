@@ -1,7 +1,7 @@
 import { Company } from "@/generated/prisma/client";
 import { ApiResponse } from "@/lib/api.response";
 import { api } from "@/lib/axios";
-import { CompanyWithProjects } from "@/types/prisma/companies";
+import { CompanyWithPositions } from "@/types/prisma/companies";
 
 export class CompanyService {
   private userId: string;
@@ -10,10 +10,14 @@ export class CompanyService {
     this.userId = userId;
   }
 
-  async get(): Promise<ApiResponse<CompanyWithProjects[]>> {
+  private getBaseUrl() {
+    return `/api/companies`;
+  }
+
+  async get(): Promise<ApiResponse<CompanyWithPositions[]>> {
     try {
-      const { data } = await api.get<ApiResponse<CompanyWithProjects[]>>(
-        `/api/users/${this.userId}/companies`,
+      const { data } = await api.get<ApiResponse<CompanyWithPositions[]>>(
+        this.getBaseUrl(),
       );
       return data;
     } catch (error) {
@@ -25,7 +29,7 @@ export class CompanyService {
   async post(companyData: Partial<Company>): Promise<ApiResponse<Company>> {
     try {
       const { data } = await api.post<ApiResponse<Company>>(
-        `/api/users/${this.userId}/companies`,
+        this.getBaseUrl(),
         companyData,
       );
       return data;
@@ -41,7 +45,7 @@ export class CompanyService {
   ): Promise<ApiResponse<Company>> {
     try {
       const { data } = await api.put<ApiResponse<Company>>(
-        `/api/users/${this.userId}/companies/${companyId}`,
+        `${this.getBaseUrl()}/${companyId}`,
         companyData,
       );
       return data;
@@ -54,7 +58,7 @@ export class CompanyService {
   async delete(companyId: string): Promise<ApiResponse<null>> {
     try {
       const { data } = await api.delete<ApiResponse<null>>(
-        `/api/users/${this.userId}/companies/${companyId}`,
+        `${this.getBaseUrl()}/${companyId}`,
       );
       return data;
     } catch (error) {

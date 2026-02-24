@@ -11,10 +11,10 @@ import { CompanyService } from "@/services/company";
 import { useAuth } from "../auth/auth.provider";
 import { status } from "@/lib/api.response";
 import { toast } from "sonner";
-import { CompanyWithProjects } from "@/types/prisma/companies";
+import { CompanyWithPositions } from "@/types/prisma/companies";
 
 interface CompanyContextType {
-  companies: CompanyWithProjects[];
+  companies: CompanyWithPositions[];
   isLoading: boolean;
   getCompanies: () => Promise<void>;
   addCompany: (company: Partial<Company>) => Promise<void>;
@@ -29,7 +29,7 @@ export const CompanyContext = createContext<CompanyContextType | null>(null);
 
 export function CompanyProvider({ children }: { children: React.ReactNode }) {
   const { user, isLoading: authLoading } = useAuth();
-  const [companies, setCompanies] = useState<CompanyWithProjects[]>([]);
+  const [companies, setCompanies] = useState<CompanyWithPositions[]>([]);
   const [isLoading, setIsLoading] = useState(true);
   const serviceRef = useRef<CompanyService | null>(null);
 

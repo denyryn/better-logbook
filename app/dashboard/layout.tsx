@@ -17,25 +17,23 @@ export default function AuthenticatedLayout({
 }: AuthenticatedLayoutProps) {
   return (
     <CompanyProvider>
-      <ProjectProvider>
-        <TagProvider>
-          <LogbookProvider>
-            <AiProvider>
-              <SidebarProvider
-                style={
-                  {
-                    "--sidebar-width": "calc(var(--spacing) * 72)",
-                    "--header-height": "calc(var(--spacing) * 12)",
-                  } as React.CSSProperties
-                }
-              >
-                <AppSidebar variant="inset" />
-                <SidebarInset>{children}</SidebarInset>
-              </SidebarProvider>
-            </AiProvider>
-          </LogbookProvider>
-        </TagProvider>
-      </ProjectProvider>
+      <TagProvider>
+        <LogbookProvider>
+          <AiProvider>
+            <SidebarProvider
+              style={
+                {
+                  "--sidebar-width": "calc(var(--spacing) * 72)",
+                  "--header-height": "calc(var(--spacing) * 12)",
+                } as React.CSSProperties
+              }
+            >
+              <AppSidebar variant="inset" />
+              <SidebarInset>{children}</SidebarInset>
+            </SidebarProvider>
+          </AiProvider>
+        </LogbookProvider>
+      </TagProvider>
     </CompanyProvider>
   );
 }

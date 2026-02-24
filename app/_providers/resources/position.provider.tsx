@@ -1,9 +1,19 @@
+"use client";
+
 import { Position } from "@/generated/prisma/client";
-import { createContext, useContext, useState, useEffect, useRef } from "react";
+import {
+  createContext,
+  useContext,
+  useState,
+  useEffect,
+  useRef,
+  useCallback,
+} from "react";
 import { PositionService } from "@/services/position";
 import { useAuth } from "../auth/auth.provider";
 import { status } from "@/lib/api.response";
 import { toast } from "sonner";
+import { useParams } from "next/navigation";
 
 interface PositionContextType {
   positions: Position[];
@@ -17,6 +27,7 @@ interface PositionContextType {
 export const PositionContext = createContext<PositionContextType | null>(null);
 
 export function PositionProvider({ children }: { children: React.ReactNode }) {
+  const { spaceId } = useParams<{ spaceId: string }>();
   const { user, isLoading: authLoading } = useAuth();
   const [positions, setPositions] = useState<Position[]>([]);
   const [isLoading, setIsLoading] = useState(true);
@@ -26,14 +37,15 @@ export function PositionProvider({ children }: { children: React.ReactNode }) {
   useEffect(() => {
     try {
       if (user?.id && !serviceRef.current) {
-        serviceRef.current = new PositionService(user.id);
+        serviceRef.current = new PositionService(user.id, spaceId);
       }
     } finally {
       setIsLoading(false);
+      getPositions();
     }
-  }, [user, authLoading]);
+  }, [user, authLoading, spaceId]);
 
-  const getPositions = async () => {
+  const getPositions = useCallback(async () => {
     if (!serviceRef.current) return;
 
     try {
@@ -45,7 +57,7 @@ export function PositionProvider({ children }: { children: React.ReactNode }) {
       console.error("Failed to fetch positions:", error);
       toast.error("Failed to fetch positions. Please try again.");
     }
-  };
+  }, []);
 
   const addPosition = async (position: Partial<Position>) => {
     if (!serviceRef.current) {

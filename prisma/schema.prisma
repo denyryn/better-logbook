@@ -87,7 +87,6 @@ model Company {
   updatedAt   DateTime  @updatedAt
 
   positions   Position[]
-  projects    Project[]
 
   @@map("company")
 }
@@ -97,16 +96,16 @@ model Project {
   user        User      @relation(fields: [userId], references: [id])
   userId      String
   name        String
-  company     Company   @relation(fields: [companyId], references: [id])
-  companyId   String
-  scopedRole   String?
+  position    Position   @relation(fields: [positionId], references: [id])
+  positionId  String
+  scopedRole  String?
 
   createdAt   DateTime  @default(now())
   updatedAt   DateTime  @updatedAt
 
   logbooks    Logbook[]
 
-  @@index([companyId])
+  @@index([positionId])
   @@map("project")
 }
 
@@ -115,6 +114,8 @@ model Position {
   role        String?
   company     Company   @relation(fields: [companyId], references: [id])
   companyId   String
+
+  projects    Project[]
 
   @@map("position")
 }

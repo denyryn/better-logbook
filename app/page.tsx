@@ -1,6 +1,6 @@
 import Link from "next/link";
 
-export default function Home() {
+export default function App() {
   return (
     <div className="min-h-screen bg-zinc-50 font-sans dark:bg-black">
       <nav className="p-16 flex items-center justify-between">

@@ -3,7 +3,7 @@ import { NextResponse } from "next/server";
 import { authRequest } from "@/lib/auth";
 
 export async function proxy(request: NextRequest) {
-  let destination = new URL("/auth/sign-in", request.url);
+  let destination;
   const isAuthenticated = await authRequest(request);
 
   if (request.nextUrl.pathname === "/") {
@@ -17,8 +17,6 @@ export async function proxy(request: NextRequest) {
     if (isAuthenticated) return NextResponse.next();
     destination = new URL("/auth/sign-in", request.url);
   }
-
-  return NextResponse.redirect(destination);
 }
 
 export const config = { matcher: ["/", "/dashboard/:path*"] };
