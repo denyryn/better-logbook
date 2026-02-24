@@ -1,8 +1,5 @@
 "use client";
 
-import { useLogbook } from "@/app/_providers/resources/logbook.provider";
-import { useProject } from "@/app/_providers/resources/project.provider";
-import { useEffect, useCallback } from "react";
 import {
   Card,
   CardContent,
@@ -20,6 +17,8 @@ import {
 } from "@tabler/icons-react";
 import Link from "next/link";
 import { Logbook } from "@/generated/prisma/client";
+import { useProjects } from "@/lib/query/project.query";
+import { useLogbooks } from "@/lib/query/logbook.query";
 
 type LogbookTag = {
   tagId: string;
@@ -33,20 +32,11 @@ type LogbookWithTags = Logbook & {
 };
 
 export function LogbookHistory() {
-  const { logbooks, isLoading, getLogbooks } = useLogbook();
-  const { projects, getProjects } = useProject();
-
-  const fetchData = useCallback(() => {
-    getLogbooks();
-    getProjects();
-  }, [getLogbooks, getProjects]);
-
-  useEffect(() => {
-    fetchData();
-  }, [fetchData]);
+  const { data: allLogbooks, isLoading } = useLogbooks();
+  const { data: allProjects } = useProjects();
 
   const getProjectName = (projectId: string) => {
-    const project = projects.find((p) => p.id === projectId);
+    const project = allProjects?.data.find((p) => p.id === projectId);
     return project?.name || "Unknown Project";
   };
 
@@ -102,7 +92,7 @@ export function LogbookHistory() {
     );
   }
 
-  if (!logbooks || logbooks.length === 0) {
+  if (!allLogbooks || allLogbooks?.data.length === 0) {
     return (
       <Card>
         <CardHeader>
@@ -124,7 +114,7 @@ export function LogbookHistory() {
     );
   }
 
-  const sortedLogbooks = [...logbooks].sort(
+  const sortedLogbooks = [...allLogbooks.data].sort(
     (a, b) => new Date(b.logDate).getTime() - new Date(a.logDate).getTime(),
   );
 
@@ -136,14 +126,14 @@ export function LogbookHistory() {
           Recent Entries
         </CardTitle>
         <CardDescription>
-          {logbooks.length} {logbooks.length === 1 ? "entry" : "entries"} in
-          your logbook
+          {allLogbooks.data.length}{" "}
+          {allLogbooks.data.length === 1 ? "entry" : "entries"} in your logbook
         </CardDescription>
       </CardHeader>
       <CardContent>
         <div className="space-y-4">
           {sortedLogbooks.slice(0, 10).map((logbook) => {
-            const logbookWithTags = logbook as LogbookWithTags;
+            const logbookWithTags = logbook;
             const hasTags =
               logbookWithTags.tags && logbookWithTags.tags.length > 0;
 
@@ -209,13 +199,13 @@ export function LogbookHistory() {
           })}
         </div>
 
-        {logbooks.length > 10 && (
+        {allLogbooks.data.length > 10 && (
           <div className="mt-6 text-center">
             <Link
               href="/dashboard/logbook"
               className="text-sm font-medium text-primary hover:underline"
             >
-              View all {logbooks.length} entries →
+              View all {allLogbooks.data.length} entries →
             </Link>
           </div>
         )}

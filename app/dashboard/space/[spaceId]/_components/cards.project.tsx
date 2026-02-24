@@ -14,7 +14,7 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
-import { ProjectDialog } from "../position/[positionId]/project/_components/dialog.project";
+import { ProjectDialog } from "@/app/dashboard/position/[positionId]/project/_components/dialog.project";
 import { Project } from "@/generated/prisma/client";
 import Link from "next/link";
 

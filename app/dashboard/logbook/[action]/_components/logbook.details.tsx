@@ -28,17 +28,20 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
+import { Project } from "@/generated/prisma/client";
 
 interface LogbookDetailsProps {
   form: UseFormReturn<FormData>;
   newTag: string;
   setNewTag: React.Dispatch<React.SetStateAction<string>>;
+  projects?: Project[];
 }
 
 export function LogbookDetails({
   form,
   newTag,
   setNewTag,
+  projects,
 }: LogbookDetailsProps) {
   const { register, watch, setValue } = form;
   const tags = watch("tags");
@@ -117,13 +120,11 @@ export function LogbookDetails({
                   <SelectValue placeholder="Select project" />
                 </SelectTrigger>
                 <SelectContent>
-                  <SelectItem value="pos1">
-                    Software Engineer - Acme Corp
-                  </SelectItem>
-                  <SelectItem value="pos2">
-                    Senior Developer - Tech Inc
-                  </SelectItem>
-                  <SelectItem value="pos3">Team Lead - StartupXYZ</SelectItem>
+                  {projects?.map((project) => (
+                    <SelectItem key={project.id} value={project.id}>
+                      {project.name}
+                    </SelectItem>
+                  ))}
                 </SelectContent>
               </Select>
             </Field>

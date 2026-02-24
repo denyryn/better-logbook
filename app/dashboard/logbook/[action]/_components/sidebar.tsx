@@ -6,6 +6,7 @@ import { Card, CardHeader, CardTitle, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Loader2, Save, Sparkles } from "lucide-react";
 import { useLogbook } from "@/app/_providers/resources/logbook.provider";
+import { useCreateLogbook } from "@/lib/query/logbook.query";
 
 interface SidebarProps {
   form: UseFormReturn<FormData>;
@@ -13,7 +14,7 @@ interface SidebarProps {
 
 export function Sidebar({ form }: SidebarProps) {
   const { state, improve } = useAi();
-  const { addLogbook } = useLogbook();
+  const { mutate: addLogbook } = useCreateLogbook();
   const { watch } = form;
   const formData = watch();
 
@@ -31,8 +32,9 @@ export function Sidebar({ form }: SidebarProps) {
         ...formData,
         logDate: new Date(formData.logDate),
       };
-      await addLogbook(logbookData);
+      addLogbook(logbookData);
       toast.success("Logbook saved successfully!");
+      form.reset();
     } catch {
       toast.error("Failed to save logbook");
     }

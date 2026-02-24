@@ -10,6 +10,7 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { logbookSchema } from "@/schemas/logbook";
 import z from "zod";
 import { LogbookHistory } from "./_components/logbook.history";
+import { useProjects } from "@/lib/query/project.query";
 
 export type FormData = z.infer<typeof logbookSchema>;
 
@@ -27,6 +28,7 @@ export default function Page() {
   });
 
   const [newTag, setNewTag] = useState("");
+  const { data: allProjects } = useProjects();
 
   return (
     <>
@@ -42,6 +44,7 @@ export default function Page() {
                   form={form}
                   newTag={newTag}
                   setNewTag={setNewTag}
+                  projects={allProjects?.data}
                 />
 
                 {/* Logbook Content */}
