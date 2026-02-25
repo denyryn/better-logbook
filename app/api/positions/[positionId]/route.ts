@@ -1,8 +1,9 @@
-import { NextRequest, NextResponse } from "next/server";
-import { success, error, status } from "@/lib/api.response";
-import { prisma } from "@/lib/prisma";
 import { StatusCodes } from "http-status-codes";
+import { NextRequest, NextResponse } from "next/server";
+
 import { Position } from "@/generated/prisma/client";
+import { error, status, success } from "@/lib/api.response";
+import { prisma } from "@/lib/prisma";
 
 export async function GET(request: NextRequest) {
   try {

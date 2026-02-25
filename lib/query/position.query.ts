@@ -1,4 +1,5 @@
 import { useQuery } from "@tanstack/react-query";
+
 import { getPositions, getPositionsByCompany } from "../api/position.api";
 
 export function usePositions() {

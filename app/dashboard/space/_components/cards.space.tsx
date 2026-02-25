@@ -1,10 +1,11 @@
 "use client";
 
 import {
+  IconArrowRight,
   IconArrowUpRight,
   IconPlus,
-  IconArrowRight,
 } from "@tabler/icons-react";
+import Link from "next/link";
 
 import {
   Card,
@@ -14,9 +15,9 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
-import { SpaceDialog } from "../../_components/dialog.space";
-import Link from "next/link";
 import { CompanyWithPositions } from "@/types/prisma/companies";
+
+import { SpaceDialog } from "../../_components/dialog.space";
 
 interface SpaceCardsProps {
   spaces?: CompanyWithPositions[];
@@ -26,7 +27,7 @@ export function SpaceCards({ spaces }: SpaceCardsProps) {
   return (
     <div className="*:data-[slot=card]:from-primary/5 *:data-[slot=card]:to-card dark:*:data-[slot=card]:bg-card grid grid-cols-1 gap-4 px-4 *:data-[slot=card]:bg-linear-to-t *:data-[slot=card]:shadow-xs lg:px-6 @xl/main:grid-cols-2 @5xl/main:grid-cols-4">
       <SpaceDialog>
-        <Card className="@container/card cursor-pointer transition-all border-2 border-dashed border-primary/30 hover:border-primary/60 hover:shadow-md h-full">
+        <Card className="border-primary/30 hover:border-primary/60 @container/card h-full cursor-pointer border-2 border-dashed transition-all hover:shadow-md">
           <CardHeader>
             <CardDescription>Add Space</CardDescription>
             <CardTitle className="text-2xl font-semibold tabular-nums @[250px]/card:text-3xl">
@@ -46,14 +47,14 @@ export function SpaceCards({ spaces }: SpaceCardsProps) {
 
       {spaces?.map((space) => (
         <Link key={space.id} href={`/dashboard/space/${space.id}`}>
-          <Card className="@container/card cursor-pointer transition-all hover:shadow-md h-full group">
+          <Card className="group @container/card h-full cursor-pointer transition-all hover:shadow-md">
             <CardHeader>
               <CardDescription>Space</CardDescription>
               <CardTitle className="text-2xl font-semibold tabular-nums @[250px]/card:text-3xl">
                 {space.name}
               </CardTitle>
               <CardAction>
-                <IconArrowUpRight className="group-hover:scale-125 transition-transform" />
+                <IconArrowUpRight className="transition-transform group-hover:scale-125" />
               </CardAction>
             </CardHeader>
             <CardFooter className="flex-col items-start gap-1.5 text-sm">

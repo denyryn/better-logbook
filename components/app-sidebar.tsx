@@ -1,6 +1,5 @@
 "use client";
 
-import * as React from "react";
 import {
   IconCamera,
   IconChartBar,
@@ -18,6 +17,8 @@ import {
   IconSettings,
   IconUsers,
 } from "@tabler/icons-react";
+import Link from "next/link";
+import * as React from "react";
 
 import { NavDocuments } from "@/components/nav-documents";
 import { NavMain } from "@/components/nav-main";
@@ -33,7 +34,6 @@ import {
   SidebarMenuItem,
 } from "@/components/ui/sidebar";
 import { config } from "@/lib/config";
-import Link from "next/link";
 
 const data = {
   user: {

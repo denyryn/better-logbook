@@ -1,5 +1,6 @@
 import { Separator } from "@/components/ui/separator";
 import { SidebarTrigger } from "@/components/ui/sidebar";
+
 import { AppBreadcrumb } from "./app-breadcumb";
 
 interface SiteHeaderProps {
@@ -14,7 +15,7 @@ export function SiteHeader({
   showBreadcrumb = true,
 }: SiteHeaderProps) {
   return (
-    <header className="flex h-(--header-height) shrink-0 items-center gap-2 border-b bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60 transition-[width,height] ease-linear group-has-data-[collapsible=icon]/sidebar-wrapper:h-(--header-height)">
+    <header className="bg-background/95 supports-[backdrop-filter]:bg-background/60 flex h-(--header-height) shrink-0 items-center gap-2 border-b backdrop-blur transition-[width,height] ease-linear group-has-data-[collapsible=icon]/sidebar-wrapper:h-(--header-height)">
       <div className="flex w-full items-center gap-2 px-4 lg:gap-3 lg:px-6">
         <SidebarTrigger className="-ml-1" />
         <Separator
@@ -24,7 +25,7 @@ export function SiteHeader({
         {showBreadcrumb ? (
           <AppBreadcrumb />
         ) : (
-          <h1 className="text-base font-semibold flex-1">{name}</h1>
+          <h1 className="flex-1 text-base font-semibold">{name}</h1>
         )}
         <div className="ml-auto flex items-center gap-2">{menu}</div>
       </div>

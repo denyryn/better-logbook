@@ -1,9 +1,11 @@
-import { Tag } from "@/generated/prisma/client";
-import { createContext, useContext, useState, useEffect, useRef } from "react";
-import { TagService } from "@/services/tag";
-import { useAuth } from "../auth/auth.provider";
-import { status } from "@/lib/api.response";
+import { createContext, useContext, useEffect, useRef, useState } from "react";
 import { toast } from "sonner";
+
+import { Tag } from "@/generated/prisma/client";
+import { status } from "@/lib/api.response";
+import { TagService } from "@/services/tag";
+
+import { useAuth } from "../auth/auth.provider";
 
 interface TagContextType {
   tags: Tag[];

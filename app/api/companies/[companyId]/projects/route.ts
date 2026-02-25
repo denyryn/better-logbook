@@ -1,16 +1,17 @@
-import { prisma } from "@/lib/prisma";
-import { NextRequest, NextResponse } from "next/server";
-import { errorResponse, successResponse } from "@/lib/api.response";
 import { StatusCodes } from "http-status-codes";
+import { NextRequest, NextResponse } from "next/server";
+
+import { errorResponse, successResponse } from "@/lib/api.response";
+import { prisma } from "@/lib/prisma";
 
 export async function GET(
   request: NextRequest,
-  { params }: {params : Promise<{ companyId: string }>},
+  { params }: { params: Promise<{ companyId: string }> },
 ) {
   try {
     const { companyId } = await params;
     const projects = await prisma.project.findMany({
-      where: { position : {companyId}  },
+      where: { position: { companyId } },
     });
 
     return NextResponse.json(

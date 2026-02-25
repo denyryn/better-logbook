@@ -1,8 +1,9 @@
-import { NextRequest, NextResponse } from "next/server";
-import { prisma } from "@/lib/prisma";
-import { successResponse, errorResponse } from "@/lib/api.response";
 import { StatusCodes } from "http-status-codes";
+import { NextRequest, NextResponse } from "next/server";
+
+import { errorResponse, successResponse } from "@/lib/api.response";
 import { auth } from "@/lib/auth";
+import { prisma } from "@/lib/prisma";
 
 export async function GET(
   request: NextRequest,
@@ -44,7 +45,11 @@ export async function GET(
     }));
 
     return NextResponse.json(
-      successResponse(normalized, "Logbooks fetched successfully", StatusCodes.OK),
+      successResponse(
+        normalized,
+        "Logbooks fetched successfully",
+        StatusCodes.OK,
+      ),
     );
   } catch (err) {
     console.error("Error fetching logbooks:", err);
@@ -114,7 +119,11 @@ export async function POST(
     };
 
     return NextResponse.json(
-      successResponse(normalized, "Logbook created successfully", StatusCodes.CREATED),
+      successResponse(
+        normalized,
+        "Logbook created successfully",
+        StatusCodes.CREATED,
+      ),
     );
   } catch (err) {
     console.error("Error creating logbook:", err);

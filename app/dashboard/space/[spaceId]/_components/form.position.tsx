@@ -1,5 +1,11 @@
 "use client";
 
+import { zodResolver } from "@hookform/resolvers/zod";
+import { useState } from "react";
+import { Controller, useForm } from "react-hook-form";
+
+import { useCompany } from "@/app/_providers/resources/company.provider";
+import { usePosition } from "@/app/_providers/resources/position.provider";
 import { Button } from "@/components/ui/button";
 import {
   Field,
@@ -15,12 +21,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import { useForm, Controller } from "react-hook-form";
-import { zodResolver } from "@hookform/resolvers/zod";
-import { positionSchema, PositionFormData } from "@/schemas/position";
-import { usePosition } from "@/app/_providers/resources/position.provider";
-import { useCompany } from "@/app/_providers/resources/company.provider";
-import { useState } from "react";
+import { PositionFormData, positionSchema } from "@/schemas/position";
 
 interface PositionFormDialogProps {
   onSuccess?: () => void;
@@ -70,10 +71,10 @@ export function PositionFormDialog({ onSuccess }: PositionFormDialogProps) {
             placeholder="e.g., Senior Developer, Project Manager"
             {...register("role")}
             disabled={isSubmitting || isLoading}
-            className="h-12 text-base px-4"
+            className="h-12 px-4 text-base"
           />
           {errors.role && (
-            <FieldDescription className="text-destructive font-medium text-sm">
+            <FieldDescription className="text-destructive text-sm font-medium">
               {errors.role.message}
             </FieldDescription>
           )}
@@ -95,7 +96,7 @@ export function PositionFormDialog({ onSuccess }: PositionFormDialogProps) {
             control={control}
             render={({ field }) => (
               <Select value={field.value} onValueChange={field.onChange}>
-                <SelectTrigger className="h-12 text-base px-4">
+                <SelectTrigger className="h-12 px-4 text-base">
                   <SelectValue placeholder="Select a company" />
                 </SelectTrigger>
                 <SelectContent>
@@ -109,7 +110,7 @@ export function PositionFormDialog({ onSuccess }: PositionFormDialogProps) {
             )}
           />
           {errors.companyId && (
-            <FieldDescription className="text-destructive font-medium text-sm">
+            <FieldDescription className="text-destructive text-sm font-medium">
               {errors.companyId.message}
             </FieldDescription>
           )}
@@ -125,11 +126,11 @@ export function PositionFormDialog({ onSuccess }: PositionFormDialogProps) {
         <Button
           type="submit"
           disabled={isSubmitting || isLoading}
-          className="flex-1 h-12 text-base font-semibold"
+          className="h-12 flex-1 text-base font-semibold"
         >
           {isSubmitting || isLoading ? (
             <>
-              <span className="animate-spin mr-2">⏳</span>
+              <span className="mr-2 animate-spin">⏳</span>
               Creating...
             </>
           ) : (

@@ -1,5 +1,10 @@
 "use client";
 
+import { zodResolver } from "@hookform/resolvers/zod";
+import { useState } from "react";
+import { useForm } from "react-hook-form";
+
+import { useCompany } from "@/app/_providers/resources/company.provider";
 import { Button } from "@/components/ui/button";
 import {
   Field,
@@ -8,11 +13,7 @@ import {
   FieldLabel,
 } from "@/components/ui/field";
 import { Input } from "@/components/ui/input";
-import { useForm } from "react-hook-form";
-import { zodResolver } from "@hookform/resolvers/zod";
-import { spaceSchema, SpaceFormData } from "@/schemas/space";
-import { useCompany } from "@/app/_providers/resources/company.provider";
-import { useState } from "react";
+import { SpaceFormData, spaceSchema } from "@/schemas/space";
 
 interface SpaceFormDialogProps {
   onSuccess?: () => void;
@@ -58,10 +59,10 @@ export function SpaceFormDialog({ onSuccess }: SpaceFormDialogProps) {
             {...register("name")}
             disabled={isSubmitting || isLoading}
             autoFocus
-            className="h-12 text-base px-4"
+            className="h-12 px-4 text-base"
           />
           {errors.name && (
-            <FieldDescription className="text-destructive font-medium text-sm">
+            <FieldDescription className="text-destructive text-sm font-medium">
               {errors.name.message}
             </FieldDescription>
           )}
@@ -77,11 +78,11 @@ export function SpaceFormDialog({ onSuccess }: SpaceFormDialogProps) {
         <Button
           type="submit"
           disabled={isSubmitting || isLoading}
-          className="flex-1 h-12 text-base font-semibold"
+          className="h-12 flex-1 text-base font-semibold"
         >
           {isSubmitting || isLoading ? (
             <>
-              <span className="animate-spin mr-2">⏳</span>
+              <span className="mr-2 animate-spin">⏳</span>
               Creating...
             </>
           ) : (

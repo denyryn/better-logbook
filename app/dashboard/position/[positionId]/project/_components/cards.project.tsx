@@ -1,11 +1,12 @@
 "use client";
 
 import {
+  IconArrowRight,
   IconArrowUpRight,
   IconPlus,
-  IconArrowRight,
 } from "@tabler/icons-react";
 
+import { useProject } from "@/app/_providers/resources/project.provider";
 import {
   Card,
   CardAction,
@@ -14,8 +15,8 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
+
 import { ProjectDialog } from "./dialog.project";
-import { useProject } from "@/app/_providers/resources/project.provider";
 
 export function ProjectCards() {
   const { projects, getProjects } = useProject();
@@ -23,7 +24,7 @@ export function ProjectCards() {
   return (
     <div className="*:data-[slot=card]:from-primary/5 *:data-[slot=card]:to-card dark:*:data-[slot=card]:bg-card grid grid-cols-1 gap-4 px-4 *:data-[slot=card]:bg-linear-to-t *:data-[slot=card]:shadow-xs lg:px-6 @xl/main:grid-cols-2 @5xl/main:grid-cols-4">
       <ProjectDialog>
-        <Card className="@container/card cursor-pointer transition-all border-2 border-dashed border-primary/30 hover:border-primary/60 hover:shadow-md h-full">
+        <Card className="border-primary/30 hover:border-primary/60 @container/card h-full cursor-pointer border-2 border-dashed transition-all hover:shadow-md">
           <CardHeader>
             <CardDescription>Add Project</CardDescription>
             <CardTitle className="text-2xl font-semibold tabular-nums @[250px]/card:text-3xl">
@@ -44,7 +45,7 @@ export function ProjectCards() {
       {projects.map((project) => (
         <Card
           key={project.id}
-          className="@container/card cursor-pointer transition-all hover:shadow-md h-full group"
+          className="group @container/card h-full cursor-pointer transition-all hover:shadow-md"
         >
           <CardHeader>
             <CardDescription>Space</CardDescription>
@@ -52,7 +53,7 @@ export function ProjectCards() {
               {project.name}
             </CardTitle>
             <CardAction>
-              <IconArrowUpRight className="group-hover:scale-125 transition-transform" />
+              <IconArrowUpRight className="transition-transform group-hover:scale-125" />
             </CardAction>
           </CardHeader>
           <CardFooter className="flex-col items-start gap-1.5 text-sm">

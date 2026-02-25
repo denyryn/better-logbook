@@ -1,20 +1,21 @@
+import { Sparkles } from "lucide-react";
 import { useState } from "react";
 import { UseFormReturn } from "react-hook-form";
-import { FormData } from "../page";
 import { toast } from "sonner";
 
+import { useAi } from "@/app/_providers/ai/ai.provider";
+import { Button } from "@/components/ui/button";
 import {
   Card,
+  CardContent,
+  CardDescription,
   CardHeader,
   CardTitle,
-  CardDescription,
-  CardContent,
 } from "@/components/ui/card";
-import { Tabs, TabsList, TabsTrigger, TabsContent } from "@/components/ui/tabs";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Textarea } from "@/components/ui/textarea";
-import { Sparkles } from "lucide-react";
-import { Button } from "@/components/ui/button";
-import { useAi } from "@/app/_providers/ai/ai.provider";
+
+import { FormData } from "../page";
 
 interface LogbookContentProps {
   form: UseFormReturn<FormData>;
@@ -56,10 +57,10 @@ export function LogbookContent({ form }: LogbookContentProps) {
               className="min-h-75 resize-y"
             />
             {response && response !== content && (
-              <div className="rounded-lg border border-primary/20 bg-primary/5 p-4">
-                <div className="flex items-center justify-between mb-2">
-                  <span className="text-sm font-medium flex items-center gap-2">
-                    <Sparkles className="h-4 w-4 text-primary" />
+              <div className="border-primary/20 bg-primary/5 rounded-lg border p-4">
+                <div className="mb-2 flex items-center justify-between">
+                  <span className="flex items-center gap-2 text-sm font-medium">
+                    <Sparkles className="text-primary h-4 w-4" />
                     AI Improved Version
                   </span>
                   <Button
@@ -70,16 +71,16 @@ export function LogbookContent({ form }: LogbookContentProps) {
                     Use This
                   </Button>
                 </div>
-                <p className="text-sm text-muted-foreground whitespace-pre-wrap">
+                <p className="text-muted-foreground text-sm whitespace-pre-wrap">
                   {response}
                 </p>
               </div>
             )}
           </TabsContent>
           <TabsContent value="preview">
-            <div className="min-h-75 rounded-lg border bg-muted/30 p-4">
+            <div className="bg-muted/30 min-h-75 rounded-lg border p-4">
               {content ? (
-                <p className="whitespace-pre-wrap text-sm">{content}</p>
+                <p className="text-sm whitespace-pre-wrap">{content}</p>
               ) : (
                 <p className="text-muted-foreground text-sm">
                   No content to preview. Start writing in the Edit tab.

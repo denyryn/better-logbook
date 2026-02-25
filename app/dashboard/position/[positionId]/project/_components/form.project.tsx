@@ -1,5 +1,11 @@
 "use client";
 
+import { zodResolver } from "@hookform/resolvers/zod";
+import { useState } from "react";
+import { Controller, useForm } from "react-hook-form";
+
+import { usePosition } from "@/app/_providers/resources/position.provider";
+import { useProject } from "@/app/_providers/resources/project.provider";
 import { Button } from "@/components/ui/button";
 import {
   Field,
@@ -15,12 +21,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import { useForm, Controller } from "react-hook-form";
-import { zodResolver } from "@hookform/resolvers/zod";
-import { useState } from "react";
 import { ProjectFormData, projectSchema } from "@/schemas/project";
-import { useProject } from "@/app/_providers/resources/project.provider";
-import { usePosition } from "@/app/_providers/resources/position.provider";
 
 interface ProjectFormDialogProps {
   onSuccess?: () => void;
@@ -72,10 +73,10 @@ export function ProjectFormDialog({ onSuccess }: ProjectFormDialogProps) {
             {...register("name")}
             disabled={isSubmitting || isLoading}
             autoFocus
-            className="h-12 text-base px-4"
+            className="h-12 px-4 text-base"
           />
           {errors.name && (
-            <FieldDescription className="text-destructive font-medium text-sm">
+            <FieldDescription className="text-destructive text-sm font-medium">
               {errors.name.message}
             </FieldDescription>
           )}
@@ -97,10 +98,10 @@ export function ProjectFormDialog({ onSuccess }: ProjectFormDialogProps) {
             placeholder="e.g., Lead Developer, Technical Lead"
             {...register("scopedRole")}
             disabled={isSubmitting || isLoading}
-            className="h-12 text-base px-4"
+            className="h-12 px-4 text-base"
           />
           {errors.scopedRole && (
-            <FieldDescription className="text-destructive font-medium text-sm">
+            <FieldDescription className="text-destructive text-sm font-medium">
               {errors.scopedRole.message}
             </FieldDescription>
           )}
@@ -117,7 +118,7 @@ export function ProjectFormDialog({ onSuccess }: ProjectFormDialogProps) {
             control={control}
             render={({ field }) => (
               <Select value={field.value} onValueChange={field.onChange}>
-                <SelectTrigger className="h-12 text-base px-4">
+                <SelectTrigger className="h-12 px-4 text-base">
                   <SelectValue placeholder="Select a position" />
                 </SelectTrigger>
                 <SelectContent>
@@ -131,7 +132,7 @@ export function ProjectFormDialog({ onSuccess }: ProjectFormDialogProps) {
             )}
           />
           {errors.positionId && (
-            <FieldDescription className="text-destructive font-medium text-sm">
+            <FieldDescription className="text-destructive text-sm font-medium">
               {errors.positionId.message}
             </FieldDescription>
           )}
@@ -147,11 +148,11 @@ export function ProjectFormDialog({ onSuccess }: ProjectFormDialogProps) {
         <Button
           type="submit"
           disabled={isSubmitting || isLoading}
-          className="flex-1 h-12 text-base font-semibold"
+          className="h-12 flex-1 text-base font-semibold"
         >
           {isSubmitting || isLoading ? (
             <>
-              <span className="animate-spin mr-2">⏳</span>
+              <span className="mr-2 animate-spin">⏳</span>
               Creating...
             </>
           ) : (

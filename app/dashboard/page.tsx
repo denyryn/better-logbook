@@ -1,12 +1,12 @@
 "use client";
 
-import { DataTable } from "@/components/data-table";
-import { SiteHeader } from "@/components/site-header";
-
-import data from "./data.json";
 import { SpaceCards } from "@/app/dashboard/space/_components/cards.space";
 import { ChartAreaInteractive } from "@/components/chart-area-interactive";
+import { DataTable } from "@/components/data-table";
+import { SiteHeader } from "@/components/site-header";
 import { useCompanies } from "@/lib/query/company.query";
+
+import data from "./data.json";
 
 export default function Page() {
   const { data: allCompanies } = useCompanies();

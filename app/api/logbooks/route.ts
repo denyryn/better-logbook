@@ -1,12 +1,11 @@
-import { NextRequest, NextResponse } from "next/server";
-import { prisma } from "@/lib/prisma";
-import { successResponse, errorResponse } from "@/lib/api.response";
 import { StatusCodes } from "http-status-codes";
-import { auth } from "@/lib/auth";
+import { NextRequest, NextResponse } from "next/server";
 
-export async function GET(
-  request: NextRequest,
-) {
+import { errorResponse, successResponse } from "@/lib/api.response";
+import { auth } from "@/lib/auth";
+import { prisma } from "@/lib/prisma";
+
+export async function GET(request: NextRequest) {
   try {
     const session = await auth.api.getSession({ headers: request.headers });
 
@@ -17,7 +16,7 @@ export async function GET(
     }
 
     const logbooks = await prisma.logbook.findMany({
-      where: { project: {userId : session.user.id}, deletedAt: null },
+      where: { project: { userId: session.user.id }, deletedAt: null },
       include: {
         tags: {
           include: { tag: true },
@@ -27,7 +26,11 @@ export async function GET(
     });
 
     return NextResponse.json(
-      successResponse(logbooks, "Logbooks fetched successfully", StatusCodes.OK),
+      successResponse(
+        logbooks,
+        "Logbooks fetched successfully",
+        StatusCodes.OK,
+      ),
     );
   } catch (err) {
     console.error("Error fetching logbooks:", err);
@@ -97,7 +100,11 @@ export async function POST(
     };
 
     return NextResponse.json(
-      successResponse(normalized, "Logbook created successfully", StatusCodes.CREATED),
+      successResponse(
+        normalized,
+        "Logbook created successfully",
+        StatusCodes.CREATED,
+      ),
     );
   } catch (err) {
     console.error("Error creating logbook:", err);

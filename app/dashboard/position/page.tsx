@@ -1,8 +1,13 @@
 "use client";
 
+import { IconPlus } from "@tabler/icons-react";
 import { useEffect } from "react";
-import { usePosition } from "@/app/_providers/resources/position.provider";
+
 import { useCompany } from "@/app/_providers/resources/company.provider";
+import { usePosition } from "@/app/_providers/resources/position.provider";
+import { SiteHeader } from "@/components/site-header";
+import { Button } from "@/components/ui/button";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import {
   Table,
   TableBody,
@@ -11,11 +16,8 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
-import { Button } from "@/components/ui/button";
-import { IconPlus } from "@tabler/icons-react";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+
 import { PositionDialog } from "../_components/dialog.position";
-import { SiteHeader } from "@/components/site-header";
 
 export default function PositionPage() {
   const { positions, isLoading, getPositions } = usePosition();
@@ -39,9 +41,9 @@ export default function PositionPage() {
         );
       case positions.length === 0:
         return (
-          <div className="flex flex-col items-center justify-center py-8 gap-2">
+          <div className="flex flex-col items-center justify-center gap-2 py-8">
             <p className="text-muted-foreground">No positions yet</p>
-            <p className="text-sm text-muted-foreground">
+            <p className="text-muted-foreground text-sm">
               Create your first position to get started
             </p>
           </div>
@@ -78,7 +80,7 @@ export default function PositionPage() {
       <div className="flex flex-1 flex-col">
         <div className="@container/main flex flex-1 flex-col gap-2">
           <div className="flex flex-col gap-4 p-4 md:gap-6 md:p-6">
-            <div className="flex flex-1 items-center justify-end w-full">
+            <div className="flex w-full flex-1 items-center justify-end">
               <PositionDialog>
                 <Button variant={"outline"} className="gap-2">
                   <IconPlus className="size-4" />

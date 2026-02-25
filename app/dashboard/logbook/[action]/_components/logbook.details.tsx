@@ -1,14 +1,3 @@
-import { useState } from "react";
-import { UseFormReturn } from "react-hook-form";
-import { FormData } from "../page";
-
-import {
-  Card,
-  CardContent,
-  CardDescription,
-  CardHeader,
-  CardTitle,
-} from "@/components/ui/card";
 import {
   Briefcase,
   Calendar,
@@ -17,10 +6,20 @@ import {
   FileText,
   Tag,
 } from "lucide-react";
+import { useState } from "react";
+import { UseFormReturn } from "react-hook-form";
+
+import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardHeader,
+  CardTitle,
+} from "@/components/ui/card";
 import { Field, FieldLabel } from "@/components/ui/field";
 import { Input } from "@/components/ui/input";
-import { Badge } from "@/components/ui/badge";
 import {
   Select,
   SelectContent,
@@ -29,6 +28,8 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { Project } from "@/generated/prisma/client";
+
+import { FormData } from "../page";
 
 interface LogbookDetailsProps {
   form: UseFormReturn<FormData>;
@@ -101,7 +102,7 @@ export function LogbookDetails({
           <div className="grid gap-6 sm:grid-cols-2">
             <Field>
               <FieldLabel htmlFor="logDate">
-                <Calendar className="inline h-4 w-4 mr-1" />
+                <Calendar className="mr-1 inline h-4 w-4" />
                 Date
               </FieldLabel>
               <Input id="logDate" type="date" {...register("logDate")} />
@@ -109,7 +110,7 @@ export function LogbookDetails({
 
             <Field>
               <FieldLabel htmlFor="project">
-                <Briefcase className="inline h-4 w-4 mr-1" />
+                <Briefcase className="mr-1 inline h-4 w-4" />
                 Project
               </FieldLabel>
               <Select
@@ -132,7 +133,7 @@ export function LogbookDetails({
 
           <Field>
             <FieldLabel htmlFor="tags">
-              <Tag className="inline h-4 w-4 mr-1" />
+              <Tag className="mr-1 inline h-4 w-4" />
               Tags
             </FieldLabel>
             <div className="flex gap-2">
@@ -154,12 +155,12 @@ export function LogbookDetails({
               </Button>
             </div>
             {tags.length > 0 && (
-              <div className="flex flex-wrap gap-2 mt-2">
+              <div className="mt-2 flex flex-wrap gap-2">
                 {tags.map((tag) => (
                   <Badge
                     key={tag}
                     variant="secondary"
-                    className="cursor-pointer hover:bg-secondary/80"
+                    className="hover:bg-secondary/80 cursor-pointer"
                     onClick={() => handleRemoveTag(tag)}
                   >
                     {tag} ×

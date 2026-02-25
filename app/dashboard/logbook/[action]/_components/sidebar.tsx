@@ -1,12 +1,14 @@
-import { toast } from "sonner";
-import { UseFormReturn } from "react-hook-form";
-import { FormData } from "../page";
-import { useAi } from "@/app/_providers/ai/ai.provider";
-import { Card, CardHeader, CardTitle, CardContent } from "@/components/ui/card";
-import { Button } from "@/components/ui/button";
 import { Loader2, Save, Sparkles } from "lucide-react";
+import { UseFormReturn } from "react-hook-form";
+import { toast } from "sonner";
+
+import { useAi } from "@/app/_providers/ai/ai.provider";
 import { useLogbook } from "@/app/_providers/resources/logbook.provider";
+import { Button } from "@/components/ui/button";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { useCreateLogbook } from "@/lib/query/logbook.query";
+
+import { FormData } from "../page";
 
 interface SidebarProps {
   form: UseFormReturn<FormData>;
@@ -85,7 +87,7 @@ export function Sidebar({ form }: SidebarProps) {
           <CardTitle className="text-base">Tips</CardTitle>
         </CardHeader>
         <CardContent>
-          <ul className="space-y-2 text-sm text-muted-foreground">
+          <ul className="text-muted-foreground space-y-2 text-sm">
             <li className="flex gap-2">
               <span className="text-primary">•</span>
               <span>Be specific about tasks and outcomes</span>

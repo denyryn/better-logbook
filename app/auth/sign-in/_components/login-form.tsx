@@ -1,6 +1,11 @@
 "use client";
 
-import { cn } from "@/lib/utils";
+import { zodResolver } from "@hookform/resolvers/zod";
+import Link from "next/link";
+import { useForm } from "react-hook-form";
+import z from "zod";
+
+import { useAuth } from "@/app/_providers/auth/auth.provider";
 import { Button } from "@/components/ui/button";
 import {
   Card,
@@ -17,12 +22,8 @@ import {
   FieldSeparator,
 } from "@/components/ui/field";
 import { Input } from "@/components/ui/input";
-import Link from "next/link";
-import { useAuth } from "@/app/_providers/auth/auth.provider";
-import z from "zod";
+import { cn } from "@/lib/utils";
 import { loginSchema } from "@/schemas/login";
-import { useForm } from "react-hook-form";
-import { zodResolver } from "@hookform/resolvers/zod";
 
 type LoginFormData = z.infer<typeof loginSchema>;
 

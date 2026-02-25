@@ -1,18 +1,20 @@
 "use client";
 
-import { SiteHeader } from "@/components/site-header";
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { ProjectCards } from "./_components/cards.project";
-import { Button } from "@/components/ui/button";
 import { IconPlus } from "@tabler/icons-react";
-import { PositionDialog } from "./_components/dialog.position";
+import { useParams } from "next/navigation";
 import { useState } from "react";
+
+import { SiteHeader } from "@/components/site-header";
+import { Button } from "@/components/ui/button";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { usePositionsByCompany } from "@/lib/query/position.query";
 import {
   useProjectsByCompany,
   useProjectsByPosition,
 } from "@/lib/query/project.query";
-import { usePositionsByCompany } from "@/lib/query/position.query";
-import { useParams } from "next/navigation";
+
+import { ProjectCards } from "./_components/cards.project";
+import { PositionDialog } from "./_components/dialog.position";
 
 export default function Page() {
   const { spaceId } = useParams<{ spaceId: string }>();
@@ -52,7 +54,7 @@ export default function Page() {
                 </PositionDialog>
               </div>
 
-              <TabsContent value="all" className="flex flex-col ">
+              <TabsContent value="all" className="flex flex-col">
                 <div className="aspect-video w-full flex-1 rounded-lg border border-dashed py-4 md:py-6">
                   <ProjectCards projects={companyProjects?.data} />
                 </div>
@@ -62,7 +64,7 @@ export default function Page() {
                 <TabsContent
                   key={position.id}
                   value={position.id}
-                  className="flex flex-col "
+                  className="flex flex-col"
                 >
                   <div className="aspect-video w-full flex-1 rounded-lg border border-dashed py-4 md:py-6">
                     <ProjectCards

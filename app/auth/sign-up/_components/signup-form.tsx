@@ -1,6 +1,11 @@
 "use client";
 
-import { cn } from "@/lib/utils";
+import { zodResolver } from "@hookform/resolvers/zod";
+import Link from "next/link";
+import { useForm } from "react-hook-form";
+import { z } from "zod";
+
+import { useAuth } from "@/app/_providers/auth/auth.provider";
 import { Button } from "@/components/ui/button";
 import {
   Card,
@@ -16,13 +21,8 @@ import {
   FieldLabel,
 } from "@/components/ui/field";
 import { Input } from "@/components/ui/input";
-
-import { useForm } from "react-hook-form";
-import { zodResolver } from "@hookform/resolvers/zod";
+import { cn } from "@/lib/utils";
 import { signUpSchema } from "@/schemas/sign-up";
-import { z } from "zod";
-import { useAuth } from "@/app/_providers/auth/auth.provider";
-import Link from "next/link";
 
 type SignupFormData = z.infer<typeof signUpSchema>;
 

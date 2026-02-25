@@ -1,19 +1,5 @@
 "use client";
 
-import * as React from "react";
-import { z } from "zod";
-import {
-  ColumnDef,
-  ColumnFiltersState,
-  flexRender,
-  getCoreRowModel,
-  getFilteredRowModel,
-  getPaginationRowModel,
-  getSortedRowModel,
-  SortingState,
-  useReactTable,
-  VisibilityState,
-} from "@tanstack/react-table";
 import {
   IconCalendarEvent,
   IconChevronDown,
@@ -23,13 +9,27 @@ import {
   IconChevronsRight,
   IconLayoutColumns,
   IconPlus,
-  IconTag,
   IconSearch,
+  IconTag,
 } from "@tabler/icons-react";
-import { format, isAfter, isThisMonth, subDays, startOfDay } from "date-fns";
+import {
+  ColumnDef,
+  ColumnFiltersState,
+  SortingState,
+  VisibilityState,
+  flexRender,
+  getCoreRowModel,
+  getFilteredRowModel,
+  getPaginationRowModel,
+  getSortedRowModel,
+  useReactTable,
+} from "@tanstack/react-table";
+import { format, isAfter, isThisMonth, startOfDay, subDays } from "date-fns";
+import { Search } from "lucide-react";
 import Link from "next/link";
+import * as React from "react";
+import { z } from "zod";
 
-import { useIsMobile } from "@/hooks/use-mobile";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Checkbox } from "@/components/ui/checkbox";
@@ -50,6 +50,11 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import { Input } from "@/components/ui/input";
+import {
+  InputGroup,
+  InputGroupAddon,
+  InputGroupInput,
+} from "@/components/ui/input-group";
 import { Label } from "@/components/ui/label";
 import {
   Select,
@@ -67,13 +72,8 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
-import {
-  InputGroup,
-  InputGroupAddon,
-  InputGroupInput,
-} from "@/components/ui/input-group";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { Search } from "lucide-react";
+import { useIsMobile } from "@/hooks/use-mobile";
 import { URLParamsBuilder } from "@/lib/url-params";
 
 export const schema = z.object({
@@ -128,7 +128,7 @@ const columns: ColumnDef<LogbookEntry>[] = [
     accessorKey: "logDate",
     header: "Log Date",
     cell: ({ row }) => (
-      <div className="flex items-center gap-1.5 text-muted-foreground text-sm whitespace-nowrap">
+      <div className="text-muted-foreground flex items-center gap-1.5 text-sm whitespace-nowrap">
         <IconCalendarEvent className="size-3.5 shrink-0" />
         {format(row.original.logDate, "MMM d, yyyy")}
       </div>
@@ -138,7 +138,7 @@ const columns: ColumnDef<LogbookEntry>[] = [
     accessorKey: "content",
     header: "Summary",
     cell: ({ row }) => (
-      <p className="max-w-sm truncate text-sm text-muted-foreground">
+      <p className="text-muted-foreground max-w-sm truncate text-sm">
         {row.original.content}
       </p>
     ),
@@ -156,13 +156,13 @@ const columns: ColumnDef<LogbookEntry>[] = [
             <Badge
               key={tag}
               variant="secondary"
-              className="text-xs px-1.5 py-0"
+              className="px-1.5 py-0 text-xs"
             >
               {tag}
             </Badge>
           ))}
           {tags.length > 3 && (
-            <Badge variant="outline" className="text-xs px-1.5 py-0">
+            <Badge variant="outline" className="px-1.5 py-0 text-xs">
               +{tags.length - 3}
             </Badge>
           )}
@@ -346,7 +346,7 @@ export function LogbookDataTable({ data, projectId }: LogbookDataTableProps) {
             placeholder="Search entries..."
             value={globalFilter}
             onChange={(e) => setGlobalFilter(e.target.value)}
-            className="pl-8 h-10 text-sm"
+            className="h-10 pl-8 text-sm"
           />
         </div>
       </div>
@@ -394,7 +394,7 @@ export function LogbookDataTable({ data, projectId }: LogbookDataTableProps) {
                     <TableRow>
                       <TableCell
                         colSpan={columns.length}
-                        className="h-24 text-center text-muted-foreground"
+                        className="text-muted-foreground h-24 text-center"
                       >
                         No logbook entries found.
                       </TableCell>
@@ -519,8 +519,8 @@ function TableCellViewer({ item }: { item: LogbookEntry }) {
         <Separator />
         <div className="flex flex-col gap-4 overflow-y-auto px-4 py-4 text-sm">
           {item.tags.length > 0 && (
-            <div className="flex flex-wrap gap-1.5 items-center">
-              <IconTag className="size-3.5 text-muted-foreground shrink-0" />
+            <div className="flex flex-wrap items-center gap-1.5">
+              <IconTag className="text-muted-foreground size-3.5 shrink-0" />
               {item.tags.map((tag) => (
                 <Badge key={tag} variant="secondary" className="text-xs">
                   {tag}
@@ -529,7 +529,7 @@ function TableCellViewer({ item }: { item: LogbookEntry }) {
             </div>
           )}
           <div className="flex flex-col gap-2">
-            <Label className="text-xs text-muted-foreground uppercase tracking-wider">
+            <Label className="text-muted-foreground text-xs tracking-wider uppercase">
               Content
             </Label>
             <p className="text-sm leading-relaxed whitespace-pre-wrap">
@@ -537,7 +537,7 @@ function TableCellViewer({ item }: { item: LogbookEntry }) {
             </p>
           </div>
           <Separator />
-          <div className="text-xs text-muted-foreground space-y-1">
+          <div className="text-muted-foreground space-y-1 text-xs">
             <div>
               Created: {format(item.createdAt, "MMM d, yyyy 'at' h:mm a")}
             </div>

@@ -1,6 +1,7 @@
 "use client";
 
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
+
 import { AuthProvider } from "./auth/auth.provider";
 import { UIProvider } from "./ui/ui.provider";
 

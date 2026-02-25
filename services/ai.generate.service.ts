@@ -1,6 +1,6 @@
+import { AIPromptBuilder } from "@/lib/ai/ai.prompt";
 import { ApiResponse, status } from "@/lib/api.response";
 import { api } from "@/lib/axios";
-import { AIPromptBuilder } from "@/lib/ai/ai.prompt";
 
 export class LogbookAIService {
   private text?: string;

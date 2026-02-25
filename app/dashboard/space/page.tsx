@@ -1,8 +1,9 @@
 "use client";
 
 import { SiteHeader } from "@/components/site-header";
-import { SpaceCards } from "./_components/cards.space";
 import { useCompanies } from "@/lib/query/company.query";
+
+import { SpaceCards } from "./_components/cards.space";
 
 export default function Page() {
   const { data: allCompanies } = useCompanies();

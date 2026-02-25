@@ -27,7 +27,7 @@ export function LogbookStatCard({
           {value}
         </CardTitle>
         <CardAction>
-          <Icon className="size-4 text-muted-foreground" />
+          <Icon className="text-muted-foreground size-4" />
         </CardAction>
       </CardHeader>
       <CardFooter className="flex-col items-start gap-1.5 text-sm">

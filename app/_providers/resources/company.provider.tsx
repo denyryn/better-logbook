@@ -1,17 +1,19 @@
-import { Company } from "@/generated/prisma/client";
 import {
   createContext,
+  useCallback,
   useContext,
-  useState,
   useEffect,
   useRef,
-  useCallback,
+  useState,
 } from "react";
-import { CompanyService } from "@/services/company";
-import { useAuth } from "../auth/auth.provider";
-import { status } from "@/lib/api.response";
 import { toast } from "sonner";
+
+import { Company } from "@/generated/prisma/client";
+import { status } from "@/lib/api.response";
+import { CompanyService } from "@/services/company";
 import { CompanyWithPositions } from "@/types/prisma/companies";
+
+import { useAuth } from "../auth/auth.provider";
 
 interface CompanyContextType {
   companies: CompanyWithPositions[];

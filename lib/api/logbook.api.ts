@@ -2,10 +2,11 @@ import { ApiResponse } from "@/lib/api.response";
 import { api } from "@/lib/axios";
 import { LogbookWithRelations } from "@/types/prisma/logbooks";
 
-export async function getLogbooks(): Promise<ApiResponse<LogbookWithRelations[]>> {
-  const { data } = await api.get<ApiResponse<LogbookWithRelations[]>>(
-    `/api/logbooks`,
-  );
+export async function getLogbooks(): Promise<
+  ApiResponse<LogbookWithRelations[]>
+> {
+  const { data } =
+    await api.get<ApiResponse<LogbookWithRelations[]>>(`/api/logbooks`);
   return data;
 }
 

@@ -1,7 +1,7 @@
 import { ScrollText } from "lucide-react";
 
-import { config } from "@/lib/config";
 import { SignupForm } from "@/app/auth/sign-up/_components/signup-form";
+import { config } from "@/lib/config";
 
 export default function SignupPage() {
   return (

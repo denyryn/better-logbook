@@ -1,6 +1,7 @@
 "use client";
 
 import { useState } from "react";
+
 import {
   Sheet,
   SheetContent,
@@ -9,6 +10,7 @@ import {
   SheetTitle,
   SheetTrigger,
 } from "@/components/ui/sheet";
+
 import { ProjectFormDialog } from "./form.project";
 
 export function ProjectDialog({ children }: React.PropsWithChildren) {
@@ -17,9 +19,9 @@ export function ProjectDialog({ children }: React.PropsWithChildren) {
   return (
     <Sheet open={open} onOpenChange={setOpen}>
       <SheetTrigger asChild>{children}</SheetTrigger>
-      <SheetContent side="right" className="w-full sm:max-w-md p-0">
-        <div className="flex flex-col h-full">
-          <SheetHeader className="border-b px-6 py-8 space-y-3">
+      <SheetContent side="right" className="w-full p-0 sm:max-w-md">
+        <div className="flex h-full flex-col">
+          <SheetHeader className="space-y-3 border-b px-6 py-8">
             <SheetTitle className="text-3xl font-bold">
               Create New Project
             </SheetTitle>

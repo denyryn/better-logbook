@@ -1,5 +1,5 @@
 export class URLParamsBuilder {
-  private params: {param: string, value: string}[];
+  private params: { param: string; value: string }[];
   private baseUrl: string;
 
   constructor(baseUrl: string) {
@@ -17,8 +17,11 @@ export class URLParamsBuilder {
       return this.baseUrl;
     }
     const queryString = this.params
-      .map(({ param, value }) => `${encodeURIComponent(param)}=${encodeURIComponent(value)}`)
-      .join('&');
+      .map(
+        ({ param, value }) =>
+          `${encodeURIComponent(param)}=${encodeURIComponent(value)}`,
+      )
+      .join("&");
     return `${this.baseUrl}?${queryString}`;
   }
 }

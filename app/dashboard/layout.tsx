@@ -2,10 +2,11 @@
 
 import { AppSidebar } from "@/components/app-sidebar";
 import { SidebarInset, SidebarProvider } from "@/components/ui/sidebar";
+
 import { AiProvider } from "../_providers/ai/ai.provider";
+import { CompanyProvider } from "../_providers/resources/company.provider";
 import { LogbookProvider } from "../_providers/resources/logbook.provider";
 import { ProjectProvider } from "../_providers/resources/project.provider";
-import { CompanyProvider } from "../_providers/resources/company.provider";
 import { TagProvider } from "../_providers/resources/tag.provider";
 
 interface AuthenticatedLayoutProps {

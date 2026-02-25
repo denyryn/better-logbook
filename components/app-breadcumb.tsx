@@ -1,5 +1,10 @@
 "use client";
 
+import { IconChevronRight, IconHome } from "@tabler/icons-react";
+import Link from "next/link";
+import { usePathname } from "next/navigation";
+import { Fragment } from "react";
+
 import {
   Breadcrumb,
   BreadcrumbItem,
@@ -8,10 +13,6 @@ import {
   BreadcrumbPage,
   BreadcrumbSeparator,
 } from "@/components/ui/breadcrumb";
-import { usePathname } from "next/navigation";
-import Link from "next/link";
-import { Fragment } from "react";
-import { IconHome, IconChevronRight } from "@tabler/icons-react";
 
 const formatSegment = (segment: string): string => {
   // Handle URL parameters like [id], [action]
@@ -61,7 +62,7 @@ export function AppBreadcrumb() {
           <BreadcrumbLink asChild>
             <Link
               href="/dashboard"
-              className="flex items-center gap-1.5 hover:text-foreground transition-colors"
+              className="hover:text-foreground flex items-center gap-1.5 transition-colors"
             >
               <IconHome className="size-4" />
               <span className="sr-only sm:not-sr-only">Home</span>
@@ -77,11 +78,11 @@ export function AppBreadcrumb() {
           return (
             <Fragment key={href}>
               <BreadcrumbSeparator>
-                <IconChevronRight className="size-4 text-muted-foreground" />
+                <IconChevronRight className="text-muted-foreground size-4" />
               </BreadcrumbSeparator>
               <BreadcrumbItem>
                 {isLast ? (
-                  <BreadcrumbPage className="font-semibold text-foreground">
+                  <BreadcrumbPage className="text-foreground font-semibold">
                     {label}
                   </BreadcrumbPage>
                 ) : (

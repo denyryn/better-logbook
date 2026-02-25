@@ -1,9 +1,13 @@
-import { NextRequest, NextResponse } from "next/server";
-import { success, error, status } from "@/lib/api.response";
-import { prisma } from "@/lib/prisma";
 import { StatusCodes } from "http-status-codes";
+import { NextRequest, NextResponse } from "next/server";
 
-export async function GET(request: NextRequest, { params }: { params: Promise<{companyId:string}> }) {
+import { error, status, success } from "@/lib/api.response";
+import { prisma } from "@/lib/prisma";
+
+export async function GET(
+  request: NextRequest,
+  { params }: { params: Promise<{ companyId: string }> },
+) {
   try {
     const { companyId } = await params;
     const position = await prisma.position.findMany({ where: { companyId } });

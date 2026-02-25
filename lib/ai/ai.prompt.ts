@@ -1,8 +1,10 @@
-type Role = "system" | "user" | "administrator";
-import { config } from "../config";
-import { api } from "../axios";
-import { ApiResponse } from "../api.response";
 import { AxiosResponse } from "axios";
+
+import { ApiResponse } from "../api.response";
+import { api } from "../axios";
+import { config } from "../config";
+
+type Role = "system" | "user" | "administrator";
 
 export class AIPromptBuilder {
   private prompt: Array<string>;

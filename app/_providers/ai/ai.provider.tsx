@@ -1,7 +1,8 @@
-import { LogbookAIService } from "@/services/ai.generate.service";
-import { ApiResponse, status } from "@/lib/api.response";
 import { createContext, useContext, useState } from "react";
 import { toast } from "sonner";
+
+import { ApiResponse, status } from "@/lib/api.response";
+import { LogbookAIService } from "@/services/ai.generate.service";
 
 interface AiContextType {
   state: "idle" | "loading" | "success" | "error";

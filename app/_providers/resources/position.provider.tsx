@@ -1,19 +1,21 @@
 "use client";
 
-import { Position } from "@/generated/prisma/client";
+import { useParams } from "next/navigation";
 import {
   createContext,
+  useCallback,
   useContext,
-  useState,
   useEffect,
   useRef,
-  useCallback,
+  useState,
 } from "react";
-import { PositionService } from "@/services/position";
-import { useAuth } from "../auth/auth.provider";
-import { status } from "@/lib/api.response";
 import { toast } from "sonner";
-import { useParams } from "next/navigation";
+
+import { Position } from "@/generated/prisma/client";
+import { status } from "@/lib/api.response";
+import { PositionService } from "@/services/position";
+
+import { useAuth } from "../auth/auth.provider";
 
 interface PositionContextType {
   positions: Position[];

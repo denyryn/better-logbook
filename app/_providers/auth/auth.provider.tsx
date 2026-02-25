@@ -1,20 +1,21 @@
 "use client";
 
-import {
-  createContext,
-  useState,
-  useContext,
-  ReactNode,
-  useEffect,
-} from "react";
-import { authClient } from "@/lib/auth-client";
-import { UserSignUp, UserLogin, User } from "@/types/user";
-import { signUpSchema } from "@/schemas/sign-up";
 import { StatusCodes } from "http-status-codes";
-import { successResponse, errorResponse } from "@/lib/api.response";
-import { type ApiResponse } from "@/lib/api.response";
+import {
+  ReactNode,
+  createContext,
+  useContext,
+  useEffect,
+  useState,
+} from "react";
 import { toast } from "sonner";
+
+import { errorResponse, successResponse } from "@/lib/api.response";
+import { type ApiResponse } from "@/lib/api.response";
+import { authClient } from "@/lib/auth-client";
 import { config } from "@/lib/config";
+import { signUpSchema } from "@/schemas/sign-up";
+import { User, UserLogin, UserSignUp } from "@/types/user";
 
 interface AuthResponse {
   token?: string;

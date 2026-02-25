@@ -1,4 +1,5 @@
 import { Position } from "@/generated/prisma/client";
+
 import { ApiResponse } from "../api.response";
 import { api } from "../axios";
 
@@ -16,7 +17,7 @@ export async function getPositionsByCompany(companyId: string) {
   if (!companyId) throw new Error("Company ID is required");
 
   const { data } = await api.get<ApiResponse<Position[]>>(
-    `${getBaseUrl(companyId)}`
+    `${getBaseUrl(companyId)}`,
   );
   return data;
 }

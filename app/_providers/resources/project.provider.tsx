@@ -1,18 +1,20 @@
 "use client";
 
-import { Project } from "@/generated/prisma/client";
 import {
   createContext,
+  useCallback,
   useContext,
-  useState,
   useEffect,
   useRef,
-  useCallback,
+  useState,
 } from "react";
-import { ProjectService } from "@/services/project";
-import { useAuth } from "../auth/auth.provider";
-import { ApiResponse, status } from "@/lib/api.response";
 import { toast } from "sonner";
+
+import { Project } from "@/generated/prisma/client";
+import { ApiResponse, status } from "@/lib/api.response";
+import { ProjectService } from "@/services/project";
+
+import { useAuth } from "../auth/auth.provider";
 
 interface ProjectContextType {
   projects: Project[];

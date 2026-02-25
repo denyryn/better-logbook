@@ -1,5 +1,10 @@
 import { useQuery } from "@tanstack/react-query";
-import { getProjects, getProjectsByCompany, getProjectsByPosition } from "../api/project.api";
+
+import {
+  getProjects,
+  getProjectsByCompany,
+  getProjectsByPosition,
+} from "../api/project.api";
 
 export function useProjects() {
   return useQuery({

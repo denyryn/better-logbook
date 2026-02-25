@@ -1,6 +1,12 @@
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
-import {createLogbook, getLogbooks, getLogbooksByProject } from "../api/logbook.api";
+
 import { Logbook } from "@/generated/prisma/client";
+
+import {
+  createLogbook,
+  getLogbooks,
+  getLogbooksByProject,
+} from "../api/logbook.api";
 
 export function useLogbooks() {
   return useQuery({
@@ -20,9 +26,10 @@ export function useLogbooksByProject(projectId: string) {
 export function useCreateLogbook() {
   const queryClient = useQueryClient();
   return useMutation({
-  mutationFn: (logbookData: Partial<Logbook>) => createLogbook(logbookData.projectId!, logbookData),
-  onSuccess: () => {
-    queryClient.invalidateQueries({ queryKey: ["logbooks"] });
+    mutationFn: (logbookData: Partial<Logbook>) =>
+      createLogbook(logbookData.projectId!, logbookData),
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["logbooks"] });
     },
   });
 }
