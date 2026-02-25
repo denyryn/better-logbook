@@ -4,11 +4,14 @@ import {
   ChevronDown,
   ChevronUp,
   FileText,
+  Sparkles,
   Tag,
 } from "lucide-react";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { UseFormReturn } from "react-hook-form";
+import { toast } from "sonner";
 
+import { useAi } from "@/app/_providers/ai/ai.provider";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import {
@@ -44,6 +47,7 @@ export function LogbookDetails({
   setNewTag,
   projects,
 }: LogbookDetailsProps) {
+  const { state, produceLogbookDetails, response } = useAi();
   const { register, watch, setValue } = form;
   const tags = watch("tags");
   const [isDetailsCollapsed, setIsDetailsCollapsed] = useState(true);
@@ -62,6 +66,39 @@ export function LogbookDetails({
     );
   }
 
+  function handleProduceDetails() {
+    if (state === "loading") return;
+    if (!watch("content").trim()) {
+      toast.error("Please enter some content to generate details");
+      return;
+    }
+
+    produceLogbookDetails(watch("content"));
+  }
+
+  useEffect(() => {
+    if (!response?.logbookDetails) return;
+
+    function applyProducedDetails() {
+      if (!response?.logbookDetails) return;
+
+      function setNewTagsFromResponse() {
+        response?.logbookDetails?.tags?.forEach((tag: string) => {
+          if (!tags.includes(tag)) {
+            setValue("tags", [...watch("tags"), tag]);
+          }
+        });
+      }
+
+      setValue("title", response?.logbookDetails?.title);
+      setNewTagsFromResponse();
+    }
+
+    applyProducedDetails();
+  }, [response?.logbookDetails, setValue, watch, tags]);
+
+  const ChevronIcon = isDetailsCollapsed ? ChevronDown : ChevronUp;
+
   return (
     <Card>
       <CardHeader>
@@ -70,18 +107,27 @@ export function LogbookDetails({
             <FileText className="h-5 w-5" />
             <CardTitle>Logbook Details</CardTitle>
           </div>
-          <Button
-            variant="ghost"
-            size="sm"
-            onClick={() => setIsDetailsCollapsed(!isDetailsCollapsed)}
-            className="h-8 w-8 p-0"
-          >
-            {isDetailsCollapsed ? (
-              <ChevronDown className="h-4 w-4" />
-            ) : (
-              <ChevronUp className="h-4 w-4" />
-            )}
-          </Button>
+
+          <div className="flex gap-4">
+            <Button
+              variant="default"
+              size="sm"
+              disabled={state === "loading"}
+              onClick={handleProduceDetails}
+              className="h-8 w-8 p-0"
+            >
+              <Sparkles className="h-4 w-4" />
+            </Button>
+
+            <Button
+              variant="ghost"
+              size="sm"
+              onClick={() => setIsDetailsCollapsed(!isDetailsCollapsed)}
+              className="h-8 w-8 p-0"
+            >
+              <ChevronIcon className="h-4 w-4" />
+            </Button>
+          </div>
         </div>
         <CardDescription>
           Create a new logbook entry for your work activities

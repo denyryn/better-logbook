@@ -1,10 +1,12 @@
-import { useQuery } from "@tanstack/react-query";
+import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 
 import {
+  createProject,
   getProjects,
   getProjectsByCompany,
   getProjectsByPosition,
 } from "../api/project.api";
+import { Project } from "@/generated/prisma/client";
 
 export function useProjects() {
   return useQuery({
@@ -26,5 +28,16 @@ export function useProjectsByCompany(companyId: string) {
     queryKey: ["projects", companyId],
     queryFn: () => getProjectsByCompany(companyId),
     enabled: !!companyId,
+  });
+}
+
+export function useCreateProject() {
+  const queryClient = useQueryClient();
+  return useMutation({
+    mutationFn: (projectData: Partial<Project>) =>
+      createProject(projectData),
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["projects"] });
+    },
   });
 }

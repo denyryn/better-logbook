@@ -21,6 +21,8 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
+import { usePositions } from "@/lib/query/position.query";
+import { useCreateProject } from "@/lib/query/project.query";
 import { ProjectFormData, projectSchema } from "@/schemas/project";
 
 interface ProjectFormDialogProps {
@@ -39,14 +41,14 @@ export function ProjectFormDialog({ onSuccess }: ProjectFormDialogProps) {
     mode: "onBlur",
   });
 
-  const { addProject } = useProject();
-  const { positions } = usePosition();
+  const { mutate: createProject } = useCreateProject();
+  const { data: allPositions } = usePositions();
   const [isLoading, setIsLoading] = useState(false);
 
   const onSubmit = async (data: ProjectFormData) => {
     try {
       setIsLoading(true);
-      await addProject({
+      createProject({
         name: data.name,
         scopedRole: data.scopedRole,
         positionId: data.positionId,
@@ -122,9 +124,9 @@ export function ProjectFormDialog({ onSuccess }: ProjectFormDialogProps) {
                   <SelectValue placeholder="Select a position" />
                 </SelectTrigger>
                 <SelectContent>
-                  {positions.map((position) => (
+                  {allPositions?.data.map((position) => (
                     <SelectItem key={position.id} value={position.id}>
-                      {position.role || "No Role"}
+                      {`${position.role} @ ${position.company.name}`}
                     </SelectItem>
                   ))}
                 </SelectContent>

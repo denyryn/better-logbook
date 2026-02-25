@@ -1,13 +1,23 @@
 import { createContext, useContext, useState } from "react";
 import { toast } from "sonner";
 
+import type {
+  ExpectedImprovedLogbookEntryResponse,
+  ExpectedProduceLogbookDetailsResponse,
+} from "@/lib/ai/instructions/entry.logbook";
 import { ApiResponse, status } from "@/lib/api.response";
 import { LogbookAIService } from "@/services/ai.generate.service";
 
+export type AIResponse = {
+  improvedText?: ExpectedImprovedLogbookEntryResponse;
+  logbookDetails?: ExpectedProduceLogbookDetailsResponse;
+};
+
 interface AiContextType {
   state: "idle" | "loading" | "success" | "error";
-  response: string | null;
-  improve: (logbookText: string) => Promise<void>;
+  response: AIResponse | null;
+  improveLogbookText: (logbookText: string) => Promise<void>;
+  produceLogbookDetails: (logbookText: string) => Promise<void>;
 }
 
 export const AiContext = createContext<AiContextType | null>(null);
@@ -31,7 +41,7 @@ export function AiProvider({ children }: { children: React.ReactNode }) {
         return;
       }
 
-      setResponse(response.data);
+      setResponse({ improvedText: response.data });
       setState("success");
       toast.success("Logbook text improved successfully!");
     } catch (err) {
@@ -43,12 +53,38 @@ export function AiProvider({ children }: { children: React.ReactNode }) {
     }
   };
 
+  const handleProduceLogbookDetails = async (logbookText: string) => {
+    setState("loading");
+    try {
+      const response = (await new LogbookAIService(
+        logbookText,
+      ).produceLogbookDetails("client")) as ApiResponse<string>;
+
+      if (response.status === status.ERROR) {
+        setState("error");
+        toast.error("Failed to produce logbook details. Please try again.");
+        return;
+      }
+
+      setResponse({ logbookDetails: JSON.parse(response.data) });
+      setState("success");
+      toast.success("Logbook details produced successfully!");
+    } catch (err) {
+      setState("error");
+      toast.error("Failed to produce logbook details. Please try again.");
+      console.error("AI request failed:", err);
+    } finally {
+      setState("idle");
+    }
+  };
+
   return (
     <AiContext.Provider
       value={{
         state,
         response: response,
-        improve: handleImproveLogbookText,
+        improveLogbookText: handleImproveLogbookText,
+        produceLogbookDetails: handleProduceLogbookDetails,
       }}
     >
       {children}

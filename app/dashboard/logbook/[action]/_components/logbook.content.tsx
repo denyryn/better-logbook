@@ -30,7 +30,7 @@ export function LogbookContent({ form }: LogbookContentProps) {
   // Update content when AI improves it
   function handleUseImprovedText() {
     if (response) {
-      setValue("content", response);
+      setValue("content", response.improvedText as string);
       toast.success("Applied improved text");
     }
   }
@@ -56,7 +56,7 @@ export function LogbookContent({ form }: LogbookContentProps) {
               placeholder="Describe what you worked on today..."
               className="min-h-75 resize-y"
             />
-            {response && response !== content && (
+            {response?.improvedText && response.improvedText !== content && (
               <div className="border-primary/20 bg-primary/5 rounded-lg border p-4">
                 <div className="mb-2 flex items-center justify-between">
                   <span className="flex items-center gap-2 text-sm font-medium">
@@ -72,7 +72,7 @@ export function LogbookContent({ form }: LogbookContentProps) {
                   </Button>
                 </div>
                 <p className="text-muted-foreground text-sm whitespace-pre-wrap">
-                  {response}
+                  {response.improvedText}
                 </p>
               </div>
             )}

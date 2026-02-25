@@ -7,6 +7,7 @@ import {
   IconChevronRight,
   IconChevronsLeft,
   IconChevronsRight,
+  IconDotsVertical,
   IconLayoutColumns,
   IconPlus,
   IconSearch,
@@ -47,6 +48,8 @@ import {
   DropdownMenu,
   DropdownMenuCheckboxItem,
   DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import { Input } from "@/components/ui/input";
@@ -82,7 +85,16 @@ export const schema = z.object({
   content: z.string(),
   logDate: z.coerce.date(),
   projectId: z.string(),
-  tags: z.array(z.string()),
+  tags: z
+    .array(
+      z.object({
+        logbookId: z.string(),
+        tagId: z.string(),
+        tag: z.object({ name: z.string() }),
+      }),
+    )
+    .nullable()
+    .default([]),
   createdAt: z.coerce.date(),
   updatedAt: z.coerce.date(),
   deletedAt: z.coerce.date().nullable(),
@@ -148,17 +160,18 @@ const columns: ColumnDef<LogbookEntry>[] = [
     header: "Tags",
     cell: ({ row }) => {
       const tags = row.original.tags;
-      if (!tags.length)
+      console.log("Rendering tags for row:", row.id, "with tags:", tags);
+      if (!tags?.length)
         return <span className="text-muted-foreground text-sm">—</span>;
       return (
         <div className="flex flex-wrap gap-1">
-          {tags.slice(0, 3).map((tag) => (
+          {tags?.slice(0, 3).map((tag, index) => (
             <Badge
-              key={tag}
+              key={`${tag}-${index}`}
               variant="secondary"
               className="px-1.5 py-0 text-xs"
             >
-              {tag}
+              {tag.tag.name}
             </Badge>
           ))}
           {tags.length > 3 && (
@@ -171,13 +184,37 @@ const columns: ColumnDef<LogbookEntry>[] = [
     },
     enableSorting: false,
   },
+  {
+    id: "actions",
+    cell: () => (
+      <DropdownMenu>
+        <DropdownMenuTrigger asChild>
+          <Button
+            variant="ghost"
+            className="data-[state=open]:bg-muted text-muted-foreground flex size-8"
+            size="icon"
+          >
+            <IconDotsVertical />
+            <span className="sr-only">Open menu</span>
+          </Button>
+        </DropdownMenuTrigger>
+        <DropdownMenuContent align="end" className="w-32">
+          <DropdownMenuItem>Edit</DropdownMenuItem>
+          <DropdownMenuItem>Make a copy</DropdownMenuItem>
+          <DropdownMenuItem>Favorite</DropdownMenuItem>
+          <DropdownMenuSeparator />
+          <DropdownMenuItem variant="destructive">Delete</DropdownMenuItem>
+        </DropdownMenuContent>
+      </DropdownMenu>
+    ),
+  },
 ];
 
 // ─── Table Component ──────────────────────────────────────────────────────────
 
 interface LogbookDataTableProps {
-  data: LogbookEntry[];
-  projectId: string;
+  data: LogbookEntry[] | undefined;
+  projectId?: string;
 }
 
 export function LogbookDataTable({ data, projectId }: LogbookDataTableProps) {
@@ -204,25 +241,25 @@ export function LogbookDataTable({ data, projectId }: LogbookDataTableProps) {
 
   const filteredData = React.useMemo(() => {
     if (activeTab === "week") {
-      return data.filter((entry) => isAfter(entry.logDate, sevenDaysAgo));
+      return data?.filter((entry) => isAfter(entry.logDate, sevenDaysAgo));
     }
     if (activeTab === "month") {
-      return data.filter((entry) => isThisMonth(entry.logDate));
+      return data?.filter((entry) => isThisMonth(entry.logDate));
     }
     return data;
   }, [data, activeTab, sevenDaysAgo]);
 
   const weekCount = React.useMemo(
-    () => data.filter((e) => isAfter(e.logDate, sevenDaysAgo)).length,
+    () => data?.filter((e) => isAfter(e.logDate, sevenDaysAgo)).length,
     [data, sevenDaysAgo],
   );
   const monthCount = React.useMemo(
-    () => data.filter((e) => isThisMonth(e.logDate)).length,
+    () => data?.filter((e) => isThisMonth(e.logDate)).length,
     [data],
   );
 
   const table = useReactTable({
-    data: filteredData,
+    data: filteredData as LogbookEntry[],
     columns,
     state: {
       sorting,
@@ -237,7 +274,9 @@ export function LogbookDataTable({ data, projectId }: LogbookDataTableProps) {
       return (
         (row.original.title?.toLowerCase().includes(search) ?? false) ||
         row.original.content.toLowerCase().includes(search) ||
-        row.original.tags.some((t) => t.toLowerCase().includes(search))
+        row.original.tags?.some((t) =>
+          t.tag.name.toLowerCase().includes(search),
+        )
       );
     },
     getRowId: (row) => row.id,
@@ -255,7 +294,7 @@ export function LogbookDataTable({ data, projectId }: LogbookDataTableProps) {
   });
 
   const addEntryLink = new URLParamsBuilder("/dashboard/logbook/create")
-    .addParam("projectId", projectId)
+    .addParam("projectId", projectId!)
     .toString();
 
   return (
@@ -287,7 +326,7 @@ export function LogbookDataTable({ data, projectId }: LogbookDataTableProps) {
         {/* Desktop tabs */}
         <TabsList className="**:data-[slot=badge]:bg-muted-foreground/30 hidden **:data-[slot=badge]:size-5 **:data-[slot=badge]:rounded-full **:data-[slot=badge]:px-1 @4xl/main:flex">
           <TabsTrigger value="all">
-            All Entries <Badge variant="secondary">{data.length}</Badge>
+            All Entries <Badge variant="secondary">{data?.length}</Badge>
           </TabsTrigger>
           <TabsTrigger value="week">
             Past 7 Days <Badge variant="secondary">{weekCount}</Badge>
@@ -518,12 +557,12 @@ function TableCellViewer({ item }: { item: LogbookEntry }) {
         </DrawerHeader>
         <Separator />
         <div className="flex flex-col gap-4 overflow-y-auto px-4 py-4 text-sm">
-          {item.tags.length > 0 && (
+          {item.tags && item.tags?.length > 0 && (
             <div className="flex flex-wrap items-center gap-1.5">
               <IconTag className="text-muted-foreground size-3.5 shrink-0" />
-              {item.tags.map((tag) => (
-                <Badge key={tag} variant="secondary" className="text-xs">
-                  {tag}
+              {item.tags?.map((tag) => (
+                <Badge key={tag.tagId} variant="secondary" className="text-xs">
+                  {tag.tag.name}
                 </Badge>
               ))}
             </div>

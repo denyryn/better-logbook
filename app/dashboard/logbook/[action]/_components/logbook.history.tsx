@@ -28,10 +28,6 @@ type LogbookTag = {
   };
 };
 
-type LogbookWithTags = Logbook & {
-  tags?: LogbookTag[];
-};
-
 export function LogbookHistory() {
   const { data: allLogbooks, isLoading } = useLogbooks();
   const { data: allProjects } = useProjects();

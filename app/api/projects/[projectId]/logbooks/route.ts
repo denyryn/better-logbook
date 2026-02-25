@@ -4,6 +4,7 @@ import { NextRequest, NextResponse } from "next/server";
 import { errorResponse, successResponse } from "@/lib/api.response";
 import { auth } from "@/lib/auth";
 import { prisma } from "@/lib/prisma";
+import { logbookWithRelationsQuery } from "@/types/prisma/logbooks";
 
 export async function GET(
   request: NextRequest,
@@ -31,22 +32,12 @@ export async function GET(
 
     const logbooks = await prisma.logbook.findMany({
       where: { projectId, deletedAt: null },
-      include: {
-        tags: {
-          include: { tag: true },
-        },
-      },
-      orderBy: { logDate: "desc" },
+      ...logbookWithRelationsQuery
     });
-
-    const normalized = logbooks.map((entry) => ({
-      ...entry,
-      tags: entry.tags.map((t) => t.tag.name),
-    }));
 
     return NextResponse.json(
       successResponse(
-        normalized,
+        logbooks,
         "Logbooks fetched successfully",
         StatusCodes.OK,
       ),

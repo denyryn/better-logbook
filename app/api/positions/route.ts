@@ -2,6 +2,7 @@ import { StatusCodes } from "http-status-codes";
 import { NextRequest, NextResponse } from "next/server";
 
 import { Position } from "@/generated/prisma/client";
+import { positionWithRelationsQuery } from "@/types/prisma/positions";
 import { error, success } from "@/lib/api.response";
 import { auth } from "@/lib/auth";
 import { prisma } from "@/lib/prisma";
@@ -11,6 +12,7 @@ export async function GET(request: NextRequest) {
     const session = await auth.api.getSession({ headers: request.headers });
     const positions = await prisma.position.findMany({
       where: { company: { userId: session?.user.id } },
+      ...positionWithRelationsQuery,
     });
     return NextResponse.json(
       success(positions, "Positions fetched successfully", StatusCodes.OK),

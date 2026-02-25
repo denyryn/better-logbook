@@ -14,10 +14,7 @@ export async function POST(request: NextRequest) {
   );
 
   try {
-    const prompt = await new LogbookAIService(body.prompt).improveText(
-      "server",
-    );
-
+    const { prompt } = body
     const response = await ai.ask(prompt as string);
 
     return NextResponse.json(

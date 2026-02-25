@@ -3,7 +3,6 @@ import { UseFormReturn } from "react-hook-form";
 import { toast } from "sonner";
 
 import { useAi } from "@/app/_providers/ai/ai.provider";
-import { useLogbook } from "@/app/_providers/resources/logbook.provider";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { useCreateLogbook } from "@/lib/query/logbook.query";
@@ -15,7 +14,7 @@ interface SidebarProps {
 }
 
 export function Sidebar({ form }: SidebarProps) {
-  const { state, improve } = useAi();
+  const { state, improveLogbookText } = useAi();
   const { mutate: addLogbook } = useCreateLogbook();
   const { watch } = form;
   const formData = watch();
@@ -47,7 +46,7 @@ export function Sidebar({ form }: SidebarProps) {
       toast.error("Please enter some content to improve");
       return;
     }
-    await improve(formData.content);
+    await improveLogbookText(formData.content);
   }
   return (
     <div className="flex flex-col gap-4">
