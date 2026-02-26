@@ -132,10 +132,10 @@ model Logbook {
   createdAt   DateTime  @default(now())
   updatedAt   DateTime  @updatedAt
   deletedAt   DateTime?
-  
+
   tags        LogbookTag[]
 
-  @@index([projectId, logDate])
+  @@index([projectId, logDate, deletedAt])
   @@unique([projectId, logDate])
 
   @@map("logbook")
@@ -160,6 +160,6 @@ model LogbookTag {
 
   @@id([logbookId, tagId])
   @@index([tagId])
-  
+
   @@map("logbook_tag")
 }

@@ -106,6 +106,14 @@ export type LogbookEntry = z.infer<typeof schema>;
 
 const columns: ColumnDef<LogbookEntry>[] = [
   {
+    id: "number",
+    cell: ({ row }) => (
+      <span className="text-muted-foreground px-2 text-sm">
+        {row.index + 1}
+      </span>
+    ),
+  },
+  {
     id: "select",
     header: ({ table }) => (
       <div className="flex items-center justify-center">
@@ -160,7 +168,6 @@ const columns: ColumnDef<LogbookEntry>[] = [
     header: "Tags",
     cell: ({ row }) => {
       const tags = row.original.tags;
-      console.log("Rendering tags for row:", row.id, "with tags:", tags);
       if (!tags?.length)
         return <span className="text-muted-foreground text-sm">—</span>;
       return (
@@ -168,8 +175,8 @@ const columns: ColumnDef<LogbookEntry>[] = [
           {tags?.slice(0, 3).map((tag, index) => (
             <Badge
               key={`${tag}-${index}`}
-              variant="secondary"
-              className="px-1.5 py-0 text-xs"
+              variant="outline"
+              className="px-2 py-1 text-xs"
             >
               {tag.tag.name}
             </Badge>

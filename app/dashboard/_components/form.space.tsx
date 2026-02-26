@@ -4,7 +4,6 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { useState } from "react";
 import { useForm } from "react-hook-form";
 
-import { useCompany } from "@/app/_providers/resources/company.provider";
 import { Button } from "@/components/ui/button";
 import {
   Field,
@@ -13,6 +12,7 @@ import {
   FieldLabel,
 } from "@/components/ui/field";
 import { Input } from "@/components/ui/input";
+import { useCreateCompany } from "@/lib/query/company.query";
 import { SpaceFormData, spaceSchema } from "@/schemas/space";
 
 interface SpaceFormDialogProps {
@@ -30,13 +30,13 @@ export function SpaceFormDialog({ onSuccess }: SpaceFormDialogProps) {
     mode: "onBlur",
   });
 
-  const { addCompany } = useCompany();
+  const { mutateAsync: createCompany } = useCreateCompany();
   const [isLoading, setIsLoading] = useState(false);
 
   const onSubmit = async (data: SpaceFormData) => {
     try {
       setIsLoading(true);
-      await addCompany({ name: data.name });
+      await createCompany({ name: data.name });
       reset();
       onSuccess?.();
     } catch (error) {

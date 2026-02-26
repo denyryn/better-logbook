@@ -21,3 +21,16 @@ export async function getPositionsByCompany(companyId: string) {
   );
   return data;
 }
+
+export async function createPosition(
+  companyId: string,
+  positionData: Partial<PositionWithRelations>,
+) {
+  if (!companyId) throw new Error("Company ID is required");
+
+  const { data } = await api.post<ApiResponse<PositionWithRelations>>(
+    `${getBaseUrl()}`,
+    { ...positionData, companyId },
+  );
+  return data;
+}

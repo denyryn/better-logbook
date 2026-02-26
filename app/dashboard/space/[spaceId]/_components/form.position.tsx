@@ -4,8 +4,6 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { useState } from "react";
 import { Controller, useForm } from "react-hook-form";
 
-import { useCompany } from "@/app/_providers/resources/company.provider";
-import { usePosition } from "@/app/_providers/resources/position.provider";
 import { Button } from "@/components/ui/button";
 import {
   Field,
@@ -21,6 +19,8 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
+import { useCompanies } from "@/lib/query/company.query";
+import { useCreatePosition } from "@/lib/query/position.query";
 import { PositionFormData, positionSchema } from "@/schemas/position";
 
 interface PositionFormDialogProps {
@@ -39,16 +39,16 @@ export function PositionFormDialog({ onSuccess }: PositionFormDialogProps) {
     mode: "onBlur",
   });
 
-  const { addPosition } = usePosition();
-  const { companies } = useCompany();
+  const { mutateAsync: createPosition } = useCreatePosition();
+  const { data: allSpaces } = useCompanies();
   const [isLoading, setIsLoading] = useState(false);
 
   const onSubmit = async (data: PositionFormData) => {
     try {
       setIsLoading(true);
-      await addPosition({
-        role: data.role || null,
+      await createPosition({
         companyId: data.companyId,
+        positionData: data,
       });
       reset();
       onSuccess?.();
@@ -100,9 +100,9 @@ export function PositionFormDialog({ onSuccess }: PositionFormDialogProps) {
                   <SelectValue placeholder="Select a company" />
                 </SelectTrigger>
                 <SelectContent>
-                  {companies.map((company) => (
-                    <SelectItem key={company.id} value={company.id}>
-                      {company.name}
+                  {allSpaces?.data.map((space) => (
+                    <SelectItem key={space.id} value={space.id}>
+                      {space.name}
                     </SelectItem>
                   ))}
                 </SelectContent>
