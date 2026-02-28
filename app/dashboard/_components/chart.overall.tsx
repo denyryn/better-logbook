@@ -59,7 +59,7 @@ export function OverallChart({ data, isLoading }: OverallChartProps) {
     <Skeleton className="aspect-auto h-[250px] w-full" />;
   }
 
-  const filteredData = data.filter((item) => {
+  const filteredData = data?.filter((item) => {
     const date = new Date(item.date);
     const referenceDate = new Date("2024-06-30");
     let daysToSubtract = 90;
@@ -74,7 +74,7 @@ export function OverallChart({ data, isLoading }: OverallChartProps) {
   });
 
   return (
-    <Card className="@container/card">
+    <Card className="@container/card mx-4 lg:mx-6">
       <CardHeader>
         <CardTitle>Overall Productivity</CardTitle>
         <CardDescription>

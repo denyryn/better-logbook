@@ -20,11 +20,11 @@ export function PositionDialog({ children }: React.PropsWithChildren) {
       <SheetTrigger asChild>{children}</SheetTrigger>
       <SheetContent side="right" className="w-full p-0 sm:max-w-md">
         <div className="flex h-full flex-col">
-          <SheetHeader className="space-y-3 border-b px-6 py-8">
-            <SheetTitle className="text-3xl font-bold">
+          <SheetHeader className="space-y-1 border-b px-6 py-8">
+            <SheetTitle>
               Create New Position
             </SheetTitle>
-            <SheetDescription className="text-base leading-relaxed">
+            <SheetDescription>
               Add a new position to organize your work and projects
             </SheetDescription>
           </SheetHeader>

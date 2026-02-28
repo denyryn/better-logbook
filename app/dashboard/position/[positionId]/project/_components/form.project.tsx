@@ -4,8 +4,6 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { useState } from "react";
 import { Controller, useForm } from "react-hook-form";
 
-import { usePosition } from "@/app/_providers/resources/position.provider";
-import { useProject } from "@/app/_providers/resources/project.provider";
 import { Button } from "@/components/ui/button";
 import {
   Field,
@@ -24,6 +22,7 @@ import {
 import { usePositions } from "@/lib/query/position.query";
 import { useCreateProject } from "@/lib/query/project.query";
 import { ProjectFormData, projectSchema } from "@/schemas/project";
+import { LoaderCircle } from "lucide-react";
 
 interface ProjectFormDialogProps {
   onSuccess?: () => void;
@@ -64,9 +63,9 @@ export function ProjectFormDialog({ onSuccess }: ProjectFormDialogProps) {
 
   return (
     <form onSubmit={handleSubmit(onSubmit)} className="space-y-8">
-      <FieldGroup className="space-y-6">
-        <Field className="space-y-3">
-          <FieldLabel htmlFor="name" className="text-base font-semibold">
+      <FieldGroup>
+        <Field className="space-y-1">
+          <FieldLabel htmlFor="name" >
             Project Name
           </FieldLabel>
           <Input
@@ -75,24 +74,23 @@ export function ProjectFormDialog({ onSuccess }: ProjectFormDialogProps) {
             {...register("name")}
             disabled={isSubmitting || isLoading}
             autoFocus
-            className="h-12 px-4 text-base"
           />
           {errors.name && (
-            <FieldDescription className="text-destructive text-sm font-medium">
+            <FieldDescription className="text-destructive">
               {errors.name.message}
             </FieldDescription>
           )}
           {!errors.name && (
-            <FieldDescription className="text-muted-foreground text-sm leading-relaxed">
+            <FieldDescription className="text-muted-foreground ">
               Choose a descriptive name for this project
             </FieldDescription>
           )}
         </Field>
       </FieldGroup>
 
-      <FieldGroup className="space-y-6">
-        <Field className="space-y-3">
-          <FieldLabel htmlFor="scopedRole" className="text-base font-semibold">
+      <FieldGroup>
+        <Field className="space-y-1">
+          <FieldLabel htmlFor="scopedRole" >
             Scoped Role (Optional)
           </FieldLabel>
           <Input
@@ -100,19 +98,18 @@ export function ProjectFormDialog({ onSuccess }: ProjectFormDialogProps) {
             placeholder="e.g., Lead Developer, Technical Lead"
             {...register("scopedRole")}
             disabled={isSubmitting || isLoading}
-            className="h-12 px-4 text-base"
           />
           {errors.scopedRole && (
-            <FieldDescription className="text-destructive text-sm font-medium">
+            <FieldDescription className="text-destructive">
               {errors.scopedRole.message}
             </FieldDescription>
           )}
         </Field>
       </FieldGroup>
 
-      <FieldGroup className="space-y-6">
-        <Field className="space-y-3">
-          <FieldLabel htmlFor="positionId" className="text-base font-semibold">
+      <FieldGroup>
+        <Field className="space-y-1">
+          <FieldLabel htmlFor="positionId" >
             Position
           </FieldLabel>
           <Controller
@@ -120,7 +117,7 @@ export function ProjectFormDialog({ onSuccess }: ProjectFormDialogProps) {
             control={control}
             render={({ field }) => (
               <Select value={field.value} onValueChange={field.onChange}>
-                <SelectTrigger className="h-12 px-4 text-base">
+                <SelectTrigger >
                   <SelectValue placeholder="Select a position" />
                 </SelectTrigger>
                 <SelectContent>
@@ -134,27 +131,27 @@ export function ProjectFormDialog({ onSuccess }: ProjectFormDialogProps) {
             )}
           />
           {errors.positionId && (
-            <FieldDescription className="text-destructive text-sm font-medium">
+            <FieldDescription className="text-destructive">
               {errors.positionId.message}
             </FieldDescription>
           )}
           {!errors.positionId && (
-            <FieldDescription className="text-muted-foreground text-sm leading-relaxed">
+            <FieldDescription className="text-muted-foreground">
               Select the position this project belongs to
             </FieldDescription>
           )}
         </Field>
       </FieldGroup>
 
-      <div className="flex gap-3 pt-4">
+      <div className="flex gap-3 justify-end">
         <Button
           type="submit"
           disabled={isSubmitting || isLoading}
-          className="h-12 flex-1 text-base font-semibold"
+          className="flex-1 text-base font-semibold"
         >
           {isSubmitting || isLoading ? (
             <>
-              <span className="mr-2 animate-spin">⏳</span>
+              <LoaderCircle className="mr-2 animate-spin" />
               Creating...
             </>
           ) : (

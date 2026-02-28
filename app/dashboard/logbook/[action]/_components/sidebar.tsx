@@ -48,6 +48,18 @@ export function Sidebar({ form }: SidebarProps) {
     }
     await improveLogbookText(formData.content);
   }
+
+  const improveButtonProperty = {
+    loading: {
+      icon: <Loader2 className="mr-2 h-4 w-4 animate-spin" />,
+      text: "Improving...",
+    },
+    default: {
+      icon: <Sparkles className="mr-2 h-4 w-4" />,
+      text: "Improve with AI",
+    },
+  };
+
   return (
     <div className="flex flex-col gap-4">
       <Card>

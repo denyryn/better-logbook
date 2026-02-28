@@ -6,19 +6,25 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
+import { Skeleton } from "@/components/ui/skeleton";
+
+interface LogbookStatCardProps {
+  title: string;
+  value: string | number;
+  description?: string;
+  icon: React.ElementType;
+}
 
 export function LogbookStatCard({
   title,
   value,
   description,
   icon: Icon,
-}: {
-  title: string;
-  value: string | number;
-  description?: string;
-  icon: React.ElementType;
-  loading?: boolean;
-}) {
+}: LogbookStatCardProps) {
+  if (!value && value !== 0) {
+    return <Skeleton className="h-40 w-sm" />;
+  }
+
   return (
     <Card className="@container/card">
       <CardHeader>

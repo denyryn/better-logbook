@@ -26,6 +26,7 @@ import {
 } from "@/components/ui/sidebar";
 
 import { Skeleton } from "./ui/skeleton";
+import Link from "next/link";
 
 interface NavUserProps {
   user:
@@ -35,14 +36,13 @@ interface NavUserProps {
         image?: string | null | undefined;
       }
     | undefined;
-  isLoading: boolean;
 }
 
-export function NavUser({ user, isLoading }: NavUserProps) {
+export function NavUser({ user }: NavUserProps) {
   const { isMobile } = useSidebar();
 
-  if (isLoading) {
-    return <Skeleton className="h-full w-full"></Skeleton>;
+  if (!user) {
+    return <Skeleton className="h-12 w-full"></Skeleton>;
   }
 
   function getInitials(name: string) {
@@ -99,10 +99,12 @@ export function NavUser({ user, isLoading }: NavUserProps) {
             </DropdownMenuLabel>
             <DropdownMenuSeparator />
             <DropdownMenuGroup>
-              <DropdownMenuItem>
-                <IconUserCircle />
-                Account
-              </DropdownMenuItem>
+              <Link href={"/user"}>
+                <DropdownMenuItem>
+                  <IconUserCircle />
+                  Account
+                </DropdownMenuItem>
+              </Link>
               <DropdownMenuItem>
                 <IconNotification />
                 Notifications

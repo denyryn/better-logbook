@@ -22,6 +22,7 @@ import {
 import { useCompanies } from "@/lib/query/company.query";
 import { useCreatePosition } from "@/lib/query/position.query";
 import { PositionFormData, positionSchema } from "@/schemas/position";
+import { LoaderCircle } from "lucide-react";
 
 interface PositionFormDialogProps {
   onSuccess?: () => void;
@@ -61,8 +62,8 @@ export function PositionFormDialog({ onSuccess }: PositionFormDialogProps) {
 
   return (
     <form onSubmit={handleSubmit(onSubmit)} className="space-y-8">
-      <FieldGroup className="space-y-6">
-        <Field className="space-y-3">
+      <FieldGroup>
+        <Field className="space-y-1">
           <FieldLabel htmlFor="role" className="text-base font-semibold">
             Role
           </FieldLabel>
@@ -71,23 +72,22 @@ export function PositionFormDialog({ onSuccess }: PositionFormDialogProps) {
             placeholder="e.g., Senior Developer, Project Manager"
             {...register("role")}
             disabled={isSubmitting || isLoading}
-            className="h-12 px-4 text-base"
           />
           {errors.role && (
-            <FieldDescription className="text-destructive text-sm font-medium">
+            <FieldDescription className="text-destructive">
               {errors.role.message}
             </FieldDescription>
           )}
           {!errors.role && (
-            <FieldDescription className="text-muted-foreground text-sm leading-relaxed">
+            <FieldDescription className="text-muted-foreground">
               Enter the role title for this position
             </FieldDescription>
           )}
         </Field>
       </FieldGroup>
 
-      <FieldGroup className="space-y-6">
-        <Field className="space-y-3">
+      <FieldGroup>
+        <Field className="space-y-1">
           <FieldLabel htmlFor="companyId" className="text-base font-semibold">
             Company / Space
           </FieldLabel>
@@ -96,7 +96,7 @@ export function PositionFormDialog({ onSuccess }: PositionFormDialogProps) {
             control={control}
             render={({ field }) => (
               <Select value={field.value} onValueChange={field.onChange}>
-                <SelectTrigger className="h-12 px-4 text-base">
+                <SelectTrigger >
                   <SelectValue placeholder="Select a company" />
                 </SelectTrigger>
                 <SelectContent>
@@ -110,27 +110,27 @@ export function PositionFormDialog({ onSuccess }: PositionFormDialogProps) {
             )}
           />
           {errors.companyId && (
-            <FieldDescription className="text-destructive text-sm font-medium">
+            <FieldDescription className="text-destructive">
               {errors.companyId.message}
             </FieldDescription>
           )}
           {!errors.companyId && (
-            <FieldDescription className="text-muted-foreground text-sm leading-relaxed">
+            <FieldDescription className="text-muted-foreground">
               Select the company or space for this position
             </FieldDescription>
           )}
         </Field>
       </FieldGroup>
 
-      <div className="flex gap-3 pt-4">
+      <div className="flex gap-3">
         <Button
           type="submit"
           disabled={isSubmitting || isLoading}
-          className="h-12 flex-1 text-base font-semibold"
+          className="flex-1 text-base font-semibold"
         >
           {isSubmitting || isLoading ? (
             <>
-              <span className="mr-2 animate-spin">⏳</span>
+            <LoaderCircle className="mr-2 animate-spin" />
               Creating...
             </>
           ) : (

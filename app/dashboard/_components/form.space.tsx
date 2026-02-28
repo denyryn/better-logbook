@@ -1,8 +1,8 @@
 "use client";
 
 import { zodResolver } from "@hookform/resolvers/zod";
-import { useState } from "react";
 import { useForm } from "react-hook-form";
+import { LoaderCircle } from "lucide-react";
 
 import { Button } from "@/components/ui/button";
 import {
@@ -14,6 +14,7 @@ import {
 import { Input } from "@/components/ui/input";
 import { useCreateCompany } from "@/lib/query/company.query";
 import { SpaceFormData, spaceSchema } from "@/schemas/space";
+import { toast } from "sonner";
 
 interface SpaceFormDialogProps {
   onSuccess?: () => void;
@@ -30,27 +31,25 @@ export function SpaceFormDialog({ onSuccess }: SpaceFormDialogProps) {
     mode: "onBlur",
   });
 
-  const { mutateAsync: createCompany } = useCreateCompany();
-  const [isLoading, setIsLoading] = useState(false);
+  const { mutateAsync: createCompany, isPending: isLoading } = useCreateCompany();
 
   const onSubmit = async (data: SpaceFormData) => {
     try {
-      setIsLoading(true);
       await createCompany({ name: data.name });
       reset();
+      toast.success("Space created successfully!");
       onSuccess?.();
     } catch (error) {
       console.error("Error creating space:", error);
-    } finally {
-      setIsLoading(false);
+      toast.error("Failed to create space. Please try again.");
     }
   };
 
   return (
     <form onSubmit={handleSubmit(onSubmit)} className="space-y-8">
-      <FieldGroup className="space-y-6">
-        <Field className="space-y-3">
-          <FieldLabel htmlFor="name" className="text-base font-semibold">
+      <FieldGroup>
+        <Field className="space-y-1">
+          <FieldLabel htmlFor="name" >
             Space Name
           </FieldLabel>
           <Input
@@ -59,7 +58,6 @@ export function SpaceFormDialog({ onSuccess }: SpaceFormDialogProps) {
             {...register("name")}
             disabled={isSubmitting || isLoading}
             autoFocus
-            className="h-12 px-4 text-base"
           />
           {errors.name && (
             <FieldDescription className="text-destructive text-sm font-medium">
@@ -74,15 +72,15 @@ export function SpaceFormDialog({ onSuccess }: SpaceFormDialogProps) {
         </Field>
       </FieldGroup>
 
-      <div className="flex gap-3 pt-4">
+      <div className="flex gap-3 justify-end">
         <Button
           type="submit"
           disabled={isSubmitting || isLoading}
-          className="h-12 flex-1 text-base font-semibold"
+          className="flex-1 text-base font-semibold"
         >
           {isSubmitting || isLoading ? (
             <>
-              <span className="mr-2 animate-spin">⏳</span>
+              <LoaderCircle className="mr-2 animate-spin" size={16} />
               Creating...
             </>
           ) : (

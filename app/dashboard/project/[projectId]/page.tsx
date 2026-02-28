@@ -6,14 +6,6 @@ import { useParams } from "next/navigation";
 import * as React from "react";
 
 import { SiteHeader } from "@/components/site-header";
-import {
-  Card,
-  CardAction,
-  CardDescription,
-  CardFooter,
-  CardHeader,
-  CardTitle,
-} from "@/components/ui/card";
 import { Skeleton } from "@/components/ui/skeleton";
 import { useLogbooksByProject } from "@/lib/query/logbook.query";
 
@@ -33,9 +25,11 @@ export default function Page() {
 
   const stats = React.useMemo(() => {
     const total = entries.length;
+
     const thisWeek = entries.filter((e) =>
       isAfter(e.logDate, sevenDaysAgo),
     ).length;
+
     const thisMonth = entries.filter((e) => isThisMonth(e.logDate)).length;
     const lastEntry = entries.length
       ? format(
@@ -74,7 +68,6 @@ export default function Page() {
                 value={stats.thisWeek}
                 description="Entries in the last week"
                 icon={IconCalendarWeek}
-                loading={isLoading}
               />
               <LogbookStatCard
                 title="This Month"
