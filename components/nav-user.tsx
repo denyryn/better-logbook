@@ -1,7 +1,6 @@
 "use client";
 
 import {
-  IconCreditCard,
   IconDotsVertical,
   IconLogout,
   IconNotification,
@@ -27,7 +26,6 @@ import {
 
 import { Skeleton } from "./ui/skeleton";
 import Link from "next/link";
-import { authClient } from "@/lib/auth-client";
 import { useAuth } from "@/app/_providers/auth/auth.provider";
 
 interface NavUserProps {

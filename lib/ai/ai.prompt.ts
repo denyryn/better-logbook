@@ -1,7 +1,4 @@
-import { AxiosResponse } from "axios";
 
-import { ApiResponse } from "../api.response";
-import { api } from "../axios";
 import { config } from "../config";
 
 type Role = "system" | "user" | "administrator";

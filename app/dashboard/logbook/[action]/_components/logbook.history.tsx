@@ -17,7 +17,6 @@ import {
   CardTitle,
 } from "@/components/ui/card";
 import { Skeleton } from "@/components/ui/skeleton";
-import { Logbook } from "@/generated/prisma/client";
 import { useLogbooks } from "@/lib/query/logbook.query";
 import { useProjects } from "@/lib/query/project.query";
 

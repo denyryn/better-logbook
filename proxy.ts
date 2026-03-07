@@ -2,7 +2,7 @@ import type { NextRequest } from "next/server";
 import { NextResponse } from "next/server";
 
 import { authRequest } from "@/lib/auth";
-import { errorResponse, serverErrorResponse } from "./lib/api.response";
+import { serverErrorResponse } from "./lib/api.response";
 import { StatusCodes } from "http-status-codes";
 
 export async function proxy(request: NextRequest) {

@@ -2,7 +2,6 @@
 
 import ProfileHeader from "./_components/profile-header";
 import ProfileContent from "./_components/profile-content";
-import { auth } from "@/lib/auth";
 import { useSession } from "@/lib/auth-client";
 
 export default function Page() {

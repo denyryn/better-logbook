@@ -1,4 +1,3 @@
-import { AIPromptBuilder } from "@/lib/ai/ai.prompt";
 import { improveLogbookEntryInstructions, produceLogbookDetailsInstructions } from "@/lib/ai/instructions/entry.logbook";
 import { ApiResponse, status } from "@/lib/api.response";
 import { api } from "@/lib/axios";

@@ -1,6 +1,5 @@
 import { useAi } from "@/app/_providers/ai/ai.provider";
 import { Button } from "@/components/ui/components/ui/button";
-import { Input } from "@/components/ui/components/ui/input";
 import { DialogClose, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import { Field, FieldDescription, FieldGroup, FieldLabel } from "@/components/ui/field";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
@@ -11,7 +10,6 @@ import { useProjects } from "@/lib/query/project.query";
 import { QuickCreateFormData, quickCreateSchema } from "@/schemas/quick-create";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { LoaderCircle } from "lucide-react";
-import { useState } from "react";
 import { Controller, useForm } from "react-hook-form";
 import { toast } from "sonner";
 

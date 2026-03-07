@@ -1,10 +1,9 @@
 import { StatusCodes } from "http-status-codes";
-import { NextRequest, NextResponse } from "next/server";
+import { NextRequest } from "next/server";
 
 import { GoogleAIProvider } from "@/lib/ai/providers/ai.google";
-import { errorResponse, serverErrorResponse, serverSuccessResponse, successResponse } from "@/lib/api.response";
+import { serverErrorResponse, serverSuccessResponse } from "@/lib/api.response";
 import { config } from "@/lib/config";
-import { LogbookAIService } from "@/services/ai.generate.service";
 import { AIProviderService } from "@/services/ai.provider.service";
 
 export async function POST(request: NextRequest) {

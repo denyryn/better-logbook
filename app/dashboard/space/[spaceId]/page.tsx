@@ -6,7 +6,7 @@ import { useState } from "react";
 
 import { SiteHeader } from "@/components/site-header";
 import { Button } from "@/components/ui/button";
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { Tabs, TabsContent } from "@/components/ui/tabs";
 import { usePositionsByCompany } from "@/lib/query/position.query";
 import { useProjectsByCompany } from "@/lib/query/project.query";
 
