@@ -5,17 +5,18 @@ import { Position } from "@/generated/prisma/client";
 import { serverErrorResponse, serverSuccessResponse } from "@/lib/api.response";
 import { prisma } from "@/lib/prisma";
 
-export async function GET(request: NextRequest) {
+export async function GET(request: NextRequest, { params }: { params: Promise<{ positionId: string }> }) {
   try {
-    const id = Number(request.nextUrl.searchParams.get("id"));
-    const position = await prisma.position.findUnique({ where: { id } });
+    const { positionId } = await params;
+    const position = await prisma.position.findUnique({ where: { id: positionId } });
 
     if (!position) {
       return serverErrorResponse(undefined, "Position not found", StatusCodes.NOT_FOUND);
     }
 
     return serverSuccessResponse(position, "Position fetched successfully", StatusCodes.OK);
-  } catch (e) {
+  } catch (err) {
+    console.error("Error fetching position:", err);
     return serverErrorResponse(
       undefined,
       "Something went wrong",
@@ -24,13 +25,13 @@ export async function GET(request: NextRequest) {
   }
 }
 
-export async function PUT(request: NextRequest) {
+export async function PUT(request: NextRequest, { params }: { params: Promise<{ positionId: string }> }) {
   try {
-    const id = Number(request.nextUrl.searchParams.get("id"));
+    const { positionId } = await params;
     const body = await request.json();
     const position = await prisma.position.update({
       data: body as Position,
-      where: { id },
+      where: { id: positionId },
     });
 
     if (!position) {
@@ -38,7 +39,8 @@ export async function PUT(request: NextRequest) {
     }
 
     return serverSuccessResponse(position, "Position updated successfully", StatusCodes.OK);
-  } catch (e) {
+  } catch (err) {
+    console.error("Error updating position:", err);
     return serverErrorResponse(
       undefined,
       "Something went wrong",
@@ -47,17 +49,18 @@ export async function PUT(request: NextRequest) {
   }
 }
 
-export async function DELETE(request: NextRequest) {
+export async function DELETE(request: NextRequest, { params }: { params: Promise<{ positionId: string }> }) {
   try {
-    const id = Number(request.nextUrl.searchParams.get("id"));
-    const position = await prisma.position.delete({ where: { id } });
+    const { positionId } = await params;
+    const position = await prisma.position.delete({ where: { id: positionId } });
 
     if (!position) {
       throw new Error("Position not found");
     }
 
     return serverSuccessResponse(position, "Position deleted successfully", StatusCodes.OK);
-  } catch (e) {
+  } catch (err) {
+    console.error("Error deleting position:", err);
     return serverErrorResponse(
       undefined,
       "Something went wrong",
