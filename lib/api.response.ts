@@ -1,3 +1,5 @@
+import { NextResponse } from "next/server";
+
 export enum status {
   SUCCESS = "success",
   ERROR = "error",
@@ -36,4 +38,35 @@ export function error<T>(
   };
 }
 
+export function serverSuccess<T>(
+  data: T,
+  message = "Success",
+  code = 200
+) {
+  const body: ApiResponse<T> = {
+    data,
+    message,
+    code,
+    status: status.SUCCESS,
+  };
+
+  return NextResponse.json(body, { status: code });
+}
+
+export function serverError<T>(
+  data: T,
+  message = "Something went wrong",
+  code = 500
+) {
+  const body: ApiResponse<T> = {
+    data,
+    message,
+    code,
+    status: status.ERROR,
+  };
+
+  return NextResponse.json(body, { status: code });
+}
+
 export { success as successResponse, error as errorResponse };
+export { serverSuccess as serverSuccessResponse, serverError as serverErrorResponse };

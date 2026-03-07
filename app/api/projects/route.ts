@@ -1,10 +1,11 @@
 import { StatusCodes } from "http-status-codes";
-import { NextRequest, NextResponse } from "next/server";
+import { NextRequest } from "next/server";
 
 import { Project } from "@/generated/prisma/client";
-import { error, success } from "@/lib/api.response";
+import { serverErrorResponse, serverSuccessResponse } from "@/lib/api.response";
 import { auth } from "@/lib/auth";
 import { prisma } from "@/lib/prisma";
+import { projectWithRelationsQuery } from "@/types/prisma/project";
 
 export async function GET(request: NextRequest) {
   try {
@@ -12,19 +13,16 @@ export async function GET(request: NextRequest) {
 
     const projects = await prisma.project.findMany({
       where: { position: { company: { userId: session?.user.id } } },
+      ...projectWithRelationsQuery
     });
 
-    return NextResponse.json(
-      success(projects, "Projects fetched successfully", StatusCodes.OK),
-    );
+    return serverSuccessResponse(projects, "Projects fetched successfully", StatusCodes.OK);
   } catch (err) {
     console.error("Error fetching projects:", err);
-    return NextResponse.json(
-      error(
-        undefined,
-        "Something went wrong",
-        StatusCodes.INTERNAL_SERVER_ERROR,
-      ),
+    return serverErrorResponse(
+      undefined,
+      "Something went wrong",
+      StatusCodes.INTERNAL_SERVER_ERROR,
     );
   }
 }
@@ -38,17 +36,13 @@ export async function POST(request: NextRequest) {
       data: { ...body, userId: session?.user.id } as Project,
     });
 
-    return NextResponse.json(
-      success(project, "Project created successfully", StatusCodes.CREATED),
-    );
+    return serverSuccessResponse(project, "Project created successfully", StatusCodes.CREATED);
   } catch (err) {
     console.error("Error creating project:", err);
-    return NextResponse.json(
-      error(
-        undefined,
-        "Something went wrong",
-        StatusCodes.INTERNAL_SERVER_ERROR,
-      ),
+    return serverErrorResponse(
+      undefined,
+      "Something went wrong",
+      StatusCodes.INTERNAL_SERVER_ERROR,
     );
   }
 }

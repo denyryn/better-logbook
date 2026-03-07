@@ -1,6 +1,7 @@
 import { Project } from "@/generated/prisma/client";
 import { ApiResponse } from "@/lib/api.response";
 import { api } from "@/lib/axios";
+import { ProjectWithRelations } from "@/types/prisma/project";
 
 function getBaseUrl({
   positionId,
@@ -12,14 +13,14 @@ function getBaseUrl({
 }
 
 export async function getProjects() {
-  const { data } = await api.get<ApiResponse<Project[]>>(getBaseUrl());
+  const { data } = await api.get<ApiResponse<ProjectWithRelations[]>>(getBaseUrl());
   return data;
 }
 
 export async function getProjectsByPosition(positionId: string) {
   if (!positionId) throw new Error("Position ID is required");
 
-  const { data } = await api.get<ApiResponse<Project[]>>(
+  const { data } = await api.get<ApiResponse<ProjectWithRelations[]>>(
     getBaseUrl({ positionId: positionId }),
   );
   return data;
@@ -28,7 +29,7 @@ export async function getProjectsByPosition(positionId: string) {
 export async function getProjectsByCompany(companyId: string) {
   if (!companyId) throw new Error("Company ID is required");
 
-  const { data } = await api.get<ApiResponse<Project[]>>(
+  const { data } = await api.get<ApiResponse<ProjectWithRelations[]>>(
     getBaseUrl({ companyId: companyId }),
   );
   return data;

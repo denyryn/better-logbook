@@ -1,8 +1,9 @@
 import { StatusCodes } from "http-status-codes";
-import { NextRequest, NextResponse } from "next/server";
+import { NextRequest } from "next/server";
 
-import { errorResponse, successResponse } from "@/lib/api.response";
+import { serverErrorResponse, serverSuccessResponse } from "@/lib/api.response";
 import { prisma } from "@/lib/prisma";
+import { projectWithRelationsQuery } from "@/types/prisma/project";
 
 export async function GET(
   request: NextRequest,
@@ -12,23 +13,20 @@ export async function GET(
     const { companyId } = await params;
     const projects = await prisma.project.findMany({
       where: { position: { companyId } },
+      ...projectWithRelationsQuery
     });
 
-    return NextResponse.json(
-      successResponse(
-        projects,
-        "Projects fetched successfully",
-        StatusCodes.OK,
-      ),
+    return serverSuccessResponse(
+      projects,
+      "Projects fetched successfully",
+      StatusCodes.OK,
     );
   } catch (err) {
     console.error("Error fetching projects:", err);
-    return NextResponse.json(
-      errorResponse(
-        undefined,
-        "Something went wrong",
-        StatusCodes.INTERNAL_SERVER_ERROR,
-      ),
+    return serverErrorResponse(
+      undefined,
+      "Something went wrong",
+      StatusCodes.INTERNAL_SERVER_ERROR,
     );
   }
 }

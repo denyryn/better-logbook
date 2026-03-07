@@ -1,7 +1,7 @@
 import { StatusCodes } from "http-status-codes";
-import { NextRequest, NextResponse } from "next/server";
+import { NextRequest } from "next/server";
 
-import { errorResponse, successResponse } from "@/lib/api.response";
+import { serverErrorResponse, serverSuccessResponse } from "@/lib/api.response";
 import { auth } from "@/lib/auth";
 import { prisma } from "@/lib/prisma";
 import { logbookWithRelationsQuery } from "@/types/prisma/logbooks";
@@ -15,9 +15,7 @@ export async function GET(
     const session = await auth.api.getSession({ headers: request.headers });
 
     if (!session?.user?.id) {
-      return NextResponse.json(
-        errorResponse(undefined, "Unauthorized", StatusCodes.UNAUTHORIZED),
-      );
+      return serverErrorResponse(undefined, "Unauthorized", StatusCodes.UNAUTHORIZED);
     }
 
     const project = await prisma.project.findFirst({
@@ -25,9 +23,7 @@ export async function GET(
     });
 
     if (!project) {
-      return NextResponse.json(
-        errorResponse(undefined, "Project not found", StatusCodes.NOT_FOUND),
-      );
+      return serverErrorResponse(undefined, "Project not found", StatusCodes.NOT_FOUND);
     }
 
     const logbooks = await prisma.logbook.findMany({
@@ -35,21 +31,17 @@ export async function GET(
       ...logbookWithRelationsQuery
     });
 
-    return NextResponse.json(
-      successResponse(
-        logbooks,
-        "Logbooks fetched successfully",
-        StatusCodes.OK,
-      ),
+    return serverSuccessResponse(
+      logbooks,
+      "Logbooks fetched successfully",
+      StatusCodes.OK,
     );
   } catch (err) {
     console.error("Error fetching logbooks:", err);
-    return NextResponse.json(
-      errorResponse(
-        undefined,
-        "Something went wrong",
-        StatusCodes.INTERNAL_SERVER_ERROR,
-      ),
+    return serverErrorResponse(
+      undefined,
+      "Something went wrong",
+      StatusCodes.INTERNAL_SERVER_ERROR,
     );
   }
 }
@@ -63,9 +55,7 @@ export async function POST(
     const session = await auth.api.getSession({ headers: request.headers });
 
     if (!session?.user?.id) {
-      return NextResponse.json(
-        errorResponse(undefined, "Unauthorized", StatusCodes.UNAUTHORIZED),
-      );
+      return serverErrorResponse(undefined, "Unauthorized", StatusCodes.UNAUTHORIZED);
     }
 
     const project = await prisma.project.findFirst({
@@ -73,9 +63,7 @@ export async function POST(
     });
 
     if (!project) {
-      return NextResponse.json(
-        errorResponse(undefined, "Project not found", StatusCodes.NOT_FOUND),
-      );
+      return serverErrorResponse(undefined, "Project not found", StatusCodes.NOT_FOUND);
     }
 
     const body = await request.json();
@@ -109,21 +97,17 @@ export async function POST(
       tags: logbook.tags.map((t) => t.tag.name),
     };
 
-    return NextResponse.json(
-      successResponse(
-        normalized,
-        "Logbook created successfully",
-        StatusCodes.CREATED,
-      ),
+    return serverSuccessResponse(
+      normalized,
+      "Logbook created successfully",
+      StatusCodes.CREATED,
     );
   } catch (err) {
     console.error("Error creating logbook:", err);
-    return NextResponse.json(
-      errorResponse(
-        undefined,
-        "Something went wrong",
-        StatusCodes.INTERNAL_SERVER_ERROR,
-      ),
+    return serverErrorResponse(
+      undefined,
+      "Something went wrong",
+      StatusCodes.INTERNAL_SERVER_ERROR,
     );
   }
 }

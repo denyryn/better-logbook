@@ -1,6 +1,6 @@
 import { auth } from "@/lib/auth";
 import { NextRequest } from "next/server";
-import { errorResponse, successResponse } from "@/lib/api.response";
+import { serverErrorResponse, serverSuccessResponse } from "@/lib/api.response";
 import { StatusCodes } from "http-status-codes";
 import { prisma } from "@/lib/prisma";
 
@@ -9,7 +9,7 @@ export async function GET(request: NextRequest) {
   const session = await auth.api.getSession({ headers: request.headers });
 
   if (!session) {
-    return errorResponse(undefined, "Unauthorized", StatusCodes.UNAUTHORIZED);
+    return serverErrorResponse(undefined, "Unauthorized", StatusCodes.UNAUTHORIZED);
   }
 
   const productivities = await prisma.logbook.groupBy({
@@ -31,5 +31,5 @@ export async function GET(request: NextRequest) {
     logbook: p._count.id
   }));
 
-  return successResponse(normalized, "Productivities fetched successfully", StatusCodes.OK);
+  return serverSuccessResponse(normalized, "Productivities fetched successfully", StatusCodes.OK);
 }

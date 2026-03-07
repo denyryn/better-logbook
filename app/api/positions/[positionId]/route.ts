@@ -1,8 +1,8 @@
 import { StatusCodes } from "http-status-codes";
-import { NextRequest, NextResponse } from "next/server";
+import { NextRequest } from "next/server";
 
 import { Position } from "@/generated/prisma/client";
-import { error, status, success } from "@/lib/api.response";
+import { serverErrorResponse, serverSuccessResponse } from "@/lib/api.response";
 import { prisma } from "@/lib/prisma";
 
 export async function GET(request: NextRequest) {
@@ -11,21 +11,15 @@ export async function GET(request: NextRequest) {
     const position = await prisma.position.findUnique({ where: { id } });
 
     if (!position) {
-      return NextResponse.json(
-        error(undefined, "Position not found", StatusCodes.NOT_FOUND),
-      );
+      return serverErrorResponse(undefined, "Position not found", StatusCodes.NOT_FOUND);
     }
 
-    return NextResponse.json(
-      success(position, "Position fetched successfully", StatusCodes.OK),
-    );
+    return serverSuccessResponse(position, "Position fetched successfully", StatusCodes.OK);
   } catch (e) {
-    return NextResponse.json(
-      error(
-        undefined,
-        "Something went wrong",
-        StatusCodes.INTERNAL_SERVER_ERROR,
-      ),
+    return serverErrorResponse(
+      undefined,
+      "Something went wrong",
+      StatusCodes.INTERNAL_SERVER_ERROR,
     );
   }
 }
@@ -40,21 +34,15 @@ export async function PUT(request: NextRequest) {
     });
 
     if (!position) {
-      return NextResponse.json(
-        error(undefined, "Position not found", StatusCodes.NOT_FOUND),
-      );
+      return serverErrorResponse(undefined, "Position not found", StatusCodes.NOT_FOUND);
     }
 
-    return NextResponse.json(
-      success(position, "Position updated successfully", StatusCodes.OK),
-    );
+    return serverSuccessResponse(position, "Position updated successfully", StatusCodes.OK);
   } catch (e) {
-    return NextResponse.json(
-      error(
-        undefined,
-        "Something went wrong",
-        StatusCodes.INTERNAL_SERVER_ERROR,
-      ),
+    return serverErrorResponse(
+      undefined,
+      "Something went wrong",
+      StatusCodes.INTERNAL_SERVER_ERROR,
     );
   }
 }
@@ -68,16 +56,12 @@ export async function DELETE(request: NextRequest) {
       throw new Error("Position not found");
     }
 
-    return NextResponse.json(
-      success(position, "Position deleted successfully", StatusCodes.OK),
-    );
+    return serverSuccessResponse(position, "Position deleted successfully", StatusCodes.OK);
   } catch (e) {
-    return NextResponse.json(
-      error(
-        undefined,
-        "Something went wrong",
-        StatusCodes.INTERNAL_SERVER_ERROR,
-      ),
+    return serverErrorResponse(
+      undefined,
+      "Something went wrong",
+      StatusCodes.INTERNAL_SERVER_ERROR,
     );
   }
 }

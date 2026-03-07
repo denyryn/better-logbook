@@ -1,8 +1,8 @@
 import { StatusCodes } from "http-status-codes";
-import { NextRequest, NextResponse } from "next/server";
+import { NextRequest } from "next/server";
 
 import { Company } from "@/generated/prisma/client";
-import { error, success } from "@/lib/api.response";
+import { serverErrorResponse, serverSuccessResponse } from "@/lib/api.response";
 import { prisma } from "@/lib/prisma";
 
 export async function GET(
@@ -16,22 +16,16 @@ export async function GET(
     });
 
     if (!company) {
-      return NextResponse.json(
-        error(undefined, "Company not found", StatusCodes.NOT_FOUND),
-      );
+      return serverErrorResponse(undefined, "Company not found", StatusCodes.NOT_FOUND);
     }
 
-    return NextResponse.json(
-      success(company, "Company fetched successfully", StatusCodes.OK),
-    );
+    return serverSuccessResponse(company, "Company fetched successfully", StatusCodes.OK);
   } catch (err) {
     console.error("Error fetching company:", err);
-    return NextResponse.json(
-      error(
-        undefined,
-        "Something went wrong",
-        StatusCodes.INTERNAL_SERVER_ERROR,
-      ),
+    return serverErrorResponse(
+      undefined,
+      "Something went wrong",
+      StatusCodes.INTERNAL_SERVER_ERROR,
     );
   }
 }
@@ -49,22 +43,16 @@ export async function PUT(
     });
 
     if (!company) {
-      return NextResponse.json(
-        error(undefined, "Company not found", StatusCodes.NOT_FOUND),
-      );
+      return serverErrorResponse(undefined, "Company not found", StatusCodes.NOT_FOUND);
     }
 
-    return NextResponse.json(
-      success(company, "Company updated successfully", StatusCodes.OK),
-    );
+    return serverSuccessResponse(company, "Company updated successfully", StatusCodes.OK);
   } catch (err) {
     console.error("Error updating company:", err);
-    return NextResponse.json(
-      error(
-        undefined,
-        "Something went wrong",
-        StatusCodes.INTERNAL_SERVER_ERROR,
-      ),
+    return serverErrorResponse(
+      undefined,
+      "Something went wrong",
+      StatusCodes.INTERNAL_SERVER_ERROR,
     );
   }
 }
@@ -78,22 +66,16 @@ export async function DELETE(
     const company = await prisma.company.delete({ where: { id: companyId } });
 
     if (!company) {
-      return NextResponse.json(
-        error(undefined, "Company not found", StatusCodes.NOT_FOUND),
-      );
+      return serverErrorResponse(undefined, "Company not found", StatusCodes.NOT_FOUND);
     }
 
-    return NextResponse.json(
-      success(company, "Company deleted successfully", StatusCodes.OK),
-    );
+    return serverSuccessResponse(company, "Company deleted successfully", StatusCodes.OK);
   } catch (err) {
     console.error("Error deleting company:", err);
-    return NextResponse.json(
-      error(
-        undefined,
-        "Something went wrong",
-        StatusCodes.INTERNAL_SERVER_ERROR,
-      ),
+    return serverErrorResponse(
+      undefined,
+      "Something went wrong",
+      StatusCodes.INTERNAL_SERVER_ERROR,
     );
   }
 }
