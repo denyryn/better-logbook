@@ -271,14 +271,14 @@ export function LogbookDataTable({ data, projectId }: LogbookDataTableProps) {
       pagination,
       globalFilter,
     },
-    globalFilterFn: (row, _columnId, filterValue: string) => {
+    globalFilterFn: (row, _columnId, filterValue: string): boolean => {
       const search = filterValue.toLowerCase();
-      return (
+      return !!(
         (row.original.title?.toLowerCase().includes(search) ?? false) ||
         row.original.content.toLowerCase().includes(search) ||
-        row.original.tags?.some((t) =>
+        (row.original.tags?.some((t) =>
           t.tag.name.toLowerCase().includes(search),
-        )
+        ) ?? false)
       );
     },
     getRowId: (row) => row.id,
