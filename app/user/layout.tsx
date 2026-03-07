@@ -1,5 +1,6 @@
 import { AppSidebar } from "@/components/app-sidebar";
 import { SidebarInset, SidebarProvider } from "@/components/ui/sidebar";
+import { AiProvider } from "../_providers/ai/ai.provider";
 
 interface UserLayoutProps {
   children: React.ReactNode;
@@ -8,6 +9,7 @@ interface UserLayoutProps {
 export default function UserLayout({ children }: UserLayoutProps) {
   return (
     <>
+    <AiProvider>
       <SidebarProvider
         style={
           {
@@ -18,7 +20,8 @@ export default function UserLayout({ children }: UserLayoutProps) {
       >
         <AppSidebar variant="inset" />
         <SidebarInset>{children}</SidebarInset>
-      </SidebarProvider>
+        </SidebarProvider>
+    </AiProvider>
     </>
   );
 }
