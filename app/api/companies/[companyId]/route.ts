@@ -32,10 +32,10 @@ export async function GET(
 
 export async function PUT(
   request: NextRequest,
-  { params }: { params: { companyId: string } },
+  { params }: { params: Promise<{companyId: string}> },
 ) {
   try {
-    const { companyId } = params;
+    const { companyId } = await params;
     const body = await request.json();
     const company = await prisma.company.update({
       data: body as Company,
@@ -59,10 +59,10 @@ export async function PUT(
 
 export async function DELETE(
   request: NextRequest,
-  { params }: { params: { companyId: string } },
+  { params }: { params: Promise<{ companyId: string }> },
 ) {
   try {
-    const { companyId } = params;
+    const { companyId } = await params;
     const company = await prisma.company.delete({ where: { id: companyId } });
 
     if (!company) {
