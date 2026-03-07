@@ -27,6 +27,8 @@ import {
 
 import { Skeleton } from "./ui/skeleton";
 import Link from "next/link";
+import { authClient } from "@/lib/auth-client";
+import { useAuth } from "@/app/_providers/auth/auth.provider";
 
 interface NavUserProps {
   user:
@@ -40,6 +42,7 @@ interface NavUserProps {
 
 export function NavUser({ user }: NavUserProps) {
   const { isMobile } = useSidebar();
+  const {signOut} = useAuth();
 
   if (!user) {
     return <Skeleton className="h-12 w-full"></Skeleton>;
@@ -49,6 +52,10 @@ export function NavUser({ user }: NavUserProps) {
     const names = name.split(" ");
     const initials = names.map((n) => n[0]).join("");
     return initials.toUpperCase();
+  }
+
+  function handleLogout() {
+    signOut();
   }
 
   return (
@@ -111,7 +118,7 @@ export function NavUser({ user }: NavUserProps) {
               </DropdownMenuItem>
             </DropdownMenuGroup>
             <DropdownMenuSeparator />
-            <DropdownMenuItem>
+            <DropdownMenuItem onClick={handleLogout}>
               <IconLogout />
               Log out
             </DropdownMenuItem>

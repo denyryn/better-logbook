@@ -3,18 +3,10 @@
 import {
   IconBox,
   IconBriefcase2,
-  IconCamera,
   IconChartBar,
   IconDashboard,
-  IconDatabase,
-  IconFileAi,
-  IconFileDescription,
-  IconFileWord,
   IconFolder,
   IconHelp,
-  IconInnerShadowTop,
-  IconListDetails,
-  IconReport,
   IconSearch,
   IconSettings,
   IconUsers,
@@ -37,6 +29,7 @@ import {
 } from "@/components/ui/sidebar";
 import { useSession } from "@/lib/auth-client";
 import { config } from "@/lib/config";
+import { toast } from "sonner";
 
 const data = {
   user: {
@@ -53,11 +46,13 @@ const data = {
     {
       title: "Analytics",
       url: "#",
+      onClick: () => toast.info("Coming soon!"),
       icon: IconChartBar,
     },
     {
       title: "Team",
       url: "#",
+      onClick: () => toast.info("Coming soon!"),
       icon: IconUsers,
     },
   ],

@@ -24,6 +24,7 @@ import {
   SidebarMenuItem,
   useSidebar,
 } from "@/components/ui/sidebar";
+import { toast } from "sonner";
 
 export function NavDocuments({
   items,
@@ -81,7 +82,8 @@ export function NavDocuments({
           </SidebarMenuItem>
         ))}
         <SidebarMenuItem>
-          <SidebarMenuButton className="text-sidebar-foreground/70">
+          {/* TODO : Implement more features */}
+          <SidebarMenuButton onClick={() => toast.info("More features about to come :)")} className="text-sidebar-foreground/70">
             <IconDots className="text-sidebar-foreground/70" />
             <span>More</span>
           </SidebarMenuButton>

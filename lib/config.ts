@@ -17,6 +17,13 @@ export const config = {
     },
     googleai: {
       apiKey: process.env.GOOGLEAI_API_KEY,
+      model: "gemini-3.1-flash-lite-preview"
     },
   },
+  auth: {
+    google: {
+      clientId: process.env.GOOGLE_CLIENT_ID!,
+      clientSecret: process.env.GOOGLE_CLIENT_SECRET!,
+    }
+  }
 };

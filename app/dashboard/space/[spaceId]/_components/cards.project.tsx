@@ -7,7 +7,7 @@ import {
 } from "@tabler/icons-react";
 import Link from "next/link";
 
-import { ProjectDialog } from "@/app/dashboard/position/[positionId]/project/_components/dialog.project";
+import { ProjectDialog } from "@/app/dashboard/project/_components/dialog.project";
 import {
   Card,
   CardAction,
@@ -17,10 +17,10 @@ import {
   CardTitle,
 } from "@/components/ui/card";
 import { Skeleton } from "@/components/ui/skeleton";
-import { Project } from "@/generated/prisma/client";
+import { ProjectWithRelations } from "@/types/prisma/project";
 
 interface ProjectCardsProps {
-  projects?: Project[];
+  projects?: ProjectWithRelations[];
 }
 
 export function ProjectCards({ projects }: ProjectCardsProps) {
@@ -72,7 +72,7 @@ export function ProjectCards({ projects }: ProjectCardsProps) {
                 View project details <IconArrowRight className="size-4" />
               </div>
               <div className="text-muted-foreground">
-                Acquisition needs attention
+                as {project.position.role}  @ {project.position.company.name}
               </div>
             </CardFooter>
           </Card>

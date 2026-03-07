@@ -2,7 +2,7 @@ import type { NextRequest } from "next/server";
 import { NextResponse } from "next/server";
 
 import { authRequest } from "@/lib/auth";
-import { errorResponse } from "./lib/api.response";
+import { errorResponse, serverErrorResponse } from "./lib/api.response";
 import { StatusCodes } from "http-status-codes";
 
 export async function proxy(request: NextRequest) {
@@ -11,9 +11,7 @@ export async function proxy(request: NextRequest) {
 
   if (request.nextUrl.pathname.startsWith("/api")) {
     if (isAuthenticated) return NextResponse.next();
-    return NextResponse.json(
-      errorResponse(undefined, "Unauthorized", StatusCodes.UNAUTHORIZED)
-    )
+    return serverErrorResponse(undefined, "Unauthorized", StatusCodes.UNAUTHORIZED);
   }
 
   if (request.nextUrl.pathname === "/") {
@@ -26,6 +24,7 @@ export async function proxy(request: NextRequest) {
   if (request.nextUrl.pathname.startsWith("/dashboard")) {
     if (isAuthenticated) return NextResponse.next();
     destination = new URL("/auth/sign-in", request.url);
+    return NextResponse.redirect(destination);
   }
 }
 
