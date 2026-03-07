@@ -1,6 +1,7 @@
 import { GoogleGenAI } from "@google/genai";
 
 import { AIProvider } from "./ai.provider.interface";
+import { config } from "@/lib/config";
 
 export class GoogleAIProvider implements AIProvider {
   private instance: GoogleGenAI;
@@ -17,7 +18,7 @@ export class GoogleAIProvider implements AIProvider {
 
   async generate(prompt: string): Promise<string | undefined> {
     const response = await this.instance.models.generateContent({
-      model: "gemini-3-flash-preview",
+      model: config.ai.googleai.model,
       contents: prompt,
     });
 

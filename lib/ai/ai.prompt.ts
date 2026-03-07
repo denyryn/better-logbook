@@ -7,23 +7,20 @@ import { config } from "../config";
 type Role = "system" | "user" | "administrator";
 
 export class AIPromptBuilder {
-  private prompt: Array<string>;
-  private role: Role;
+  private prompt: Array<{ role: Role; content: string }>;
   private defaultOutputFormat = {
     content: "output",
   };
 
-  constructor(role: Role) {
-    this.role = role;
+  constructor() {
     this.prompt = [];
   }
 
   base() {
-    this.prompt.push(`You are a helpful assistant for ${config.app.name}.`);
-    this.prompt.push(`You are acting as a ${this.role}.`);
-    this.prompt.push(`Answer accurately and concisely.`);
+    this.prompt.push({role: "system", content : `You are a helpful assistant for ${config.app.name}.`});
+    this.prompt.push({role: "system", content : `Answer accurately and concisely.`});
     this.prompt.push(
-      `Return only the result using the EXPECTED_OUTPUT_FORMAT.`,
+      {role: "system", content : `Return only the result using the EXPECTED_OUTPUT_FORMAT.`},
     );
     return this;
   }
@@ -32,7 +29,7 @@ export class AIPromptBuilder {
     return this;
   }
 
-  addInstruction(instruction: string): AIPromptBuilder {
+  addInstruction(instruction: { role: Role; content: string }): AIPromptBuilder {
     this.prompt.push(instruction);
     return this;
   }
@@ -41,16 +38,18 @@ export class AIPromptBuilder {
     expectedOutput?: Record<string, T> | string,
   ): AIPromptBuilder {
     if (expectedOutput) {
-      this.prompt.push("EXPECTED_OUTPUT_FORMAT : " + expectedOutput);
+      this.prompt.push({role: "system", content: "EXPECTED_OUTPUT_FORMAT : " + expectedOutput});
     } else {
       this.prompt.push(
-        "EXPECTED_OUTPUT_FORMAT : " + JSON.stringify(this.defaultOutputFormat),
+        {role: "system", content: "EXPECTED_OUTPUT_FORMAT : " + JSON.stringify(this.defaultOutputFormat)}
       );
     }
     return this;
   }
 
   async execute(): Promise<string> {
-    return this.prompt.join("\n");
+    return this.prompt
+      .map((p) => `${p.role}: ${p.content}`)
+      .join("\n");
   }
 }

@@ -5,7 +5,7 @@ import type {
   ExpectedImprovedLogbookEntryResponse,
   ExpectedProduceLogbookDetailsResponse,
 } from "@/lib/ai/instructions/entry.logbook";
-import { ApiResponse, status } from "@/lib/api.response";
+import { ApiResponse, errorResponse, status, successResponse } from "@/lib/api.response";
 import { LogbookAIService } from "@/services/ai.generate.service";
 
 export type AIResponse = {
@@ -16,8 +16,8 @@ export type AIResponse = {
 interface AiContextType {
   state: "idle" | "loading" | "success" | "error";
   response: AIResponse | null;
-  improveLogbookText: (logbookText: string) => Promise<void>;
-  produceLogbookDetails: (logbookText: string) => Promise<void>;
+  improveLogbookText: (logbookText: string) => Promise<ApiResponse<ExpectedImprovedLogbookEntryResponse | undefined>>;
+  produceLogbookDetails: (logbookText: string) => Promise<ApiResponse<ExpectedProduceLogbookDetailsResponse | undefined>>;
 }
 
 export const AiContext = createContext<AiContextType | null>(null);
@@ -38,16 +38,20 @@ export function AiProvider({ children }: { children: React.ReactNode }) {
       if (response.status === status.ERROR) {
         setState("error");
         toast.error("Failed to improve logbook text. Please try again.");
-        return;
+        return errorResponse(undefined, "Failed to improve logbook text") as ApiResponse<undefined>;
       }
 
-      setResponse({ improvedText: response.data });
+      setResponse(prev => ({ ...prev, improvedText: response.data }));
       setState("success");
       toast.success("Logbook text improved successfully!");
+
+      return successResponse(response.data, "Logbook text improved successfully") as ApiResponse<ExpectedImprovedLogbookEntryResponse>;
     } catch (err) {
       setState("error");
       toast.error("Failed to improve logbook text. Please try again.");
       console.error("AI request failed:", err);
+
+      return errorResponse(undefined, "Failed to improve logbook text") as ApiResponse<undefined>;
     } finally {
       setState("idle");
     }
@@ -63,16 +67,20 @@ export function AiProvider({ children }: { children: React.ReactNode }) {
       if (response.status === status.ERROR) {
         setState("error");
         toast.error("Failed to produce logbook details. Please try again.");
-        return;
+        return errorResponse(undefined, "Failed to produce logbook details") as ApiResponse<undefined>;
       }
 
-      setResponse({ logbookDetails: JSON.parse(response.data) });
+      setResponse(prev => ({ ...prev, logbookDetails: JSON.parse(response.data) }));
       setState("success");
       toast.success("Logbook details produced successfully!");
+
+      return successResponse(JSON.parse(response.data), "Logbook details produced successfully") as ApiResponse<ExpectedProduceLogbookDetailsResponse>;
     } catch (err) {
       setState("error");
       toast.error("Failed to produce logbook details. Please try again.");
       console.error("AI request failed:", err);
+
+      return errorResponse(undefined, "Failed to produce logbook details") as ApiResponse<undefined>;
     } finally {
       setState("idle");
     }
