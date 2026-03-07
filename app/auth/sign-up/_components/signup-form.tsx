@@ -95,17 +95,18 @@ export function SignupForm({
                       {...register("confirmPassword")}
                     />
                   </Field>
-
-                  {(errors.password || errors.confirmPassword) && (
-                    <FieldDescription className="text-red-500">
-                      {errors.password?.message ||
-                        errors.confirmPassword?.message}
-                    </FieldDescription>
-                  )}
                 </Field>
-                <FieldDescription>
-                  Must be at least 8 characters long.
-                </FieldDescription>
+                {(errors.password || errors.confirmPassword) && (
+                  <FieldDescription className="text-red-500">
+                    {errors.password?.message ||
+                      errors.confirmPassword?.message}
+                  </FieldDescription>
+                )}
+                {(!errors.password && !errors.confirmPassword) && (
+                  <FieldDescription>
+                    Must be at least 8 characters long.
+                  </FieldDescription>
+                )}
               </Field>
               <Field>
                 <Button type="submit" disabled={isSubmitting || isLoading}>

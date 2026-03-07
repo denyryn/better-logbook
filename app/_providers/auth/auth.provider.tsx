@@ -16,6 +16,7 @@ import { authClient } from "@/lib/auth-client";
 import { config } from "@/lib/config";
 import { signUpSchema } from "@/schemas/sign-up";
 import { User, UserLogin, UserSignUp } from "@/types/user";
+import { useRouter } from "next/navigation";
 
 interface AuthResponse {
   token?: string;
@@ -31,6 +32,7 @@ interface AuthContextType {
   signIn: (
     data: UserLogin,
   ) => Promise<ApiResponse<AuthResponse | null | undefined>>;
+  socialSignIn: (provider: "google") => void;
   signOut: () => Promise<ApiResponse<AuthResponse | null | undefined>>;
   isLoading: boolean;
 }
@@ -40,6 +42,7 @@ export const AuthContext = createContext<AuthContextType | null>(null);
 export function AuthProvider({ children }: { children: ReactNode }) {
   const [user, setUser] = useState<User | null>(null);
   const [isLoading, setIsLoading] = useState(true);
+  const router = useRouter();
 
   useEffect(() => {
     const checkSession = async () => {
@@ -130,6 +133,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
         StatusCodes.OK,
       ) as ApiResponse<AuthResponse>;
     } catch (err) {
+      console.error("Sign-in failed:", err);
       return errorResponse(
         undefined,
         "Something went wrong",
@@ -138,17 +142,32 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     }
   };
 
+  const handleSocialSignIn = (provider: "google") => {
+    authClient.signIn.social({
+      provider: provider,
+      callbackURL: config.app.home,
+      newUserCallbackURL: config.app.home,
+    })
+  }
+
   const handleSignOut = async (): Promise<
     ApiResponse<AuthResponse | null | undefined>
   > => {
     try {
-      const { data, error } = await authClient.signOut();
+      const { data, error } = await authClient.signOut({
+        fetchOptions: {
+          onSuccess: () => {
+            router.push(config.app.home);
+          },
+        }
+      });
 
       if (error) {
         return errorResponse(undefined, error.message, StatusCodes.BAD_REQUEST);
       }
 
       setUser(null);
+      toast.info("Signed out successfully");
 
       return successResponse(
         undefined,
@@ -156,6 +175,8 @@ export function AuthProvider({ children }: { children: ReactNode }) {
         StatusCodes.OK,
       );
     } catch (err) {
+      console.error("Sign-out failed:", err);
+      toast.error("Something went wrong during sign-out");
       return errorResponse(
         undefined,
         "Something went wrong",
@@ -172,6 +193,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
         signUp: handleSignUp,
         signIn: handleSignIn,
         signOut: handleSignOut,
+        socialSignIn: handleSocialSignIn,
         isLoading,
       }}
     >

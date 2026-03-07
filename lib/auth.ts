@@ -3,6 +3,7 @@ import { prismaAdapter } from "better-auth/adapters/prisma";
 import { type NextRequest } from "next/server";
 
 import { prisma } from "@/lib/prisma";
+import { config } from "./config";
 
 export const auth = betterAuth({
   database: prismaAdapter(prisma, {
@@ -10,6 +11,13 @@ export const auth = betterAuth({
   }),
   emailAndPassword: {
     enabled: true,
+  },
+  socialProviders: {
+    google: {
+      enabled: true,
+      clientId: config.auth.google.clientId,
+      clientSecret: config.auth.google.clientSecret,
+    }
   },
   session: {
     expiresIn: 60 * 60 * 24 * 7, // 7 days
