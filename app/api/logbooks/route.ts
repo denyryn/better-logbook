@@ -4,6 +4,7 @@ import { NextRequest } from "next/server";
 import { serverErrorResponse, serverSuccessResponse } from "@/lib/api.response";
 import { auth } from "@/lib/auth";
 import { prisma } from "@/lib/prisma";
+import { Logbook } from "@/generated/prisma/client";
 
 export async function GET(request: NextRequest) {
   try {
@@ -36,31 +37,29 @@ export async function GET(request: NextRequest) {
 
 export async function POST(
   request: NextRequest,
-  { params }: { params: Promise<{ projectId: string }> },
 ) {
   try {
-    const { projectId } = await params;
     const session = await auth.api.getSession({ headers: request.headers });
 
     if (!session?.user?.id) {
       return serverErrorResponse(undefined, "Unauthorized", StatusCodes.UNAUTHORIZED);
     }
 
+    const body = await request.json() as Logbook & { tags?: string[] };
+
     const project = await prisma.project.findFirst({
-      where: { id: projectId, userId: session.user.id },
+      where: { id: body.projectId, userId: session.user.id },
     });
 
     if (!project) {
       return serverErrorResponse(undefined, "Project not found", StatusCodes.NOT_FOUND);
     }
 
-    const body = await request.json();
     const { tags, ...logbookData } = body;
 
     const logbook = await prisma.logbook.create({
       data: {
         ...logbookData,
-        projectId,
         logDate: new Date(logbookData.logDate),
         tags: tags?.length
           ? {
