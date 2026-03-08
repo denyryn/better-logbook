@@ -39,7 +39,7 @@ export function AiProvider({ children }: { children: React.ReactNode }) {
   const handleImproveLogbookText = async (logbookText: string) => {
     setState("loading");
     try {
-      if (usedTokenPercentage === 0) return errorResponse(undefined, "You exceeded ai usage limit.") as ApiResponse<undefined>;
+      if (usedTokenPercentage <= 0) return errorResponse(undefined, "You exceeded ai usage limit.") as ApiResponse<undefined>;
 
       const response = (await new LogbookAIService(logbookText).improveText(
         "client",

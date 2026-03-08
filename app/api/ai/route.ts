@@ -27,7 +27,7 @@ export async function POST(request: NextRequest) {
     const tokenCalculator = new TokenCalculator(usages);
     const remainingToken = tokenCalculator.calculateRemainingPercentage();
 
-    if (remainingToken === 0) {
+    if (remainingToken <= 0) {
       return serverErrorResponse(undefined, "You are exceeded your AI usage limit.", StatusCodes.FORBIDDEN)
     }
 
