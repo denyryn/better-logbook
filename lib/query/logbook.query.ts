@@ -7,6 +7,7 @@ import {
   getLogbooks,
   getLogbooksByProject,
 } from "../api/logbook.api";
+import { toast } from "sonner";
 
 export function useLogbooks() {
   return useQuery({
@@ -31,5 +32,9 @@ export function useCreateLogbook() {
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["logbooks"] });
     },
+    onError: (error) => {
+      console.error("Error creating logbook entry:", error);
+      toast.error(error.message);
+    }
   });
 }
