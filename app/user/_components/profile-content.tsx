@@ -7,10 +7,12 @@ import { Label } from "@/components/ui/label";
 import { Separator } from "@/components/ui/separator";
 import { Switch } from "@/components/ui/switch";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { Textarea } from "@/components/ui/textarea";
 import { Badge } from "@/components/ui/badge";
+import { useProfile } from "./profile";
+import { cn } from "@/lib/utils";
 
 export default function ProfileContent() {
+  const {usage} = useProfile();
   return (
     <Tabs defaultValue="personal" className="space-y-6">
       <TabsList className="grid w-full grid-cols-4">
@@ -45,27 +47,6 @@ export default function ProfileContent() {
                 <Label htmlFor="phone">Phone</Label>
                 <Input id="phone" defaultValue="+1 (555) 123-4567" />
               </div>
-              <div className="space-y-2">
-                <Label htmlFor="jobTitle">Job Title</Label>
-                <Input id="jobTitle" defaultValue="Senior Product Designer" />
-              </div>
-              <div className="space-y-2">
-                <Label htmlFor="company">Company</Label>
-                <Input id="company" defaultValue="Acme Inc." />
-              </div>
-            </div>
-            <div className="space-y-2">
-              <Label htmlFor="bio">Bio</Label>
-              <Textarea
-                id="bio"
-                placeholder="Tell us about yourself..."
-                defaultValue="Passionate product designer with 8+ years of experience creating user-centered digital experiences. I love solving complex problems and turning ideas into beautiful, functional products."
-                rows={4}
-              />
-            </div>
-            <div className="space-y-2">
-              <Label htmlFor="location">Location</Label>
-              <Input id="location" defaultValue="San Francisco, CA" />
             </div>
           </CardContent>
         </Card>
@@ -73,6 +54,22 @@ export default function ProfileContent() {
 
       {/* Account Settings */}
       <TabsContent value="account" className="space-y-6">
+        <Card>
+          <CardHeader>
+            <CardTitle>AI Usage</CardTitle>
+            <CardDescription>Track your AI usage and token consumption.</CardDescription>
+          </CardHeader>
+          <CardContent className="space-y-2">
+            <div className="w-full text-end">
+              { usage }%
+            </div>
+            <div className="w-full relative">
+              <div className="block w-full bg-muted h-6"></div>
+              <div className={cn("absolute inset-0 bg-white h-6")} style={{width: `${usage}%` }}></div>
+            </div>
+          </CardContent>
+        </Card>
+
         <Card>
           <CardHeader>
             <CardTitle>Account Settings</CardTitle>
