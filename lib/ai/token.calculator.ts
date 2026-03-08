@@ -2,37 +2,33 @@ import { AiTokenUsage } from "@/generated/prisma/client";
 import { config } from "../config";
 
 export class TokenCalculator {
-  private usageData: AiTokenUsage[] | undefined;
+  private usageData: AiTokenUsage[];
 
-  constructor(usageData: AiTokenUsage[] | undefined) {
-    if (!usageData) throw Error("Ai usage token data invalid.")
-    this.usageData = usageData;
+  constructor(usageData?: AiTokenUsage[]) {
+    this.usageData = usageData ?? [];
   }
 
-  calculateUsedTokens() {
-    const usedTokens = this.usageData?.reduce((acc, usage) => acc + usage.totalTokens, 0);
-    return usedTokens;
+  calculateUsedTokens(): number {
+    return this.usageData.reduce((acc, usage) => acc + usage.totalTokens, 0);
   }
 
   calculateUsagePercentage(): number {
     const totalTokens = this.calculateUsedTokens();
-    if (!totalTokens) throw Error("Total token invalid")
-
     const tokenLimit = config.ai.weeklyLimit;
-    if (tokenLimit === 0) return 0; // Avoid division by zero
-    return (totalTokens / tokenLimit) * 100;
+
+    if (tokenLimit === 0) return 0;
+
+    return Math.min((totalTokens / tokenLimit) * 100, 100);
   }
 
   calculateRemainingTokens(): number {
     const totalTokens = this.calculateUsedTokens();
-    if (!totalTokens) throw Error("Total token invalid")
-
     const tokenLimit = config.ai.weeklyLimit;
-    return Math.max(tokenLimit - totalTokens, 0); // Ensure it doesn't go negative
+
+    return Math.max(tokenLimit - totalTokens, 0);
   }
 
   calculateRemainingPercentage(): number {
-    const remainingTokens = this.calculateRemainingTokens();
-    return 100 - remainingTokens;
+    return 100 - this.calculateUsagePercentage();
   }
 }

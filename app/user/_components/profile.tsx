@@ -4,6 +4,7 @@ import ProfileHeader from "./profile-header";
 import { useAuth } from "@/app/_providers/auth/auth.provider";
 import { useAiUsage } from "@/lib/query/ai-usage.query";
 import { config } from "@/lib/config";
+import { TokenCalculator } from "@/lib/ai/token.calculator";
 
 export type ProfileState = "edit" | "view";
 
@@ -60,9 +61,8 @@ const Profile = (({ children }: { children: React.ReactNode }) => {
   const { user } = useAuth();
   const { data: aiUsageDatas } = useAiUsage();
 
-  const tokenUsed = aiUsageDatas?.data.reduce((acc, usage) => acc + usage.totalTokens, 0);
-
-  const usage = tokenUsed ? Math.round((tokenUsed / config.ai.weeklyLimit) * 100) : 0;
+  const tokens = new TokenCalculator(aiUsageDatas?.data)
+  const usage = tokens.calculateUsagePercentage();
 
   return (
     <ProfileContext.Provider value={{ profileState, setProfileState, user, usage }}>
