@@ -1,10 +1,10 @@
-import { useAi } from "@/app/_providers/ai/ai.provider";
 import { Button } from "@/components/ui/components/ui/button";
 import { DialogClose, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import { Field, FieldDescription, FieldGroup, FieldLabel } from "@/components/ui/field";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Textarea } from "@/components/ui/textarea";
 import { Logbook } from "@/generated/prisma/client";
+import { useImproveText, useProduceLogbookDetails } from "@/lib/query/ai-generate.query";
 import { useCreateLogbook } from "@/lib/query/logbook.query";
 import { useProjects } from "@/lib/query/project.query";
 import { QuickCreateFormData, quickCreateSchema } from "@/schemas/quick-create";
@@ -23,38 +23,38 @@ export function QuickCreateFormDialog({ onSuccess }: QuickCreateFormDialogProps)
     mode: "onBlur",
   });
 
-  const { state: aiState, improveLogbookText, produceLogbookDetails, response } = useAi();
+  const { mutateAsync: improveLogbookText, data: improvedLogbookText } = useImproveText();
+  const { mutateAsync: produceLogbookDetails, data: producedLogbookDetails } = useProduceLogbookDetails();
   const { data: allProjects, isLoading: isProjectsLoading } = useProjects();
   const { mutateAsync: createLogbook, isPending: isCreateLogbookPending } = useCreateLogbook();
 
   async function inferenceLogbookCreation(data: QuickCreateFormData) {
-    const inferencedData: Partial<Logbook & {tags: string[]}> = { ...data };
+    const inferencedData: Partial<Logbook & {tags: string[]}> = {};
 
-    inferencedData.logDate = new Date();
-
-    const [improvedText, logbookDetails] = await Promise.all([
+    const [improved, produced] = await Promise.all([
       improveLogbookText(data.content),
       produceLogbookDetails(data.content)
     ]);
 
-    inferencedData.title = logbookDetails?.data?.title;
-    inferencedData.tags = logbookDetails?.data?.tags;
-    inferencedData.content = improvedText.data;
+    console.log("Improved Logbook Text:", improved);
+    console.log("Produced Logbook Details:", produced);
 
-    console.log("Inferenced Data:", inferencedData);
-    await createLogbook(inferencedData)
+    inferencedData.logDate = new Date();
+    inferencedData.projectId = data.projectId;
+    inferencedData.title = produced.data.title;
+    inferencedData.tags = produced.data.tags;
+    inferencedData.content = improved.data;
+
+    const response = await createLogbook(inferencedData);
+
+    return response;
   }
 
   const onSubmit = async (data: QuickCreateFormData) => {
-    try {
-      await inferenceLogbookCreation(data)
-      reset();
-      toast.success("Logbook entry created successfully.")
-      onSuccess?.();
-    } catch (error) {
-      console.error("Error creating:", error);
-      toast.error("Failed to create logbook entry. Please try again")
-    }
+    await inferenceLogbookCreation(data);
+    reset();
+    toast.success("Logbook entry created successfully.")
+    onSuccess?.();
   };
 
   return (

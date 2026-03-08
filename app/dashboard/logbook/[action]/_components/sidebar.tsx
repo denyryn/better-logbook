@@ -1,21 +1,23 @@
-import { Loader2, Save, Sparkles } from "lucide-react";
+import { Loader2, LoaderCircle, Save, Sparkles } from "lucide-react";
 import { UseFormReturn } from "react-hook-form";
 import { toast } from "sonner";
 
-import { useAi } from "@/app/_providers/ai/ai.provider";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { useCreateLogbook } from "@/lib/query/logbook.query";
 
 import { FormData } from "../page";
+import { UseMutateAsyncFunction } from "@tanstack/react-query";
+import { ApiResponse } from "@/lib/api.response";
 
 interface SidebarProps {
   form: UseFormReturn<FormData>;
+  improveLogbookText: UseMutateAsyncFunction<ApiResponse<string>, Error, string, unknown>
+  isPending: boolean;
 }
 
-export function Sidebar({ form }: SidebarProps) {
-  const { state, improveLogbookText } = useAi();
-  const { mutate: addLogbook } = useCreateLogbook();
+export function Sidebar({ form, improveLogbookText, isPending }: SidebarProps) {
+  const { mutateAsync: createLogbook, isPending: isCreatingLogbook } = useCreateLogbook();
   const { watch } = form;
   const formData = watch();
 
@@ -33,7 +35,7 @@ export function Sidebar({ form }: SidebarProps) {
         ...formData,
         logDate: new Date(formData.logDate),
       };
-      addLogbook(logbookData);
+      await createLogbook(logbookData);
       toast.success("Logbook saved successfully!");
       form.reset();
     } catch {
@@ -67,29 +69,37 @@ export function Sidebar({ form }: SidebarProps) {
           <CardTitle className="text-base">Actions</CardTitle>
         </CardHeader>
         <CardContent className="flex flex-col gap-3">
-          <Button
-            onClick={improveText}
-            disabled={state === "loading" || !formData.content.trim()}
-            className="w-full"
-            variant="outline"
-          >
-            {state === "loading" ? (
-              <>
+          {isPending
+            ? <Button
+                onClick={improveText}
+                disabled
+                className="w-full"
+                variant="outline"
+              >
                 <Loader2 className="mr-2 h-4 w-4 animate-spin" />
                 Improving...
-              </>
-            ) : (
-              <>
-                <Sparkles className="mr-2 h-4 w-4" />
-                Improve with AI
-              </>
-            )}
-          </Button>
+              </Button>
+             : <Button
+                 onClick={improveText}
+                 disabled={!formData.content.trim()}
+                 className="w-full"
+                 variant="outline"
+               >
+                 <Sparkles className="mr-2 h-4 w-4" />
+                 Improve with AI
+               </Button>
+          }
 
-          <Button onClick={handleSave} className="w-full">
-            <Save className="mr-2 h-4 w-4" />
-            Save Entry
-          </Button>
+          {isCreatingLogbook
+            ? <Button onClick={handleSave} className="w-full" disabled>
+                <LoaderCircle className="mr-2 h-4 w-4 animate-spin" />
+                Saving Entry
+            </Button>
+            : <Button onClick={handleSave} className="w-full">
+                <Save className="mr-2 h-4 w-4" />
+                Save Entry
+            </Button>
+          }
         </CardContent>
       </Card>
 

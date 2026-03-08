@@ -3,7 +3,6 @@ import { useState } from "react";
 import { UseFormReturn } from "react-hook-form";
 import { toast } from "sonner";
 
-import { useAi } from "@/app/_providers/ai/ai.provider";
 import { Button } from "@/components/ui/button";
 import {
   Card,
@@ -19,18 +18,19 @@ import { FormData } from "../page";
 
 interface LogbookContentProps {
   form: UseFormReturn<FormData>;
+  improvedText?: string;
+  isPending?: boolean;
 }
 
-export function LogbookContent({ form }: LogbookContentProps) {
+export function LogbookContent({ form, improvedText, isPending }: LogbookContentProps) {
   const { register, watch, setValue } = form;
-  const { state, response } = useAi();
   const content = watch("content");
   const [activeTab, setActiveTab] = useState("edit");
 
   // Update content when AI improves it
   function handleUseImprovedText() {
-    if (response) {
-      setValue("content", response.improvedText as string);
+    if (improvedText) {
+      setValue("content", improvedText);
       toast.success("Applied improved text");
     }
   }
@@ -51,12 +51,12 @@ export function LogbookContent({ form }: LogbookContentProps) {
           </TabsList>
           <TabsContent value="edit" className="space-y-4">
             <Textarea
-              disabled={state === "loading"}
+              disabled={isPending}
               {...register("content")}
               placeholder="Describe what you worked on today..."
               className="min-h-75 resize-y"
             />
-            {response?.improvedText && response.improvedText !== content && (
+            {improvedText && improvedText !== content && (
               <div className="border-primary/20 bg-primary/5 rounded-lg border p-4">
                 <div className="mb-2 flex items-center justify-between">
                   <span className="flex items-center gap-2 text-sm font-medium">
@@ -72,7 +72,7 @@ export function LogbookContent({ form }: LogbookContentProps) {
                   </Button>
                 </div>
                 <p className="text-muted-foreground text-sm whitespace-pre-wrap">
-                  {response.improvedText}
+                  {improvedText}
                 </p>
               </div>
             )}

@@ -13,6 +13,7 @@ import { LogbookContent } from "./_components/logbook.content";
 import { LogbookDetails } from "./_components/logbook.details";
 import { LogbookHistory } from "./_components/logbook.history";
 import { Sidebar } from "./_components/sidebar";
+import { useImproveText } from "@/lib/query/ai-generate.query";
 
 export type FormData = z.infer<typeof logbookSchema>;
 
@@ -31,6 +32,7 @@ export default function Page() {
 
   const [newTag, setNewTag] = useState("");
   const { data: allProjects } = useProjects();
+  const { mutateAsync: improveLogbookText, data: improvedText, isPending } = useImproveText();
 
   return (
     <>
@@ -50,14 +52,14 @@ export default function Page() {
                 />
 
                 {/* Logbook Content */}
-                <LogbookContent form={form} />
+                <LogbookContent form={form} improvedText={improvedText?.data} />
 
                 {/* Logbook Histories */}
                 <LogbookHistory />
               </div>
 
               {/* Sidebar Actions */}
-              <Sidebar form={form} />
+              <Sidebar form={form} improveLogbookText={improveLogbookText} isPending={isPending} />
             </div>
           </div>
         </div>

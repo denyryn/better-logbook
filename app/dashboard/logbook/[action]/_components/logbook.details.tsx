@@ -11,7 +11,6 @@ import { useEffect, useState } from "react";
 import { UseFormReturn } from "react-hook-form";
 import { toast } from "sonner";
 
-import { useAi } from "@/app/_providers/ai/ai.provider";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import {
@@ -33,6 +32,7 @@ import {
 import { Project } from "@/generated/prisma/client";
 
 import { FormData } from "../page";
+import { useProduceLogbookDetails } from "@/lib/query/ai-generate.query";
 
 interface LogbookDetailsProps {
   form: UseFormReturn<FormData>;
@@ -47,7 +47,7 @@ export function LogbookDetails({
   setNewTag,
   projects,
 }: LogbookDetailsProps) {
-  const { state, produceLogbookDetails, response } = useAi();
+  const {mutateAsync: produceLogbookDetails, data: producedLogbookDetails, isPending} = useProduceLogbookDetails();
   const { register, watch, setValue } = form;
   const tags = watch("tags");
   const [isDetailsCollapsed, setIsDetailsCollapsed] = useState(true);
@@ -67,7 +67,7 @@ export function LogbookDetails({
   }
 
   function handleProduceDetails() {
-    if (state === "loading") return;
+    if (isPending) return;
     if (!watch("content").trim()) {
       toast.error("Please enter some content to generate details");
       return;
@@ -77,25 +77,25 @@ export function LogbookDetails({
   }
 
   useEffect(() => {
-    if (!response?.logbookDetails) return;
+    if (!producedLogbookDetails?.data) return;
 
     function applyProducedDetails() {
-      if (!response?.logbookDetails) return;
+      if (!producedLogbookDetails?.data) return;
 
       function setNewTagsFromResponse() {
-        response?.logbookDetails?.tags?.forEach((tag: string) => {
+        producedLogbookDetails?.data.tags?.forEach((tag: string) => {
           if (!tags.includes(tag)) {
             setValue("tags", [...watch("tags"), tag]);
           }
         });
       }
 
-      setValue("title", response?.logbookDetails?.title);
+      setValue("title", producedLogbookDetails.data.title);
       setNewTagsFromResponse();
     }
 
     applyProducedDetails();
-  }, [response?.logbookDetails, setValue, watch, tags]);
+  }, [producedLogbookDetails?.data, setValue, watch, tags]);
 
   const ChevronIcon = isDetailsCollapsed ? ChevronDown : ChevronUp;
 
@@ -112,7 +112,7 @@ export function LogbookDetails({
             <Button
               variant="default"
               size="sm"
-              disabled={state === "loading"}
+              disabled={isPending}
               onClick={handleProduceDetails}
               className="h-8 w-8 p-0"
             >
