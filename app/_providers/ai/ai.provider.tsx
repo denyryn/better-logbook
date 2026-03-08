@@ -9,6 +9,8 @@ import type {
 } from "@/lib/ai/instructions/entry.logbook";
 import { ApiResponse, errorResponse, status, successResponse } from "@/lib/api.response";
 import { LogbookAIService } from "@/services/ai.generate.service";
+import { useAiUsage } from "@/lib/query/ai-usage.query";
+import { TokenCalculator } from "@/lib/ai/token.calculator";
 
 export type AIResponse = {
   improvedText?: ExpectedImprovedLogbookEntryResponse;
@@ -29,10 +31,16 @@ export function AiProvider({ children }: { children: React.ReactNode }) {
   const [response, setResponse] = useState<AiContextType["response"] | null>(
     null,
   );
+  const { data: aiUsageData } = useAiUsage();
+
+  const tokens = new TokenCalculator(aiUsageData?.data)
+  const usedTokenPercentage = tokens.calculateRemainingPercentage();
 
   const handleImproveLogbookText = async (logbookText: string) => {
     setState("loading");
     try {
+      if (usedTokenPercentage === 0) return errorResponse(undefined, "You exceeded ai usage limit.") as ApiResponse<undefined>;
+
       const response = (await new LogbookAIService(logbookText).improveText(
         "client",
       )) as ApiResponse<string>;
@@ -62,6 +70,8 @@ export function AiProvider({ children }: { children: React.ReactNode }) {
   const handleProduceLogbookDetails = async (logbookText: string) => {
     setState("loading");
     try {
+      if (usedTokenPercentage === 0) return errorResponse(undefined, "You exceeded ai usage limit.") as ApiResponse<undefined>;
+
       const response = (await new LogbookAIService(
         logbookText,
       ).produceLogbookDetails("client")) as ApiResponse<string>;
