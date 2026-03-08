@@ -54,7 +54,7 @@ export function SpaceFormDialog({ onSuccess }: SpaceFormDialogProps) {
           </FieldLabel>
           <Input
             id="name"
-            placeholder="e.g., Frontend Development, Marketing Team"
+            placeholder="e.g., Work, Portfolios, Microsoft"
             {...register("name")}
             disabled={isSubmitting || isLoading}
             autoFocus
@@ -73,20 +73,22 @@ export function SpaceFormDialog({ onSuccess }: SpaceFormDialogProps) {
       </FieldGroup>
 
       <div className="flex gap-3 justify-end">
-        <Button
-          type="submit"
-          disabled={isSubmitting || isLoading}
-          className="flex-1 text-base font-semibold"
-        >
-          {isSubmitting || isLoading ? (
-            <>
-              <LoaderCircle className="mr-2 animate-spin" size={16} />
-              Creating...
-            </>
-          ) : (
-            "Create Space"
-          )}
-        </Button>
+        {isSubmitting || isLoading
+          ? <Button
+            type="submit"
+            className="flex-1 text-base font-semibold"
+            disabled
+          >
+            <LoaderCircle className="mr-2 animate-spin" size={16} />
+            Creating...
+          </Button>
+          : <Button
+            type="submit"
+            className="flex-1 text-base font-semibold"
+          >
+            Create Space
+          </Button>
+          }
       </div>
     </form>
   );

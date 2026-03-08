@@ -49,7 +49,7 @@ export function ProjectFormDialog({ onSuccess }: ProjectFormDialogProps) {
           </FieldLabel>
           <Input
             id="name"
-            placeholder="e.g., Frontend Development, Marketing Team"
+            placeholder="e.g., Better Logbook, Smart Shop"
             {...register("name")}
             disabled={isSubmitting || isLoading}
             autoFocus
@@ -109,14 +109,13 @@ export function ProjectFormDialog({ onSuccess }: ProjectFormDialogProps) {
           disabled={isSubmitting || isLoading}
           className="flex-1 text-base font-semibold"
         >
-          {isSubmitting || isLoading ? (
-            <>
+          {isSubmitting || isLoading
+            ? <>
               <LoaderCircle className="mr-2 animate-spin" size={16} />
               Creating...
             </>
-          ) : (
-            "Create Space"
-          )}
+            : "Create Space"
+          }
         </Button>
       </div>
     </form>

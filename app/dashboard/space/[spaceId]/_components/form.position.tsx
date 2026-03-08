@@ -69,7 +69,7 @@ export function PositionFormDialog({ onSuccess }: PositionFormDialogProps) {
           </FieldLabel>
           <Input
             id="role"
-            placeholder="e.g., Senior Developer, Project Manager"
+            placeholder="e.g., Senior Developer, Project Manager, Owner"
             {...register("role")}
             disabled={isSubmitting || isLoading}
           />
@@ -128,14 +128,12 @@ export function PositionFormDialog({ onSuccess }: PositionFormDialogProps) {
           disabled={isSubmitting || isLoading}
           className="flex-1 text-base font-semibold"
         >
-          {isSubmitting || isLoading ? (
-            <>
-            <LoaderCircle className="mr-2 animate-spin" />
+          {isSubmitting || isLoading
+            ? <>
+              <LoaderCircle className="mr-2 animate-spin" />
               Creating...
             </>
-          ) : (
-            "Create Position"
-          )}
+            : "Create Position"}
         </Button>
       </div>
     </form>

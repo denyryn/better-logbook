@@ -63,7 +63,7 @@ export function QuickCreateFormDialog({ onSuccess }: QuickCreateFormDialogProps)
         <DialogHeader>
           <DialogTitle>Quick Create</DialogTitle>
           <DialogDescription>
-            Create a new logbook entry quickly.
+            Create a new logbook entry quickly. The date will be set as today.
           </DialogDescription>
         </DialogHeader>
         <FieldGroup>
