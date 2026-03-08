@@ -10,6 +10,7 @@ export const config = {
     home: "/",
   },
   ai: {
+    weeklyLimit: 1000,
     deepseek: {
       apiKey: process.env.DEEPSEEK_API_KEY,
       baseURL: process.env.DEEPSEEK_API_BASE_URL,
