@@ -2,6 +2,7 @@ import { AiTokenUsage } from "@/generated/prisma/client";
 import { serverErrorResponse, serverSuccessResponse } from "@/lib/api.response";
 import { auth } from "@/lib/auth";
 import { prisma } from "@/lib/prisma";
+import { startOfISOWeek } from "date-fns";
 import { StatusCodes } from "http-status-codes";
 import { NextRequest } from "next/server";
 
@@ -13,8 +14,10 @@ export async function GET(request: NextRequest) {
       return serverErrorResponse(undefined, "Unauthorized", StatusCodes.UNAUTHORIZED);
     }
 
+    const startOfWeekDate = startOfISOWeek(new Date());
+
     const usage = await prisma.aiTokenUsage.findMany({
-      where: { userId: session.user.id }
+      where: { userId: session.user.id, createdAt: { gte: startOfWeekDate} }
     });
 
     return serverSuccessResponse(usage, "Usage fetched successfully", StatusCodes.OK)
