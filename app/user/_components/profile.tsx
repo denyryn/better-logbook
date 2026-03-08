@@ -3,7 +3,6 @@ import { createContext, useContext, useState } from "react";
 import ProfileHeader from "./profile-header";
 import { useAuth } from "@/app/_providers/auth/auth.provider";
 import { useAiUsage } from "@/lib/query/ai-usage.query";
-import { config } from "@/lib/config";
 import { TokenCalculator } from "@/lib/ai/token.calculator";
 
 export type ProfileState = "edit" | "view";
@@ -32,8 +31,6 @@ export function useProfile() {
 /* ---------------- Sub Components ---------------- */
 
 function Content() {
-  const { profileState } = useProfile();
-
   return <ProfileContent />
 }
 

@@ -12,7 +12,8 @@ import { useProfile } from "./profile";
 import { cn } from "@/lib/utils";
 
 export default function ProfileContent() {
-  const {usage} = useProfile();
+  const { usage } = useProfile();
+
   return (
     <Tabs defaultValue="personal" className="space-y-6">
       <TabsList className="grid w-full grid-cols-4">
@@ -56,7 +57,7 @@ export default function ProfileContent() {
       <TabsContent value="account" className="space-y-6">
         <Card>
           <CardHeader>
-            <CardTitle>AI Usage</CardTitle>
+            <CardTitle>Weekly AI Usage</CardTitle>
             <CardDescription>Track your AI usage and token consumption.</CardDescription>
           </CardHeader>
           <CardContent className="space-y-2">
@@ -89,7 +90,7 @@ export default function ProfileContent() {
             <div className="flex items-center justify-between">
               <div className="space-y-1">
                 <Label className="text-base">Subscription Plan</Label>
-                <p className="text-muted-foreground text-sm">Pro Plan - $29/month</p>
+                <p className="text-muted-foreground text-sm">Free Plan</p>
               </div>
               <Button variant="outline">Manage Subscription</Button>
             </div>
