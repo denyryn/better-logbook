@@ -77,6 +77,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
         email: parsedBody.data.email,
         password: parsedBody.data.password,
         name: parsedBody.data.name,
+        callbackURL: config.app.home,
       });
 
       if (error) {
