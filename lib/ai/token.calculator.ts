@@ -18,7 +18,7 @@ export class TokenCalculator {
 
     if (tokenLimit === 0) return 0;
 
-    return Math.min((totalTokens / tokenLimit) * 100, 100);
+    return Math.ceil(Math.min((totalTokens / tokenLimit) * 100, 100));
   }
 
   calculateRemainingTokens(): number {
