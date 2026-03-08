@@ -25,6 +25,7 @@ model User {
   accounts      Account[]
   projects    Project[]
   companies   Company[]
+  aiTokenUsages AiTokenUsage[]
 
   @@unique([email])
   @@map("user")
@@ -163,4 +164,20 @@ model LogbookTag {
   @@index([tagId])
 
   @@map("logbook_tag")
+}
+
+model AiTokenUsage {
+  id        String          @id @default(uuid())
+  userId    String
+  model     String
+  promptTokens Int
+  completionTokens Int
+  totalTokens Int
+  createdAt DateTime        @default(now())
+
+  user     User            @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([userId])
+
+  @@map("ai_token_usage")
 }
