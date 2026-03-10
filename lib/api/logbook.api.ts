@@ -2,8 +2,9 @@ import { ApiResponse } from "@/lib/api.response";
 import { api } from "@/lib/axios";
 import { LogbookWithRelations } from "@/types/prisma/logbooks";
 
-function getBaseUrl(projectId?: string) {
+function getBaseUrl(projectId?: string, logbookId?: string) {
   if (projectId) return `/api/projects/${projectId}/logbooks`;
+  if (logbookId) return `/api/logbooks/${logbookId}`;
   return `/api/logbooks`;
 }
 
@@ -12,6 +13,13 @@ export async function getLogbooks(): Promise<
 > {
   const { data } =
     await api.get<ApiResponse<LogbookWithRelations[]>>(getBaseUrl());
+  return data;
+}
+
+export async function getLogbookById(id: string): Promise<
+  ApiResponse<LogbookWithRelations>
+> {
+  const { data } = await api.get<ApiResponse<LogbookWithRelations>>(`${getBaseUrl()}/${id}`);
   return data;
 }
 
@@ -30,6 +38,17 @@ export async function createLogbook(
 ): Promise<ApiResponse<LogbookWithRelations>> {
   const { data } = await api.post<ApiResponse<LogbookWithRelations>>(
     getBaseUrl(projectId),
+    logbookData,
+  );
+  return data;
+}
+
+export async function updateLogbook(
+  logbookId: string,
+  logbookData: Partial<LogbookWithRelations>,
+): Promise<ApiResponse<LogbookWithRelations>> {
+  const { data } = await api.post<ApiResponse<LogbookWithRelations>>(
+    getBaseUrl(undefined, logbookId),
     logbookData,
   );
   return data;
