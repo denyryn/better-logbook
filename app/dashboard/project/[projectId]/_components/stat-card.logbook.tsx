@@ -13,6 +13,7 @@ interface LogbookStatCardProps {
   value: string | number;
   description?: string;
   icon: React.ElementType;
+  loading: boolean;
 }
 
 export function LogbookStatCard({
@@ -20,8 +21,9 @@ export function LogbookStatCard({
   value,
   description,
   icon: Icon,
+  loading
 }: LogbookStatCardProps) {
-  if (!value && value !== 0) {
+  if (loading) {
     return <Skeleton className="h-40 w-sm" />;
   }
 

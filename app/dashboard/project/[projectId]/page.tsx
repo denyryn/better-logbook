@@ -68,12 +68,14 @@ export default function Page() {
                 value={stats.thisWeek}
                 description="Entries in the last week"
                 icon={IconCalendarWeek}
+                loading={isLoading}
               />
               <LogbookStatCard
                 title="This Month"
                 value={stats.thisMonth}
                 description="Entries this calendar month"
                 icon={IconClock}
+                loading={isLoading}
               />
             </div>
 
