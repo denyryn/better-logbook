@@ -17,6 +17,7 @@ import { config } from "@/lib/config";
 import { signUpSchema } from "@/schemas/sign-up";
 import { User, UserLogin, UserSignUp } from "@/types/user";
 import { useRouter } from "next/navigation";
+import { Passkey } from "@better-auth/passkey/client";
 
 interface AuthResponse {
   token?: string;
@@ -33,6 +34,10 @@ interface AuthContextType {
     data: UserLogin,
   ) => Promise<ApiResponse<AuthResponse | null | undefined>>;
   socialSignIn: (provider: "google") => void;
+  passkeySignIn: () => Promise<ApiResponse<undefined>>;
+  registerPasskey: () => Promise<ApiResponse<undefined>>;
+  fetchPasskeys: () => Promise<ApiResponse<Passkey[] | undefined>>;
+  deletePasskey: (passkeyId: string) => Promise<ApiResponse<undefined>>;
   signOut: () => Promise<ApiResponse<AuthResponse | null | undefined>>;
   isLoading: boolean;
 }
@@ -58,6 +63,8 @@ export function AuthProvider({ children }: { children: ReactNode }) {
 
     checkSession();
   }, []);
+
+  /* ------------------ Plain Email ------------------ */
 
   const handleSignUp = async (
     userData: UserSignUp,
@@ -143,6 +150,8 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     }
   };
 
+  /* ------------------ Social ------------------ */
+
   const handleSocialSignIn = (provider: "google") => {
     authClient.signIn.social({
       provider: provider,
@@ -150,6 +159,138 @@ export function AuthProvider({ children }: { children: ReactNode }) {
       newUserCallbackURL: config.app.home,
     })
   }
+
+  /* ------------------ Passkey ------------------ */
+
+  const handleRegisterPasskey = async () => {
+    try {
+      setIsLoading(true);
+      const { data, error } = await authClient.passkey.addPasskey();
+
+      if (error) {
+        return errorResponse(
+          undefined,
+          error.message,
+          StatusCodes.UNAUTHORIZED,
+        );
+      }
+
+      toast.success("Passkey registered successfully");
+
+      return successResponse(
+        undefined,
+        "Passkey registered successfully",
+        StatusCodes.OK,
+      ) as ApiResponse<undefined>;
+    } catch (err) {
+      console.error("Passkey registration failed:", err);
+      return errorResponse(
+        undefined,
+        "Something went wrong",
+        StatusCodes.INTERNAL_SERVER_ERROR,
+      );
+    } finally {
+      setIsLoading(false);
+    }
+  }
+
+  const handlePasskeySignIn = async () => {
+    try {
+      setIsLoading(true);
+      const { data, error } = await authClient.signIn.passkey({
+        autoFill: true,
+        fetchOptions: {
+          onSuccess: () => {
+            window.location.href = config.app.home;
+          },
+          onError: (err) => {
+            console.error("Passkey sign-in error:", err);
+          }
+        }
+      });
+
+      if (error) {
+        return errorResponse(
+          undefined,
+          error.message,
+          StatusCodes.UNAUTHORIZED,
+        );
+      }
+
+      return successResponse(
+        undefined,
+        "Signed in with passkey successfully",
+        StatusCodes.OK,
+      ) as ApiResponse<undefined>;
+    } catch (err) {
+      console.error("Passkey sign-in failed:", err);
+      return errorResponse(
+        undefined,
+        "Something went wrong",
+        StatusCodes.INTERNAL_SERVER_ERROR,
+      );
+    } finally {
+      setIsLoading(false);
+    }
+  }
+
+  const handleFetchPasskeys = async ()=> {
+    try {
+      const { data: passkeys, error } = await authClient.passkey.listUserPasskeys();
+
+      if (error) {
+        return errorResponse(
+          undefined,
+          error.message,
+          StatusCodes.UNAUTHORIZED,
+        );
+      }
+
+      return successResponse(
+        passkeys || null,
+        "Passkeys fetched successfully",
+        StatusCodes.OK,
+      ) as ApiResponse<Passkey[] | undefined>;
+    } catch (err) {
+      console.error("Fetching passkeys failed:", err);
+      return errorResponse(
+        undefined,
+        "Something went wrong",
+        StatusCodes.INTERNAL_SERVER_ERROR,
+      );
+    }
+  }
+
+  const handleDeletePasskey = async (passkeyId: string) => {
+    try {
+      const { data, error } = await authClient.passkey.deletePasskey({
+          id: passkeyId,
+      });
+
+      if (error) {
+        return errorResponse(
+          undefined,
+          error.message,
+          StatusCodes.UNAUTHORIZED,
+        );
+      }
+
+      return successResponse(
+        undefined,
+        "Passkeys removed successfully",
+        StatusCodes.OK,
+      ) as ApiResponse<undefined>;
+    } catch (err) {
+      console.error("Deleting passkey failed:", err);
+      return errorResponse(
+        undefined,
+        "Something went wrong",
+        StatusCodes.INTERNAL_SERVER_ERROR,
+      );
+    }
+  }
+
+  /* ------------------ Shared ------------------ */
 
   const handleSignOut = async (): Promise<
     ApiResponse<AuthResponse | null | undefined>
@@ -195,6 +336,10 @@ export function AuthProvider({ children }: { children: ReactNode }) {
         signIn: handleSignIn,
         signOut: handleSignOut,
         socialSignIn: handleSocialSignIn,
+        passkeySignIn: handlePasskeySignIn,
+        registerPasskey: handleRegisterPasskey,
+        fetchPasskeys: handleFetchPasskeys,
+        deletePasskey: handleDeletePasskey,
         isLoading,
       }}
     >

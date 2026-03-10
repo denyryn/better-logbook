@@ -1,4 +1,4 @@
-import { Shield, Key, Trash2, LoaderCircle } from "lucide-react";
+import { Shield, Key, Trash2, LoaderCircle, KeyIcon } from "lucide-react";
 
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
@@ -14,7 +14,11 @@ import { useForm, UseFormReturn } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { ProfileFormData, ProfileSchema } from "@/schemas/profile";
 import { FieldDescription, FieldGroup, FieldLabel } from "@/components/ui/field";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
+import { useCreatePasskey, useDeletePasskey, usePasskeys } from "@/lib/query/auth.query";
+import { Skeleton } from "@/components/ui/skeleton";
+import { format } from "date-fns";
+import { AlertModal } from "@/components/alert-modal";
 
 export default function ProfileContent() {
   const { user } = useProfile();
@@ -245,6 +249,89 @@ function AccountSection() {
 }
 
 function SecuritySection() {
+  const { data: passkeys, isLoading: isPasskeyLoading } = usePasskeys();
+  const { mutate: createPasskey, isPending: isCreatePasskeyPending } = useCreatePasskey();
+  const { mutate: deletePasskey } = useDeletePasskey();
+
+  function RenderPasskeySection() {
+    const [modalOpen, setModalOpen] = useState(false);
+    const [deletionTarget, setDeletionTarget] = useState("");
+
+    function deletionAttempt(passkeyId: string) {
+      setDeletionTarget(passkeyId);
+      setModalOpen(true);
+    }
+
+    const DeletionAlert = () => {
+      return (
+        <AlertModal open={modalOpen} onOpenChange={setModalOpen}>
+          <AlertModal.Content>
+            <AlertModal.Header>
+              <AlertModal.Title>
+                Remove Passkey
+              </AlertModal.Title>
+            </AlertModal.Header>
+            <p className="text-sm text-muted-foreground">
+              This action cannot be undone. This will remove your passkey.
+            </p>
+            <AlertModal.Footer>
+              <AlertModal.Cancel>
+                Cancel
+              </AlertModal.Cancel>
+              <AlertModal.Action variant={"destructive"} onClick={() => deletePasskey(deletionTarget)}>
+                Continue
+              </AlertModal.Action>
+            </AlertModal.Footer>
+          </AlertModal.Content>
+        </AlertModal>
+      )
+    }
+
+    if (isPasskeyLoading) {
+      return (
+        <Skeleton className="h-10 w-40" />
+      );
+    }
+
+    return (
+      <>
+        <div className="space-y-4">
+          <div className="flex items-center justify-between">
+            <div className="space-y-1">
+              <Label className="text-base">Passkeys</Label>
+              <p className="text-muted-foreground text-sm">
+                Use biometric authentication for faster and more secure logins
+              </p>
+            </div>
+            <Button variant="outline" onClick={() => createPasskey()} disabled={isCreatePasskeyPending}>
+              {isCreatePasskeyPending && <LoaderCircle className="mr-2 h-4 w-4 animate-spin" />}
+              {!isCreatePasskeyPending && <KeyIcon className="mr-2 h-4 w-4" />}
+              Add Passkey
+            </Button>
+          </div>
+          {passkeys && passkeys.length > 0 && passkeys.map((passkey) => (
+            <div key={passkey.id} className="mt-2 border rounded-md p-4 flex items-center justify-between">
+              <div className="space-y-1">
+                <Label className="text-sm">
+                  {passkey.name}
+                </Label>
+                <p className="text-muted-foreground text-sm">
+                  Registered on { format(new Date(passkey.createdAt), "dd MMMM yyyy")  }
+                </p>
+              </div>
+              <Button variant="destructive" onClick={() => deletionAttempt(passkey.id)}>
+                <Trash2 className="mr-2 h-4 w-4" />
+                Remove
+              </Button>
+            </div>
+          ))}
+        </div>
+
+        <DeletionAlert />
+      </>
+    )
+  }
+
   return (
     <Card>
       <CardHeader>
@@ -303,6 +390,8 @@ function SecuritySection() {
               View Sessions
             </Button>
           </div>
+          <Separator />
+          {RenderPasskeySection()}
         </div>
       </CardContent>
     </Card>
