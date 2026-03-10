@@ -73,6 +73,8 @@ import {
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { useIsMobile } from "@/hooks/use-mobile";
 import { URLParamsBuilder } from "@/lib/url-params";
+import { Copy } from "lucide-react";
+import { toast } from "sonner";
 
 export const schema = z.object({
   id: z.string(),
@@ -540,6 +542,11 @@ export function LogbookDataTable({ data, projectId }: LogbookDataTableProps) {
 function TableCellViewer({ item }: { item: LogbookEntry }) {
   const isMobile = useIsMobile();
 
+  const handleCopy = async (text: string) => {
+    await navigator.clipboard.writeText(text)
+    toast.success("Content copied to clipboard");
+  }
+
   return (
     <Drawer direction={isMobile ? "bottom" : "right"}>
       <DrawerTrigger asChild>
@@ -572,8 +579,11 @@ function TableCellViewer({ item }: { item: LogbookEntry }) {
           <div className="flex flex-col gap-2">
             <Label className="text-muted-foreground text-xs tracking-wider uppercase">
               Content
+              <Button variant="ghost" size="icon" onClick={() => handleCopy(item.content)}>
+                <Copy className="size-2.5" />
+              </Button>
             </Label>
-            <p className="text-sm leading-relaxed whitespace-pre-wrap">
+            <p onClick={() => handleCopy(item.content)} className="text-sm leading-relaxed whitespace-pre-wrap">
               {item.content}
             </p>
           </div>
