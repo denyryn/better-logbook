@@ -45,17 +45,15 @@ export async function POST(
       return serverErrorResponse(undefined, "Unauthorized", StatusCodes.UNAUTHORIZED);
     }
 
-    const body = await request.json() as Logbook & { tags?: string[] };
+    const { tags, ...logbookData } = await request.json() as Logbook & { tags?: string[] };
 
     const project = await prisma.project.findFirst({
-      where: { id: body.projectId, userId: session.user.id },
+      where: { id: logbookData.projectId, userId: session.user.id },
     });
 
     if (!project) {
       return serverErrorResponse(undefined, "Project not found", StatusCodes.NOT_FOUND);
     }
-
-    const { tags, ...logbookData } = body;
 
     const logbook = await prisma.logbook.create({
       data: {
