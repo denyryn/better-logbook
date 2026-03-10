@@ -14,18 +14,20 @@ datasource db {
 }
 
 model User {
-  id            String    @id
+  id            String         @id
   name          String
   email         String
-  emailVerified Boolean   @default(false)
+  emailVerified Boolean        @default(false)
   image         String?
-  createdAt     DateTime  @default(now())
-  updatedAt     DateTime  @updatedAt
+  createdAt     DateTime       @default(now())
+  updatedAt     DateTime       @updatedAt
   sessions      Session[]
   accounts      Account[]
-  projects    Project[]
-  companies   Company[]
+  projects      Project[]
+  companies     Company[]
   aiTokenUsages AiTokenUsage[]
+
+  passkeys Passkey[]
 
   @@unique([email])
   @@map("user")
@@ -80,76 +82,74 @@ model Verification {
 }
 
 model Company {
-  id          String    @id @default(uuid())
-  user        User      @relation(fields: [userId], references: [id])
-  userId      String
-  name        String
-  createdAt   DateTime  @default(now())
-  updatedAt   DateTime  @updatedAt
+  id        String   @id @default(uuid())
+  user      User     @relation(fields: [userId], references: [id])
+  userId    String
+  name      String
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
 
-  positions   Position[]
+  positions Position[]
 
   @@unique([userId, name])
   @@map("company")
 }
 
 model Project {
-  id          String    @id @default(uuid())
-  user        User      @relation(fields: [userId], references: [id])
-  userId      String
-  name        String
-  position    Position   @relation(fields: [positionId], references: [id])
-  positionId  String
-  scopedRole  String?
+  id         String   @id @default(uuid())
+  user       User     @relation(fields: [userId], references: [id])
+  userId     String
+  name       String
+  position   Position @relation(fields: [positionId], references: [id])
+  positionId String
+  scopedRole String?
 
-  createdAt   DateTime  @default(now())
-  updatedAt   DateTime  @updatedAt
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
 
-  logbooks    Logbook[]
+  logbooks Logbook[]
 
   @@index([positionId])
   @@map("project")
 }
 
 model Position {
-  id          String       @id @default(uuid())
-  role        String?
-  company     Company   @relation(fields: [companyId], references: [id])
-  companyId   String
+  id        String  @id @default(uuid())
+  role      String?
+  company   Company @relation(fields: [companyId], references: [id])
+  companyId String
 
-  projects    Project[]
+  projects Project[]
 
   @@map("position")
 }
 
 model Logbook {
-  id          String       @id @default(uuid())
-  project     Project      @relation(fields: [projectId], references: [id])
-  projectId   String
+  id        String  @id @default(uuid())
+  project   Project @relation(fields: [projectId], references: [id])
+  projectId String
 
-  title       String?
-  content     String
-  logDate     DateTime
+  title   String?
+  content String
+  logDate DateTime
 
-  createdAt   DateTime  @default(now())
-  updatedAt   DateTime  @updatedAt
-  deletedAt   DateTime?
+  createdAt DateTime  @default(now())
+  updatedAt DateTime  @updatedAt
+  deletedAt DateTime?
 
-  tags        LogbookTag[]
+  tags LogbookTag[]
 
   @@index([projectId, logDate, deletedAt])
   @@unique([projectId, logDate])
-
   @@map("logbook")
 }
 
 model Tag {
-  id          String       @id @default(uuid())
-  name        String
-  logbooks    LogbookTag[]
+  id       String       @id @default(uuid())
+  name     String
+  logbooks LogbookTag[]
 
   @@unique([name])
-
   @@map("tag")
 }
 
@@ -157,27 +157,44 @@ model LogbookTag {
   logbookId String
   tagId     String
 
-  logbook   Logbook @relation(fields: [logbookId], references: [id], onDelete: Cascade)
-  tag       Tag     @relation(fields: [tagId], references: [id], onDelete: Cascade)
+  logbook Logbook @relation(fields: [logbookId], references: [id], onDelete: Cascade)
+  tag     Tag     @relation(fields: [tagId], references: [id], onDelete: Cascade)
 
   @@id([logbookId, tagId])
   @@index([tagId])
-
   @@map("logbook_tag")
 }
 
 model AiTokenUsage {
-  id        String          @id @default(uuid())
-  userId    String
-  model     String
-  promptTokens Int
+  id               String   @id @default(uuid())
+  userId           String
+  model            String
+  promptTokens     Int
   completionTokens Int
-  totalTokens Int
-  createdAt DateTime        @default(now())
+  totalTokens      Int
+  createdAt        DateTime @default(now())
 
-  user     User            @relation(fields: [userId], references: [id], onDelete: Cascade)
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
 
   @@index([userId])
-
   @@map("ai_token_usage")
+}
+
+model Passkey {
+  id           String    @id
+  name         String?
+  publicKey    String
+  userId       String
+  user         User      @relation(fields: [userId], references: [id], onDelete: Cascade)
+  credentialID String
+  counter      Int
+  deviceType   String
+  backedUp     Boolean
+  transports   String?
+  createdAt    DateTime?
+  aaguid       String?
+
+  @@index([userId])
+  @@index([credentialID])
+  @@map("passkey")
 }

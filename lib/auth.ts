@@ -1,6 +1,7 @@
 import { betterAuth } from "better-auth";
 import { prismaAdapter } from "better-auth/adapters/prisma";
 import { type NextRequest } from "next/server";
+import { passkey } from "@better-auth/passkey"
 
 import { prisma } from "@/lib/prisma";
 import { config } from "./config";
@@ -22,6 +23,9 @@ export const auth = betterAuth({
   session: {
     expiresIn: 60 * 60 * 24 * 7, // 7 days
   },
+  plugins: [
+    passkey()
+  ]
 });
 
 export async function authRequest(request: NextRequest) {
