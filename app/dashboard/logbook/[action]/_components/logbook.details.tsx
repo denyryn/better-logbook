@@ -36,26 +36,26 @@ import { useProduceLogbookDetails } from "@/lib/query/ai-generate.query";
 
 interface LogbookDetailsProps {
   form: UseFormReturn<FormData>;
-  newTag: string;
-  setNewTag: React.Dispatch<React.SetStateAction<string>>;
   projects?: Project[];
 }
 
 export function LogbookDetails({
   form,
-  newTag,
-  setNewTag,
   projects,
 }: LogbookDetailsProps) {
   const {mutateAsync: produceLogbookDetails, data: producedLogbookDetails, isPending} = useProduceLogbookDetails();
   const { register, watch, setValue } = form;
-  const tags = watch("tags");
   const [isDetailsCollapsed, setIsDetailsCollapsed] = useState(true);
 
+  const tags = watch("tags");
+
   function handleAddTag() {
-    if (newTag.trim() && !tags.includes(newTag.trim())) {
-      setValue("tags", [...tags, newTag.trim()]);
-      setNewTag("");
+    const tags = form.watch("tags");
+    const newTag = form.watch("newTag");
+
+    if (newTag?.trim() && !form.getValues("tags").includes(newTag.trim())) {
+      form.setValue("tags", [...tags, newTag.trim()])
+      form.setValue("newTag", "")
     }
   }
 
@@ -187,8 +187,7 @@ export function LogbookDetails({
                 id="tags"
                 type="text"
                 placeholder="Add a tag..."
-                value={newTag}
-                onChange={(e) => setNewTag(e.target.value)}
+                {...register("newTag")}
                 onKeyDown={(e) => {
                   if (e.key === "Enter") {
                     e.preventDefault();
@@ -200,7 +199,7 @@ export function LogbookDetails({
                 Add
               </Button>
             </div>
-            {tags.length > 0 && (
+            {tags?.length > 0 && (
               <div className="mt-2 flex flex-wrap gap-2">
                 {tags.map((tag) => (
                   <Badge

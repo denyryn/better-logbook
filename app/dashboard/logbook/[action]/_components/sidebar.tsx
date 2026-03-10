@@ -4,25 +4,32 @@ import { toast } from "sonner";
 
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { useCreateLogbook } from "@/lib/query/logbook.query";
+import { useCreateLogbook, useUpdateLogbook } from "@/lib/query/logbook.query";
 
 import { FormData } from "../page";
 import { UseMutateAsyncFunction } from "@tanstack/react-query";
 import { ApiResponse } from "@/lib/api.response";
+import { useSearchParams } from "next/navigation";
 
 interface SidebarProps {
   form: UseFormReturn<FormData>;
   improveLogbookText: UseMutateAsyncFunction<ApiResponse<string>, Error, string, unknown>
   isPending: boolean;
+  isEditPage: boolean;
 }
 
-export function Sidebar({ form, improveLogbookText, isPending }: SidebarProps) {
-  const { mutateAsync: createLogbook, isPending: isCreatingLogbook } = useCreateLogbook();
+export function Sidebar({ form, improveLogbookText, isPending, isEditPage }: SidebarProps) {
+  const searchParams = useSearchParams();
+  const logbookId = searchParams.get("id") || undefined;
+
   const { watch } = form;
   const formData = watch();
 
+  const { mutateAsync: createLogbook, isPending: isCreatingLogbook } = useCreateLogbook();
+  const { mutateAsync: updateLogbook, isPending: isUpdatingLogbook } = useUpdateLogbook(logbookId)
+
   async function handleSave() {
-    if (!formData.content.trim()) {
+    if (!formData?.content?.trim()) {
       toast.error("Please enter logbook content");
       return;
     }
@@ -35,16 +42,18 @@ export function Sidebar({ form, improveLogbookText, isPending }: SidebarProps) {
         ...formData,
         logDate: new Date(formData.logDate),
       };
-      await createLogbook(logbookData);
-      toast.success("Logbook saved successfully!");
+
+      if (isEditPage) await updateLogbook(logbookData);
+      else await createLogbook(logbookData);
+
       form.reset();
-    } catch {
-      toast.error("Failed to save logbook");
+    } catch (err) {
+      console.error("Failed to save logbook. Error: ", err)
     }
   }
 
   async function improveText() {
-    if (!formData.content.trim()) {
+    if (!formData?.content?.trim()) {
       toast.error("Please enter some content to improve");
       return;
     }
@@ -81,7 +90,7 @@ export function Sidebar({ form, improveLogbookText, isPending }: SidebarProps) {
               </Button>
              : <Button
                  onClick={improveText}
-                 disabled={!formData.content.trim()}
+                 disabled={!formData?.content?.trim()}
                  className="w-full"
                  variant="outline"
                >
@@ -90,7 +99,7 @@ export function Sidebar({ form, improveLogbookText, isPending }: SidebarProps) {
                </Button>
           }
 
-          {isCreatingLogbook
+          {isCreatingLogbook || isUpdatingLogbook
             ? <Button onClick={handleSave} className="w-full" disabled>
                 <LoaderCircle className="mr-2 h-4 w-4 animate-spin" />
                 Saving Entry

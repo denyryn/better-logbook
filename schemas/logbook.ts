@@ -6,4 +6,5 @@ export const logbookSchema = z.object({
   logDate: z.string().datetime("Invalid date format"),
   projectId: z.string().min(1, "Project is required"),
   tags: z.array(z.string()).min(0, "Tags must be an array of strings"),
+  newTag: z.string().optional()
 });

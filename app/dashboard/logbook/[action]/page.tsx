@@ -1,7 +1,6 @@
 "use client";
 
 import { zodResolver } from "@hookform/resolvers/zod";
-import { useState } from "react";
 import { useForm } from "react-hook-form";
 import z from "zod";
 
@@ -14,25 +13,41 @@ import { LogbookDetails } from "./_components/logbook.details";
 import { LogbookHistory } from "./_components/logbook.history";
 import { Sidebar } from "./_components/sidebar";
 import { useImproveText } from "@/lib/query/ai-generate.query";
+import { useSearchParams } from "next/navigation";
+import { format, formatISO } from "date-fns";
+import { useLogbookById } from "@/lib/query/logbook.query";
+import { useEffect } from "react";
 
 export type FormData = z.infer<typeof logbookSchema>;
 
 export default function Page() {
+  const searchParams = useSearchParams();
+  const projectId = searchParams.get("projectId") || undefined;
+  const logbookId = searchParams.get("id") || undefined;
+
+  const today = formatISO(new Date(), { representation: "date" });
+  const { data: logbook } = useLogbookById(logbookId)
+
   const form = useForm<FormData>({
     resolver: zodResolver(logbookSchema),
     mode: "onBlur",
-    defaultValues: {
-      title: "",
-      content: "",
-      logDate: new Date().toISOString().split("T")[0],
-      projectId: "",
-      tags: [],
-    },
+    defaultValues: { logDate: today, projectId: projectId },
   });
 
-  const [newTag, setNewTag] = useState("");
   const { data: allProjects } = useProjects();
   const { mutateAsync: improveLogbookText, data: improvedText, isPending } = useImproveText();
+
+  useEffect(() => {
+    if (logbook && logbook.data) form.reset({
+      title: logbook.data.title || undefined,
+      content: logbook.data.content,
+      logDate: format(logbook.data.logDate, "yyyy-MM-dd"),
+      projectId: logbook.data.projectId,
+      tags: logbook.data.tags?.map((t) => t.tag.name),
+    });
+  }, [form, logbook])
+
+  const isEditPage = !!logbookId;
 
   return (
     <>
@@ -46,8 +61,6 @@ export default function Page() {
                 {/* Logbook Details */}
                 <LogbookDetails
                   form={form}
-                  newTag={newTag}
-                  setNewTag={setNewTag}
                   projects={allProjects?.data}
                 />
 
@@ -59,7 +72,7 @@ export default function Page() {
               </div>
 
               {/* Sidebar Actions */}
-              <Sidebar form={form} improveLogbookText={improveLogbookText} isPending={isPending} />
+              <Sidebar form={form} improveLogbookText={improveLogbookText} isPending={isPending} isEditPage={isEditPage} />
             </div>
           </div>
         </div>
