@@ -4,6 +4,7 @@ import {
   ChevronDown,
   ChevronUp,
   FileText,
+  LoaderCircle,
   Sparkles,
   Tag,
 } from "lucide-react";
@@ -83,9 +84,10 @@ export function LogbookDetails({
       if (!producedLogbookDetails?.data) return;
 
       function setNewTagsFromResponse() {
+        const tags = form.getValues("tags") || [];
         producedLogbookDetails?.data.tags?.forEach((tag: string) => {
-          if (!tags.includes(tag)) {
-            setValue("tags", [...watch("tags"), tag]);
+          if (!tags?.includes(tag)) {
+            setValue("tags", [...tags, tag]);
           }
         });
       }
@@ -116,7 +118,10 @@ export function LogbookDetails({
               onClick={handleProduceDetails}
               className="h-8 w-8 p-0"
             >
-              <Sparkles className="h-4 w-4" />
+              {isPending
+                ? <LoaderCircle className="h-4 w-4 animate-spin" />
+                : <Sparkles className="h-4 w-4" />
+              }
             </Button>
 
             <Button
