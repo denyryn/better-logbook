@@ -7,17 +7,18 @@ import {
   getProjectsByPosition,
 } from "../api/project.api";
 import { Project } from "@/generated/prisma/client";
+import { queryKey } from "../constants/query-key.constant";
 
 export function useProjects() {
   return useQuery({
-    queryKey: ["projects"],
+    queryKey: [queryKey.PROJECTS],
     queryFn: () => getProjects(),
   });
 }
 
 export function useProjectsByPosition(positionId: string) {
   return useQuery({
-    queryKey: ["projects", positionId],
+    queryKey: [queryKey.PROJECTS, positionId],
     queryFn: () => getProjectsByPosition(positionId),
     enabled: !!positionId,
   });
@@ -25,7 +26,7 @@ export function useProjectsByPosition(positionId: string) {
 
 export function useProjectsByCompany(companyId: string) {
   return useQuery({
-    queryKey: ["projects", companyId],
+    queryKey: [queryKey.PROJECTS, companyId],
     queryFn: () => getProjectsByCompany(companyId),
     enabled: !!companyId,
   });
@@ -37,7 +38,7 @@ export function useCreateProject() {
     mutationFn: (projectData: Partial<Project>) =>
       createProject(projectData),
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ["projects"] });
+      queryClient.invalidateQueries({ queryKey: [queryKey.PROJECTS] });
     },
   });
 }

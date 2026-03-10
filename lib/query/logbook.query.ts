@@ -8,17 +8,18 @@ import {
   getLogbooksByProject,
 } from "../api/logbook.api";
 import { toast } from "sonner";
+import { queryKey } from "../constants/query-key.constant";
 
 export function useLogbooks() {
   return useQuery({
-    queryKey: ["logbooks"],
+    queryKey: [queryKey.LOGBOOKS],
     queryFn: () => getLogbooks(),
   });
 }
 
 export function useLogbooksByProject(projectId: string) {
   return useQuery({
-    queryKey: ["logbooks", projectId],
+    queryKey: [queryKey.LOGBOOKS, projectId],
     queryFn: () => getLogbooksByProject(projectId),
     enabled: !!projectId,
   });
@@ -30,7 +31,7 @@ export function useCreateLogbook() {
     mutationFn: (logbookData: Partial<Logbook>) =>
       createLogbook(logbookData.projectId!, logbookData),
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ["logbooks"] });
+      queryClient.invalidateQueries({ queryKey: [queryKey.LOGBOOKS] });
     },
     onError: (error) => {
       console.error("Error creating logbook entry:", error);
