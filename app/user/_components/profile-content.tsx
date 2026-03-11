@@ -79,6 +79,7 @@ function PersonalSection({form}: SubProfileContentProps) {
   const formDisabledState = profileState === "view" || form.formState.isSubmitting;
 
   function resetForm() {
+    if (!user) return;
     form.reset(user);
   }
 
@@ -193,8 +194,8 @@ function AccountSection() {
             { usage }%
           </div>
           <div className="w-full relative">
-            <div className="block w-full bg-muted h-6"></div>
-            <div className={cn("absolute inset-0 bg-white h-6")} style={{width: `${usage}%` }}></div>
+            <div className="block w-full bg-muted h-6 rounded"></div>
+            <div className={cn("absolute inset-0 bg-white h-6 rounded")} style={{width: `${usage}%` }}></div>
           </div>
         </CardContent>
       </Card>
