@@ -5,7 +5,6 @@ import Link from "next/link";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
 
-import { useAuth } from "@/app/_providers/auth/auth.provider";
 import { Button } from "@/components/ui/button";
 import {
   Card,
@@ -23,6 +22,8 @@ import {
 import { Input } from "@/components/ui/input";
 import { cn } from "@/lib/utils";
 import { signUpSchema } from "@/schemas/sign-up";
+import { useSignUp } from "@/lib/query/auth.query";
+import { LoaderCircle } from "lucide-react";
 
 type SignupFormData = z.infer<typeof signUpSchema>;
 
@@ -36,14 +37,16 @@ export function SignupForm({
     formState: { errors, isSubmitting, isLoading },
   } = useForm<SignupFormData>({
     resolver: zodResolver(signUpSchema),
-    mode: "onBlur",
+    mode: "onSubmit",
   });
 
-  const { signUp } = useAuth();
+  const { mutateAsync: signUp, isPending: isSigningUp } = useSignUp();
 
   const onSubmit = async (data: SignupFormData) => {
     await signUp(data);
   };
+
+  const formLoading = isSigningUp || isSubmitting || isLoading;
 
   return (
     <div className={cn("flex flex-col gap-6", className)} {...props}>
@@ -59,7 +62,7 @@ export function SignupForm({
             <FieldGroup>
               <Field>
                 <FieldLabel htmlFor="name">Full Name</FieldLabel>
-                <Input id="name" {...register("name")} />
+                <Input id="name" {...register("name")} disabled={formLoading} />
                 {errors.name && (
                   <FieldDescription className="text-red-500">
                     {errors.name.message}
@@ -68,7 +71,7 @@ export function SignupForm({
               </Field>
               <Field>
                 <FieldLabel htmlFor="email">Email</FieldLabel>
-                <Input id="email" type="email" {...register("email")} />
+                <Input id="email" type="email" {...register("email")} disabled={formLoading} />
                 {errors.email && (
                   <FieldDescription className="text-red-500">
                     {errors.email.message}
@@ -83,6 +86,7 @@ export function SignupForm({
                       id="password"
                       type="password"
                       {...register("password")}
+                      disabled={formLoading}
                     />
                   </Field>
                   <Field>
@@ -93,6 +97,7 @@ export function SignupForm({
                       id="confirm-password"
                       type="password"
                       {...register("confirmPassword")}
+                      disabled={formLoading}
                     />
                   </Field>
                 </Field>
@@ -109,8 +114,9 @@ export function SignupForm({
                 )}
               </Field>
               <Field>
-                <Button type="submit" disabled={isSubmitting || isLoading}>
-                  {isSubmitting || isLoading ? "Creating..." : "Create Account"}
+                <Button type="submit" disabled={formLoading}>
+                  {formLoading && <LoaderCircle className="size-4 mr-2 animate-spin" />}
+                  Create Account
                 </Button>
                 <FieldDescription className="text-center">
                   Already have an account?{" "}
