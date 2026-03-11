@@ -124,24 +124,6 @@ function PersonalSection({form}: SubProfileContentProps) {
               </FieldDescription>
             )}
           </FieldGroup>
-          <FieldGroup className="col-span-full gap-3">
-            <FieldLabel htmlFor="phone">
-              Phone
-            </FieldLabel>
-            <Input
-              id="phone"
-              placeholder="e.g., 865123"
-              type="number"
-              {...form.register("phone")}
-              disabled={formDisabledState}
-              autoFocus
-            />
-            {form.formState.errors.phone && (
-              <FieldDescription className="text-destructive text-sm font-medium">
-                {form.formState.errors.phone.message}
-              </FieldDescription>
-            )}
-          </FieldGroup>
 
           <div className="flex gap-3 justify-end col-span-full">
             { formDisabledState
