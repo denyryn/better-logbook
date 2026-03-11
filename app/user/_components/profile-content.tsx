@@ -78,6 +78,10 @@ function PersonalSection({form}: SubProfileContentProps) {
   const hiddenButtonState = profileState === "view";
   const formDisabledState = profileState === "view" || form.formState.isSubmitting;
 
+  function resetForm() {
+    form.reset(user);
+  }
+
   function onSubmit() {
     form.reset();
   }
@@ -129,9 +133,10 @@ function PersonalSection({form}: SubProfileContentProps) {
             { formDisabledState
               ? <>
                 <Button
-                  type="reset"
-                  className="w-1/4 text-base font-semibold"
+                  type="button"
+                  className="w-1/8 text-base font-semibold"
                   hidden={hiddenButtonState}
+                  onClick={resetForm}
                   disabled
                 >
                   Cancel
@@ -139,7 +144,7 @@ function PersonalSection({form}: SubProfileContentProps) {
                 <Button
                   type="submit"
                   variant={"secondary"}
-                  className="w-1/4 text-base font-semibold"
+                  className="w-1/8 text-base font-semibold"
                   hidden={hiddenButtonState}
                   disabled
                 >
@@ -149,17 +154,18 @@ function PersonalSection({form}: SubProfileContentProps) {
               </>
               : <>
                 <Button
-                  type="reset"
+                  type="button"
                   variant={"secondary"}
                   hidden={hiddenButtonState}
-                  className="w-1/4 text-base font-semibold"
+                  onClick={resetForm}
+                  className="w-1/8 text-base font-semibold"
                 >
                   Cancel
                 </Button>
                 <Button
                   type="submit"
                   hidden={hiddenButtonState}
-                  className="w-1/4 text-base font-semibold"
+                  className="w-1/8 text-base font-semibold"
                 >
                   Save
                 </Button>
