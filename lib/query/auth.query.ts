@@ -2,6 +2,8 @@ import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { queryKey } from "../constants/query-key.constant";
 import { createPasskey, deletePasskey, deleteSession, getPasskeys, getSessions } from "../client/auth";
 import { toast } from "sonner";
+import { signOut, signUpWithEmail, signInWithEmail } from "@/lib/client/auth";
+import { UserLogin, UserSignUp } from "@/types/user";
 
 export function usePasskeys() {
   return useQuery({
@@ -49,6 +51,33 @@ export function useDeleteSession() {
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: [queryKey.SESSIONS] });
       toast.success("Session successfully deleted")
+    }
+  });
+}
+
+export function useSignIn() {
+  return useMutation({
+    mutationFn: async (credentials: UserLogin) => signInWithEmail(credentials),
+    onSuccess: () => {
+      toast.success("Signed in successfully")
+    }
+  });
+}
+
+export function useSignUp() {
+  return useMutation({
+    mutationFn: async (credentials: UserSignUp) => signUpWithEmail(credentials),
+    onSuccess: () => {
+      toast.success("Signed up successfully")
+    }
+  });
+}
+
+export function useSignOut() {
+  return useMutation({
+    mutationFn: async () => signOut(),
+    onSuccess: () => {
+      toast.success("Signed out successfully")
     }
   });
 }
