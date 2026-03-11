@@ -26,6 +26,12 @@ export async function proxy(request: NextRequest) {
     destination = new URL("/auth/sign-in", request.url);
     return NextResponse.redirect(destination);
   }
+
+  if (request.nextUrl.pathname.startsWith("/user")) {
+    if (isAuthenticated) return NextResponse.next();
+    destination = new URL("/auth/sign-in", request.url);
+    return NextResponse.redirect(destination);
+  }
 }
 
-export const config = { matcher: ["/", "/dashboard/:path*"] };
+export const config = { matcher: ["/", "/dashboard/:path*", "/user:path*"] };
