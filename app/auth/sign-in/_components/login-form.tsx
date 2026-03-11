@@ -24,6 +24,9 @@ import {
 import { Input } from "@/components/ui/input";
 import { cn } from "@/lib/utils";
 import { loginSchema } from "@/schemas/login";
+import { Key } from "lucide-react";
+import { useEffect } from "react";
+import { authClient } from "@/lib/auth-client";
 
 type LoginFormData = z.infer<typeof loginSchema>;
 
@@ -40,18 +43,26 @@ export function LoginForm({
     mode: "onBlur",
   });
 
-  const { signIn, socialSignIn } = useAuth();
+  const { signIn, socialSignIn, passkeySignIn } = useAuth();
 
   const onSubmit = async (data: LoginFormData) => {
     await signIn(data);
   };
+
+  useEffect(() => {
+     if (!PublicKeyCredential.isConditionalMediationAvailable ||
+         !PublicKeyCredential.isConditionalMediationAvailable()) {
+       return;
+     }
+    void authClient.signIn.passkey({ autoFill: true })
+  }, [])
 
   return (
     <div className={cn("flex flex-col gap-6", className)} {...props}>
       <Card>
         <CardHeader className="text-center">
           <CardTitle className="text-xl">Welcome back</CardTitle>
-          <CardDescription>Login with your Google account</CardDescription>
+          <CardDescription>Login easier using Google or Passkey</CardDescription>
         </CardHeader>
         <CardContent>
           <form onSubmit={handleSubmit(onSubmit)}>
@@ -66,6 +77,11 @@ export function LoginForm({
                   </svg>
                   Login with Google
                 </Button>
+
+                <Button variant="outline" type="button" onClick={() => passkeySignIn()} disabled={isSubmitting || isLoading}>
+                  <Key className="mr-2" />
+                  Login with Passkey
+                </Button>
               </Field>
               <FieldSeparator className="*:data-[slot=field-separator-content]:bg-card">
                 Or continue with
@@ -77,6 +93,7 @@ export function LoginForm({
                   type="email"
                   placeholder="m@example.com"
                   {...register("email")}
+                  autoComplete="email webauthn"
                 />
                 {errors.email && (
                   <FieldDescription className="text-red-500">
@@ -98,6 +115,7 @@ export function LoginForm({
                   id="password"
                   type="password"
                   {...register("password")}
+                  autoComplete="current-password webauthn"
                 />
                 {errors.password && (
                   <FieldDescription className="text-red-500">

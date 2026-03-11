@@ -5,5 +5,6 @@ export const queryKey = {
   POSITIONS: "positions",
   PRODUCTIVITIES: "productivities",
   PROJECTS: "projects",
-  PASSKEYS: "passkeys"
+  PASSKEYS: "passkeys",
+  SESSIONS: "sessions"
 }

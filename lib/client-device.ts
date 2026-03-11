@@ -1,8 +1,8 @@
 import { UAParser } from "ua-parser-js";
 
 export const clientDevice = {
-  name: () => {
-    const parser = new UAParser();
+  name: (uaString?: string | null) => {
+    const parser = new UAParser(uaString || undefined);
     const { device, browser, os } = parser.getResult();
 
     if (device.vendor) {

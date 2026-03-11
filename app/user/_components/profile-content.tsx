@@ -15,10 +15,13 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { ProfileFormData, ProfileSchema } from "@/schemas/profile";
 import { FieldDescription, FieldGroup, FieldLabel } from "@/components/ui/field";
 import { useEffect, useState } from "react";
-import { useCreatePasskey, useDeletePasskey, usePasskeys } from "@/lib/query/auth.query";
+import { useCreatePasskey, useDeletePasskey, useDeleteSession, usePasskeys, useSessions } from "@/lib/query/auth.query";
 import { Skeleton } from "@/components/ui/skeleton";
 import { format } from "date-fns";
 import { AlertModal } from "@/components/alert-modal";
+import { Modal } from "@/components/modal";
+import { clientDevice } from "@/lib/client-device";
+import { useAuth } from "@/app/_providers/auth/auth.provider";
 
 export default function ProfileContent() {
   const { user } = useProfile();
@@ -253,7 +256,10 @@ function SecuritySection() {
   const { mutate: createPasskey, isPending: isCreatePasskeyPending } = useCreatePasskey();
   const { mutate: deletePasskey } = useDeletePasskey();
 
-  function RenderPasskeySection() {
+  const { data: sessions, isLoading: isSessionsLoading } = useSessions();
+  const { mutate: deleteSession } = useDeleteSession();
+
+  const PasskeySection = () => {
     const [modalOpen, setModalOpen] = useState(false);
     const [deletionTarget, setDeletionTarget] = useState("");
 
@@ -313,7 +319,7 @@ function SecuritySection() {
             <div key={passkey.id} className="mt-2 border rounded-md p-4 flex items-center justify-between">
               <div className="space-y-1">
                 <Label className="text-sm">
-                  {passkey.name}
+                  {passkey.id}
                 </Label>
                 <p className="text-muted-foreground text-sm">
                   Registered on { format(new Date(passkey.createdAt), "dd MMMM yyyy")  }
@@ -327,6 +333,109 @@ function SecuritySection() {
           ))}
         </div>
 
+        <DeletionAlert />
+      </>
+    )
+  }
+
+  const SessionSection = () => {
+    const { session: currentSession } = useAuth();
+    const [modalOpen, setModalOpen] = useState(false);
+    const [alertOpen, setAlertOpen] = useState(false);
+    const [deletionTarget, setDeletionTarget] = useState("");
+
+    function deletionAttempt(tokenId: string) {
+      setDeletionTarget(tokenId);
+      setAlertOpen(true);
+    }
+
+    const ListModal = () => {
+      return (
+        <Modal open={modalOpen} onOpenChange={setModalOpen}>
+          <Modal.Content>
+            <Modal.Header>
+              <Modal.Title>
+                Session List
+              </Modal.Title>
+              <Modal.Description>
+                Manage your active sessions.
+              </Modal.Description>
+            </Modal.Header>
+
+            {sessions && sessions?.length > 0 && sessions.map((session) => (
+              <div
+                key={session.id}
+                className="p-4 border rounded-lg bg-background hover:bg-muted/40 transition-colors flex justify-between items-center"
+              >
+                <div className="flex flex-col gap-1">
+                  <span className="text-base font-medium">
+                    {clientDevice.name(session?.userAgent)}
+                  </span>
+
+                  <div className="text-sm text-muted-foreground flex flex-col gap-0.5">
+                    <span>
+                      Created <span className="opacity-70">·</span>{" "}
+                      {format(session.createdAt, "dd MMM yyyy")}
+                    </span>
+
+                    <span>
+                      Expires <span className="opacity-70">·</span>{" "}
+                      {format(session.expiresAt, "dd MMM yyyy")}
+                    </span>
+                  </div>
+                </div>
+
+                <Button variant={"destructive"} onClick={() => deletionAttempt(session.token)} hidden={session.token === currentSession?.token}>
+                  Remove
+                </Button>
+              </div>
+            ))}
+          </Modal.Content>
+        </Modal>
+      )
+    }
+
+    const DeletionAlert = () => {
+      return (
+        <AlertModal open={alertOpen} onOpenChange={setAlertOpen}>
+          <AlertModal.Content>
+            <AlertModal.Header>
+              <AlertModal.Title>
+                Are you absolutely sure to remove this session?
+              </AlertModal.Title>
+              <AlertModal.Description>
+                The action cannot be undone. The selected session will be removed.
+              </AlertModal.Description>
+            </AlertModal.Header>
+            <AlertModal.Footer>
+              <AlertModal.Cancel>
+                Cancel
+              </AlertModal.Cancel>
+              <AlertModal.Action variant={"destructive"} onClick={() => deleteSession(deletionTarget)}>
+                Continue
+              </AlertModal.Action>
+            </AlertModal.Footer>
+          </AlertModal.Content>
+        </AlertModal>
+      )
+    }
+
+    return (
+      <>
+        <div className="flex items-center justify-between">
+          <div className="space-y-1">
+            <Label className="text-base">Active Sessions</Label>
+            <p className="text-muted-foreground text-sm">
+              Manage devices that are logged into your account
+            </p>
+          </div>
+          <Button variant="outline" onClick={() => setModalOpen(true)}>
+            <Shield className="mr-2 h-4 w-4" />
+            View Sessions
+          </Button>
+        </div>
+
+        <ListModal />
         <DeletionAlert />
       </>
     )
@@ -378,20 +487,9 @@ function SecuritySection() {
             <Switch defaultChecked />
           </div>
           <Separator />
-          <div className="flex items-center justify-between">
-            <div className="space-y-1">
-              <Label className="text-base">Active Sessions</Label>
-              <p className="text-muted-foreground text-sm">
-                Manage devices that are logged into your account
-              </p>
-            </div>
-            <Button variant="outline">
-              <Shield className="mr-2 h-4 w-4" />
-              View Sessions
-            </Button>
-          </div>
+          <SessionSection />
           <Separator />
-          {RenderPasskeySection()}
+          <PasskeySection />
         </div>
       </CardContent>
     </Card>

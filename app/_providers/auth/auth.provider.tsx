@@ -18,6 +18,7 @@ import { signUpSchema } from "@/schemas/sign-up";
 import { User, UserLogin, UserSignUp } from "@/types/user";
 import { useRouter } from "next/navigation";
 import { Passkey } from "@better-auth/passkey/client";
+import { Session } from "better-auth";
 
 interface AuthResponse {
   token?: string;
@@ -25,6 +26,7 @@ interface AuthResponse {
 }
 
 interface AuthContextType {
+  session: Session | null;
   user: User | null;
   setUser: (user: User | null) => void;
   signUp: (
@@ -46,6 +48,7 @@ export const AuthContext = createContext<AuthContextType | null>(null);
 
 export function AuthProvider({ children }: { children: ReactNode }) {
   const [user, setUser] = useState<User | null>(null);
+  const [session, setSession] = useState<Session | null>(null);
   const [isLoading, setIsLoading] = useState(true);
   const router = useRouter();
 
@@ -53,6 +56,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     const checkSession = async () => {
       try {
         const { data } = await authClient.getSession();
+        if (data?.session) setSession(data.session);
         if (data?.user) setUser(data.user);
       } catch (err) {
         console.error("Session check failed:", err);
@@ -198,13 +202,14 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     try {
       setIsLoading(true);
       const { data, error } = await authClient.signIn.passkey({
-        autoFill: true,
+        autoFill: false,
         fetchOptions: {
-          onSuccess: () => {
+          onSuccess: (context) => {
             window.location.href = config.app.home;
           },
-          onError: (err) => {
-            console.error("Passkey sign-in error:", err);
+          onError: (context) => {
+            console.error("Passkey sign-in error:", context.error.message);
+            toast.error(context.error.message);
           }
         }
       });
@@ -330,6 +335,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   return (
     <AuthContext.Provider
       value={{
+        session,
         user,
         setUser,
         signUp: handleSignUp,
