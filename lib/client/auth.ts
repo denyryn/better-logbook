@@ -1,7 +1,6 @@
 "use client"
 
 import { authClient } from "../auth-client";
-import { clientDevice } from "../client-device";
 
 export async function getPasskeys() {
   const { data, error } = await authClient.passkey.listUserPasskeys();
