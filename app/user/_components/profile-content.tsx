@@ -295,7 +295,7 @@ function SecuritySection() {
 
     if (isPasskeyLoading) {
       return (
-        <Skeleton className="h-10 w-40" />
+        <Skeleton className="h-30 w-full" />
       );
     }
 
@@ -439,6 +439,12 @@ function SecuritySection() {
         <DeletionAlert />
       </>
     )
+  }
+
+  if (isSessionsLoading) {
+    return (
+      <Skeleton className="h-30 w-full" />
+    );
   }
 
   return (
