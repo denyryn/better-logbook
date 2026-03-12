@@ -45,10 +45,11 @@ export async function POST(
       return serverErrorResponse(undefined, "Unauthorized", StatusCodes.UNAUTHORIZED);
     }
 
-    const { tags, ...logbookData } = await request.json() as Logbook & { tags?: string[] };
+    const { title, content, logDate, projectId, tags = [] } =
+          await request.json() as Logbook & { tags?: string[] };
 
     const project = await prisma.project.findFirst({
-      where: { id: logbookData.projectId, userId: session.user.id },
+      where: { id: projectId, userId: session.user.id },
     });
 
     if (!project) {
@@ -57,8 +58,10 @@ export async function POST(
 
     const logbook = await prisma.logbook.create({
       data: {
-        ...logbookData,
-        logDate: new Date(logbookData.logDate),
+        title,
+        content,
+        logDate: new Date(logDate),
+        project: { connect: { id: projectId } },
         tags: tags?.length
           ? {
               create: tags.map((tagName: string) => ({

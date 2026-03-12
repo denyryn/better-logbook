@@ -33,11 +33,10 @@ export async function getLogbooksByProject(
 }
 
 export async function createLogbook(
-  projectId: string,
   logbookData: Partial<LogbookWithRelations>,
 ): Promise<ApiResponse<LogbookWithRelations>> {
   const { data } = await api.post<ApiResponse<LogbookWithRelations>>(
-    getBaseUrl(projectId),
+    getBaseUrl(),
     logbookData,
   );
   return data;

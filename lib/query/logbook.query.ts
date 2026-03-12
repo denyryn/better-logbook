@@ -39,7 +39,7 @@ export function useCreateLogbook() {
   const queryClient = useQueryClient();
   return useMutation({
     mutationFn: (logbookData: Partial<Logbook>) =>
-      createLogbook(logbookData.projectId!, logbookData),
+      createLogbook(logbookData),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: [queryKey.LOGBOOKS] });
       toast.success("Logbook saved succesfully")
