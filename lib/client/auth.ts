@@ -9,7 +9,7 @@ export async function getPasskeys() {
 
   if (error) {
     console.error("Error fetching passkeys:", error);
-    throw new Error("Failed to fetch passkeys");
+    throw new Error(error.message);
   }
 
   return data;
@@ -24,7 +24,7 @@ export async function createPasskey() {
 
   if (error) {
     console.error("Error creating passkey:", error);
-    throw new Error("Failed to create passkey");
+    throw new Error(error.message);
   }
 
   return data;
@@ -37,7 +37,7 @@ export async function deletePasskey(passkeyId: string) {
 
   if (error) {
     console.error("Error deleting passkey:", error);
-    throw new Error("Failed to delete passkey");
+    throw new Error(error.message);
   }
 
   return data;
@@ -48,7 +48,7 @@ export async function getSessions() {
 
   if (error) {
     console.error("Error fetching sessions:", error);
-    throw new Error("Failed to fetch sessions")
+    throw new Error(error.message);
   }
 
   return data;
@@ -61,7 +61,7 @@ export async function deleteSession(tokenId: string) {
 
   if (error) {
     console.error("Error deleting session:", error);
-    throw new Error("Failed to delete session");
+    throw new Error(error.message);
   }
 
   return data;
@@ -76,25 +76,23 @@ export async function signInWithEmail(credentials: UserLogin) {
 
   if (error) {
     console.error("Error signing in with email:", error);
-    throw new Error("Failed to sign in with email");
+    throw new Error(error.message);
   }
 
   return data;
 }
 
 export async function signUpWithEmail(credentials: UserSignUp) {
-  const loginURL = '/auth/sign-in';
-
   const { data, error } = await authClient.signUp.email({
     name: credentials.name,
     email: credentials.email,
     password: credentials.password,
-    callbackURL: loginURL
+    callbackURL: "/auth/sign-in"
   });
 
   if (error) {
     console.error("Error signing up with email:", error);
-    throw new Error("Failed to sign up with email");
+    throw new Error(error.message);
   }
 
   return data;
@@ -105,7 +103,7 @@ export async function signOut() {
 
   if (error) {
     console.error("Error signing out:", error);
-    throw new Error("Failed to sign out");
+    throw new Error(error.message);
   }
 
   return data;

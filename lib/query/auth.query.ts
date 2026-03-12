@@ -69,6 +69,10 @@ export function useSignUp() {
     mutationFn: async (credentials: UserSignUp) => signUpWithEmail(credentials),
     onSuccess: () => {
       toast.success("Signed up successfully")
+    },
+    onError: (error) => {
+      console.error("Error signing up: " + error.message)
+      toast.error(error.message)
     }
   });
 }
