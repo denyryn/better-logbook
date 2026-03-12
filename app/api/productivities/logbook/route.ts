@@ -35,7 +35,7 @@ export async function GET(request: NextRequest) {
 
   if (mapped.length > 0) {
     const start = new Date(mapped[0].date);
-    const end = new Date(mapped[mapped.length - 1].date);
+    const end = new Date();
     const countByDate = new Map(mapped.map(p => [p.date, p.logbook]));
 
     for (const d = new Date(start); d <= end; d.setUTCDate(d.getUTCDate() + 1)) {
