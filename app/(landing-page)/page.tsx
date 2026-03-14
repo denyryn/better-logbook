@@ -21,11 +21,12 @@ import {
   Users,
   Lock,
 } from "lucide-react";
+import { useTheme } from "next-themes";
 
 export default function LandingPage() {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [scrolled, setScrolled] = useState(false);
-  const [darkMode, setDarkMode] = useState(false);
+  const { theme, setTheme } = useTheme()
 
   useEffect(() => {
     const handleScroll = () => setScrolled(window.scrollY > 16);
@@ -33,13 +34,13 @@ export default function LandingPage() {
     return () => window.removeEventListener("scroll", handleScroll);
   }, []);
 
-  useEffect(() => {
-    if (darkMode) {
-      document.documentElement.classList.add("dark");
-    } else {
-      document.documentElement.classList.remove("dark");
-    }
-  }, [darkMode]);
+  // useEffect(() => {
+  //   if (darkMode) {
+  //     document.documentElement.classList.add("dark");
+  //   } else {
+  //     document.documentElement.classList.remove("dark");
+  //   }
+  // }, [darkMode]);
 
   const features = [
     {
@@ -484,9 +485,9 @@ export default function LandingPage() {
                 variant="ghost"
                 size="sm"
                 className="text-xs text-muted-foreground"
-                onClick={() => setDarkMode(!darkMode)}
+                onClick={() => setTheme(theme === "light" ? "dark" : "light")}
               >
-                {darkMode ? "Light mode" : "Dark mode"}
+                {theme === "light" ? "Dark mode" : "Light mode"}
               </Button>
             </div>
           </div>
