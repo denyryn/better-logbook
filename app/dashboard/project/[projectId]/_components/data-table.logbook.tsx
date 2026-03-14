@@ -15,6 +15,7 @@ import {
 import {
   ColumnDef,
   ColumnFiltersState,
+  Row,
   SortingState,
   VisibilityState,
   flexRender,
@@ -52,7 +53,6 @@ import {
 } from "@/components/ui/dropdown-menu";
 import { Input } from "@/components/ui/input";
 
-
 import { Label } from "@/components/ui/label";
 import {
   Select,
@@ -75,6 +75,10 @@ import { useIsMobile } from "@/hooks/use-mobile";
 import { URLParamsBuilder } from "@/lib/url-params";
 import { Copy } from "lucide-react";
 import { toast } from "sonner";
+import { useDeleteLogbook } from "@/lib/query/logbook.query";
+import { Logbook } from "@/generated/prisma/browser";
+import { AlertModal } from "@/components/alert-modal";
+import { useState } from "react";
 
 export const schema = z.object({
   id: z.string(),
@@ -190,7 +194,48 @@ const columns: ColumnDef<LogbookEntry>[] = [
   },
   {
     id: "actions",
-    cell: () => (
+    cell: ({ row }) => <LogbookActions row={row} />
+  }
+];
+
+function LogbookActions({ row }: { row: Row<Logbook> }) {
+  const { mutateAsync: deleteLogbook } = useDeleteLogbook();
+
+  const [modalOpen, setModalOpen] = useState(false);
+  const [deletionTarget, setDeletionTarget] = useState("");
+
+  function deletionAttempt(passkeyId: string) {
+    setDeletionTarget(passkeyId);
+    setModalOpen(true);
+  }
+
+  function RenderDeletionAlert() {
+    return (
+      <AlertModal open={modalOpen} onOpenChange={setModalOpen}>
+        <AlertModal.Content>
+          <AlertModal.Header>
+            <AlertModal.Title>
+              Remove Logbook
+            </AlertModal.Title>
+          </AlertModal.Header>
+          <p className="text-sm text-muted-foreground">
+            This action cannot be undone. This will remove your logbook.
+          </p>
+          <AlertModal.Footer>
+            <AlertModal.Cancel>
+              Cancel
+            </AlertModal.Cancel>
+            <AlertModal.Action variant={"destructive"} onClick={() => deleteLogbook(deletionTarget)}>
+              Continue
+            </AlertModal.Action>
+          </AlertModal.Footer>
+        </AlertModal.Content>
+      </AlertModal>
+    )
+  }
+
+  return (
+    <>
       <DropdownMenu>
         <DropdownMenuTrigger asChild>
           <Button
@@ -202,17 +247,32 @@ const columns: ColumnDef<LogbookEntry>[] = [
             <span className="sr-only">Open menu</span>
           </Button>
         </DropdownMenuTrigger>
+
         <DropdownMenuContent align="end" className="w-32">
-          <DropdownMenuItem>Edit</DropdownMenuItem>
-          <DropdownMenuItem>Make a copy</DropdownMenuItem>
-          <DropdownMenuItem>Favorite</DropdownMenuItem>
+          <DropdownMenuItem asChild>
+            <Link
+              href={`/dashboard/logbook/edit?id=${row.original.id}`}
+              className="w-full"
+            >
+              Edit
+            </Link>
+          </DropdownMenuItem>
+
           <DropdownMenuSeparator />
-          <DropdownMenuItem variant="destructive">Delete</DropdownMenuItem>
+
+          <DropdownMenuItem
+            variant="destructive"
+            onClick={() => deletionAttempt(row.original.id)}
+          >
+            Delete
+          </DropdownMenuItem>
         </DropdownMenuContent>
       </DropdownMenu>
-    ),
-  },
-];
+
+      { RenderDeletionAlert() }
+    </>
+  );
+}
 
 // ─── Table Component ──────────────────────────────────────────────────────────
 

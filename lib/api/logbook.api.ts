@@ -52,3 +52,12 @@ export async function updateLogbook(
   );
   return data;
 }
+
+export async function deleteLogbook(
+  logbookId: string
+): Promise<ApiResponse<LogbookWithRelations>> {
+  const { data } = await api.delete<ApiResponse<LogbookWithRelations>>(
+    getBaseUrl(undefined, logbookId)
+  );
+  return data;
+}

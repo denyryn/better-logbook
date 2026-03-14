@@ -88,3 +88,38 @@ export async function POST(
     );
   }
 }
+
+export async function DELETE(
+  request: NextRequest,
+  { params }: { params: Promise<{ logbookId: string }> }
+) {
+  try {
+    const { logbookId } = await params;
+
+    const logbook = prisma.logbook.findFirst({
+      where: { id: logbookId, deletedAt: null }
+    })
+
+    if (!logbook) {
+      return serverErrorResponse(undefined, "Logbook not found", StatusCodes.NOT_FOUND);
+    }
+
+    const deleted = await prisma.logbook.update({
+      where: { id: logbookId },
+      data: {
+        deletedAt: new Date()
+      }
+    })
+
+    console.log(deleted)
+
+    return serverSuccessResponse(deleted, "Logbook deleted successfully", StatusCodes.OK)
+  } catch (err) {
+    console.error("Error deleting logbook:", err);
+    return serverErrorResponse(
+      undefined,
+      "Something went wrong",
+      StatusCodes.INTERNAL_SERVER_ERROR,
+    );
+  }
+}

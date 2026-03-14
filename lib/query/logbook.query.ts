@@ -4,6 +4,7 @@ import { Logbook } from "@/generated/prisma/client";
 
 import {
   createLogbook,
+  deleteLogbook,
   getLogbookById,
   getLogbooks,
   getLogbooksByProject,
@@ -42,6 +43,7 @@ export function useCreateLogbook() {
       createLogbook(logbookData),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: [queryKey.LOGBOOKS] });
+      queryClient.invalidateQueries({ queryKey: [queryKey.PRODUCTIVITIES] });
       toast.success("Logbook saved succesfully")
     },
     onError: (error) => {
@@ -58,11 +60,29 @@ export function useUpdateLogbook(logbookId?: string) {
       updateLogbook(logbookId!, logbookData),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: [queryKey.LOGBOOKS, logbookId] });
+      queryClient.invalidateQueries({ queryKey: [queryKey.PRODUCTIVITIES] });
       toast.success("Logbook saved succesfully")
     },
     onError: (error) => {
       console.error("Error updating logbook entry:", error);
       toast.error("Error updating logbook. " + error.message);
+    }
+  });
+}
+
+export function useDeleteLogbook() {
+  const queryClient = useQueryClient();
+  return useMutation({
+    mutationFn: (logbookId: string) =>
+      deleteLogbook(logbookId!),
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: [queryKey.LOGBOOKS] });
+      queryClient.invalidateQueries({ queryKey: [queryKey.PRODUCTIVITIES] });
+      toast.success("Logbook deleted succesfully")
+    },
+    onError: (error) => {
+      console.error("Error deleting logbook entry:", error);
+      toast.error("Error deleting logbook. " + error.message);
     }
   });
 }
