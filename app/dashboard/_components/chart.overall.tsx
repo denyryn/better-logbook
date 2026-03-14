@@ -1,5 +1,5 @@
 import React from "react";
-import { Area, AreaChart, CartesianGrid, XAxis } from "recharts";
+import { Area, AreaChart, CartesianGrid, XAxis, YAxis } from "recharts";
 
 import {
   Card,
@@ -137,7 +137,16 @@ export function OverallChart({ data, isLoading }: OverallChartProps) {
                 />
               </linearGradient>
             </defs>
+
             <CartesianGrid vertical={false} />
+
+            <YAxis
+              tickLine={false}
+              axisLine={false}
+              tickMargin={8}
+              domain={[0, "dataMax + 2"]}
+            />
+
             <XAxis
               dataKey="date"
               tickLine={false}
@@ -152,6 +161,7 @@ export function OverallChart({ data, isLoading }: OverallChartProps) {
                 });
               }}
             />
+
             <ChartTooltip
               cursor={false}
               content={
@@ -166,6 +176,7 @@ export function OverallChart({ data, isLoading }: OverallChartProps) {
                 />
               }
             />
+
             <Area
               dataKey="logbook"
               type="natural"

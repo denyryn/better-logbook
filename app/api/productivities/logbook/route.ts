@@ -36,11 +36,23 @@ export async function GET(request: NextRequest) {
   if (mapped.length > 0) {
     const start = new Date(mapped[0].date);
     const end = new Date();
-    const countByDate = new Map(mapped.map(p => [p.date, p.logbook]));
+
+    const countByDate = new Map<string, number>();
+
+    for (const item of mapped) {
+      countByDate.set(
+        item.date,
+        (countByDate.get(item.date) ?? 0) + item.logbook
+      );
+    }
 
     for (const d = new Date(start); d <= end; d.setUTCDate(d.getUTCDate() + 1)) {
       const dateStr = d.toISOString().split("T")[0];
-      normalized.push({ date: dateStr, logbook: countByDate.get(dateStr) ?? 0 });
+
+      normalized.push({
+        date: dateStr,
+        logbook: countByDate.get(dateStr) ?? 0
+      });
     }
   }
 
