@@ -22,6 +22,7 @@ import {
   Lock,
 } from "lucide-react";
 import { useTheme } from "next-themes";
+import Link from "next/link";
 
 export default function LandingPage() {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
@@ -159,8 +160,16 @@ export default function LandingPage() {
               Docs
             </a>
             <Separator orientation="vertical" className="h-4" />
-            <Button variant="ghost" size="sm">Login</Button>
-            <Button size="sm">Get Started</Button>
+            <Link href={"/auth/sign-in"}>
+              <Button variant="ghost" size="sm">
+                Login
+              </Button>
+            </Link>
+            <Link href={"/auth/sign-up"}>
+              <Button size="sm">
+                Get Started
+              </Button>
+            </Link>
           </nav>
 
           <div className="flex md:hidden items-center gap-2">
@@ -181,7 +190,11 @@ export default function LandingPage() {
             <a href="#pricing" className="text-sm text-muted-foreground hover:text-foreground transition-colors py-1" onClick={() => setMobileMenuOpen(false)}>Pricing</a>
             <a href="#preview" className="text-sm text-muted-foreground hover:text-foreground transition-colors py-1" onClick={() => setMobileMenuOpen(false)}>Docs</a>
             <Separator />
-            <Button variant="outline" size="sm" className="w-full">Login</Button>
+            <Link href={"/auth/sign-in"}>
+              <Button variant="outline" size="sm" className="w-full">
+                Login
+              </Button>
+            </Link>
             <Button size="sm" className="w-full">Get Started</Button>
           </div>
         )}
@@ -191,7 +204,7 @@ export default function LandingPage() {
       <section className="pt-40 pb-28 px-6">
         <div className="max-w-6xl mx-auto text-center">
           <Badge variant="outline" className="mb-6 text-xs tracking-wide uppercase">
-            Now with AI insights
+            With AI insights
           </Badge>
           <h1 className="text-5xl md:text-7xl font-bold tracking-tight leading-[1.1] mb-6 max-w-4xl mx-auto">
             Your work, clearly documented.
@@ -200,13 +213,17 @@ export default function LandingPage() {
             Better Logbook captures everything you do, surfaces your best work, and turns daily logs into career-ready highlights — privately, and automatically.
           </p>
           <div className="flex flex-col sm:flex-row items-center justify-center gap-3">
-            <Button size="lg" className="w-full sm:w-auto">
-              Start for free
-              <ArrowRight className="w-4 h-4 ml-1" />
-            </Button>
-            <Button variant="outline" size="lg" className="w-full sm:w-auto">
-              See how it works
-            </Button>
+            <Link href={"/auth/sign-up"}>
+              <Button size="lg" className="w-full sm:w-auto">
+                Start for free
+                <ArrowRight className="w-4 h-4 ml-1" />
+              </Button>
+            </Link>
+            <Link href={"/auth/sign-in"}>
+              <Button variant="outline" size="lg" className="w-full sm:w-auto">
+                See how it works
+              </Button>
+            </Link>
           </div>
           <p className="mt-5 text-xs text-muted-foreground">
             No credit card required. 50 free AI requests per month.
@@ -272,10 +289,12 @@ export default function LandingPage() {
                   </div>
                 ))}
               </div>
-              <Button className="mt-8" size="lg">
-                Try it yourself
-                <ArrowRight className="w-4 h-4 ml-1" />
-              </Button>
+              <Link href={"/auth/sign-up"}>
+                <Button className="mt-8" size="lg">
+                  Try it yourself
+                  <ArrowRight className="w-4 h-4 ml-1" />
+                </Button>
+              </Link>
             </div>
 
             <div className="relative">
@@ -445,13 +464,12 @@ export default function LandingPage() {
             Join professionals who use Better Logbook to stay sharp, track progress, and never undersell their work in a review.
           </p>
           <div className="flex flex-col sm:flex-row items-center justify-center gap-3">
-            <Button size="lg" className="w-full sm:w-auto">
-              Create your free account
-              <ArrowRight className="w-4 h-4 ml-1" />
-            </Button>
-            <Button variant="outline" size="lg" className="w-full sm:w-auto">
-              View live demo
-            </Button>
+            <Link href={"/auth/sign-up"}>
+              <Button size="lg" className="w-full sm:w-auto">
+                Create your free account
+                <ArrowRight className="w-4 h-4 ml-1" />
+              </Button>
+            </Link>
           </div>
           <p className="text-xs text-muted-foreground mt-5">
             Free forever plan available. No credit card required.

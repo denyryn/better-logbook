@@ -5,7 +5,6 @@ import Link from "next/link";
 import { useForm } from "react-hook-form";
 import z from "zod";
 
-import { useAuth } from "@/app/_providers/auth/auth.provider";
 import { Button } from "@/components/ui/button";
 import {
   Card,
@@ -27,7 +26,7 @@ import { loginSchema } from "@/schemas/login";
 import { Key, LoaderCircle } from "lucide-react";
 import { useEffect } from "react";
 import { authClient } from "@/lib/auth-client";
-import { useSignIn } from "@/lib/query/auth.query";
+import { usePasskeySignIn, useSignIn, useSocialSignIn } from "@/lib/query/auth.query";
 
 type LoginFormData = z.infer<typeof loginSchema>;
 
@@ -44,8 +43,9 @@ export function LoginForm({
     mode: "onSubmit",
   });
 
-  const { socialSignIn, passkeySignIn } = useAuth();
   const { mutateAsync: signIn, isPending: isSigningIn } = useSignIn();
+  const { mutateAsync: socialSignIn, isPending: isSocialSigningIn } = useSocialSignIn();
+  const { mutateAsync: passkeySignIn, isPending: isPasskeySigningIn } = usePasskeySignIn();
 
   const onSubmit = async (data: LoginFormData) => {
     await signIn(data);
@@ -59,7 +59,7 @@ export function LoginForm({
     void authClient.signIn.passkey({ autoFill: true })
   }, [])
 
-  const formLoading = isSigningIn || isSubmitting || isLoading;
+  const formLoading = isSocialSigningIn || isSigningIn || isPasskeySigningIn || isSubmitting || isLoading;
 
   return (
     <div className={cn("flex flex-col gap-6", className)} {...props}>
