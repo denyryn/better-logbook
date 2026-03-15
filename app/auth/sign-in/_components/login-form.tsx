@@ -41,7 +41,7 @@ export function LoginForm({
     formState: { errors, isSubmitting, isLoading },
   } = useForm<LoginFormData>({
     resolver: zodResolver(loginSchema),
-    mode: "onBlur",
+    mode: "onSubmit",
   });
 
   const { socialSignIn, passkeySignIn } = useAuth();

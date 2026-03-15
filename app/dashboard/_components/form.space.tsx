@@ -28,7 +28,7 @@ export function SpaceFormDialog({ onSuccess }: SpaceFormDialogProps) {
     reset,
   } = useForm<SpaceFormData>({
     resolver: zodResolver(spaceSchema),
-    mode: "onBlur",
+    mode: "onSubmit",
   });
 
   const { mutateAsync: createCompany, isPending: isLoading } = useCreateCompany();

@@ -37,7 +37,7 @@ export function PositionFormDialog({ onSuccess }: PositionFormDialogProps) {
     control,
   } = useForm<PositionFormData>({
     resolver: zodResolver(positionSchema),
-    mode: "onBlur",
+    mode: "onSubmit",
   });
 
   const { mutateAsync: createPosition } = useCreatePosition();

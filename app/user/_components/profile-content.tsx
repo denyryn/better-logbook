@@ -28,7 +28,7 @@ export default function ProfileContent() {
 
   const form = useForm<ProfileFormData>({
     resolver: zodResolver(ProfileSchema),
-    mode: "onBlur",
+    mode: "onSubmit",
     defaultValues: {...user}
   });
 

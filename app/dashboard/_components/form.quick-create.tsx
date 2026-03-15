@@ -20,7 +20,7 @@ interface QuickCreateFormDialogProps {
 export function QuickCreateFormDialog({ onSuccess }: QuickCreateFormDialogProps) {
   const { register, handleSubmit, formState: { errors, isSubmitting }, reset, control } = useForm({
     resolver: zodResolver(quickCreateSchema),
-    mode: "onBlur",
+    mode: "onSubmit",
   });
 
   const { mutateAsync: improveLogbookText, data: improvedLogbookText } = useImproveText();

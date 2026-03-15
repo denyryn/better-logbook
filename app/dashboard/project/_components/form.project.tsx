@@ -23,7 +23,7 @@ export function ProjectFormDialog({ onSuccess }: ProjectFormDialogProps) {
     control
   } = useForm<ProjectFormData>({
     resolver: zodResolver(projectSchema),
-    mode: "onBlur",
+    mode: "onSubmit",
   });
 
   const { mutateAsync: createProject, isPending: isLoading } = useCreateProject();

@@ -30,7 +30,7 @@ export default function Page() {
 
   const form = useForm<FormData>({
     resolver: zodResolver(logbookSchema),
-    mode: "onBlur",
+    mode: "onSubmit",
     defaultValues: { logDate: today, projectId: projectId },
   });
 
