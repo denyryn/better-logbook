@@ -81,7 +81,7 @@ export function SpaceCards({ spaces, settings }: SpaceCardsProps) {
                 Has {space.positions.length} positions
               </div>
               <div className="text-muted-foreground">
-                Acquisition needs attention
+                Keep it moving
               </div>
             </CardFooter>
           </Card>
