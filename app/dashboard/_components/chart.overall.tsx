@@ -61,7 +61,7 @@ export function OverallChart({ data, isLoading }: OverallChartProps) {
 
   const filteredData = data?.filter((item) => {
     const date = new Date(item.date);
-    const referenceDate = new Date("2024-06-30");
+    const referenceDate = new Date();
     let daysToSubtract = 90;
     if (timeRange === "30d") {
       daysToSubtract = 30;
@@ -143,7 +143,7 @@ export function OverallChart({ data, isLoading }: OverallChartProps) {
             <YAxis
               tickLine={false}
               axisLine={false}
-              tickMargin={8}
+              tickMargin={36}
               domain={[0, "dataMax + 2"]}
             />
 
@@ -151,7 +151,7 @@ export function OverallChart({ data, isLoading }: OverallChartProps) {
               dataKey="date"
               tickLine={false}
               axisLine={false}
-              tickMargin={8}
+              tickMargin={16}
               minTickGap={32}
               tickFormatter={(value) => {
                 const date = new Date(value);
