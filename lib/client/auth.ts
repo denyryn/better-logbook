@@ -3,6 +3,7 @@
 import { UserLogin, UserSignUp } from "@/types/user";
 import { authClient } from "../auth-client";
 import { config } from "../config";
+import { toast } from "sonner";
 
 export async function getPasskeys() {
   const { data, error } = await authClient.passkey.listUserPasskeys();
@@ -103,6 +104,43 @@ export async function signOut() {
 
   if (error) {
     console.error("Error signing out:", error);
+    throw new Error(error.message);
+  }
+
+  return data;
+}
+
+export async function socialSignIn(provider: "google") {
+  const { data, error } = await authClient.signIn.social({
+    provider: provider,
+    callbackURL: config.app.home,
+    newUserCallbackURL: config.app.home,
+  });
+
+  if (error) {
+    console.error("Error signing in with social provider:", error);
+    throw new Error(error.message);
+  }
+
+  return data;
+}
+
+export async function passkeySignIn() {
+  const { data, error } = await authClient.signIn.passkey({
+    autoFill: false,
+    fetchOptions: {
+      onSuccess: (context) => {
+        window.location.href = config.app.home;
+      },
+      onError: (context) => {
+        console.error("Passkey sign-in error:", context.error.message);
+        toast.error(context.error.message);
+      }
+    }
+  });
+
+  if (error) {
+    console.error("Error signing in with passkey:", error);
     throw new Error(error.message);
   }
 

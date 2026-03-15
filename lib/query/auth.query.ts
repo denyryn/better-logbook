@@ -1,6 +1,6 @@
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { queryKey } from "../constants/query-key.constant";
-import { createPasskey, deletePasskey, deleteSession, getPasskeys, getSessions } from "../client/auth";
+import { createPasskey, deletePasskey, deleteSession, getPasskeys, getSessions, passkeySignIn, socialSignIn } from "../client/auth";
 import { toast } from "sonner";
 import { signOut, signUpWithEmail, signInWithEmail } from "@/lib/client/auth";
 import { UserLogin, UserSignUp } from "@/types/user";
@@ -84,4 +84,22 @@ export function useSignOut() {
       toast.success("Signed out successfully")
     }
   });
+}
+
+export function useSocialSignIn() {
+  return useMutation({
+    mutationFn: async (provider: "google") => socialSignIn(provider),
+    onSuccess: () => {
+      toast.success("Signed in successfully")
+    }
+  });
+}
+
+export function usePasskeySignIn() {
+  return useMutation({
+    mutationFn: async () => passkeySignIn(),
+    onSuccess: () => {
+      toast.success("Signed in successfully")
+    }
+  })
 }
