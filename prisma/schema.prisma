@@ -115,7 +115,7 @@ model Project {
 
 model Position {
   id        String  @id @default(uuid())
-  role      String?
+  role      String
   company   Company @relation(fields: [companyId], references: [id])
   companyId String
 
