@@ -3,11 +3,15 @@ import { Prisma } from "@/generated/prisma/client";
 export const logbookWithRelationsQuery = {
   include: {
     tags: {
-      include: {
-        tag: true,
-      },
+      include: { tag: true },
     },
-    project: true,
+    project: {
+      include: {
+        position: {
+          include: {company: true}
+        }
+      }
+    }
   },
 };
 

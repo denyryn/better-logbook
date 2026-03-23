@@ -5,6 +5,7 @@ import { serverErrorResponse, serverSuccessResponse } from "@/lib/api.response";
 import { auth } from "@/lib/auth";
 import { prisma } from "@/lib/prisma";
 import { Logbook } from "@/generated/prisma/client";
+import { logbookWithRelationsQuery } from "@/types/prisma/logbooks";
 
 export async function GET(request: NextRequest) {
   try {
@@ -16,11 +17,7 @@ export async function GET(request: NextRequest) {
 
     const logbooks = await prisma.logbook.findMany({
       where: { project: { userId: session.user.id }, deletedAt: null },
-      include: {
-        tags: {
-          include: { tag: true },
-        },
-      },
+      ...logbookWithRelationsQuery,
       orderBy: { logDate: "desc" },
     });
 

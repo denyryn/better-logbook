@@ -80,12 +80,21 @@ import { Logbook } from "@/generated/prisma/browser";
 import { AlertModal } from "@/components/alert-modal";
 import { useState } from "react";
 
+// ─── Schema ──────────────────────────────────────────────────────────────────
 export const schema = z.object({
   id: z.string(),
   title: z.string().nullable(),
   content: z.string(),
   logDate: z.coerce.date(),
-  projectId: z.string(),
+  project: z.object({
+    name: z.string(),
+    position: z.object({
+      role: z.string(),
+      company: z.object({
+        name: z.string()
+      })
+    })
+  }),
   tags: z
     .array(
       z.object({
@@ -104,7 +113,6 @@ export const schema = z.object({
 export type LogbookEntry = z.infer<typeof schema>;
 
 // ─── Columns ──────────────────────────────────────────────────────────────────
-
 const columns: ColumnDef<LogbookEntry>[] = [
   {
     id: "number",
@@ -116,18 +124,18 @@ const columns: ColumnDef<LogbookEntry>[] = [
   },
   {
     id: "select",
-    header: ({ table }) => (
-      <div className="flex items-center justify-center">
-        <Checkbox
-          checked={
-            table.getIsAllPageRowsSelected() ||
-            (table.getIsSomePageRowsSelected() && "indeterminate")
-          }
-          onCheckedChange={(value) => table.toggleAllPageRowsSelected(!!value)}
-          aria-label="Select all"
-        />
-      </div>
-    ),
+    header: ({ table }) => {
+      const checked = table.getIsAllPageRowsSelected() || (table.getIsSomePageRowsSelected() && "indeterminate");
+      return (
+        <div className="flex items-center justify-center">
+          <Checkbox
+            checked={ checked }
+            onCheckedChange={(value) => table.toggleAllPageRowsSelected(!!value)}
+            aria-label="Select all"
+          />
+        </div>
+      )
+    },
     cell: ({ row }) => (
       <div className="flex items-center justify-center">
         <Checkbox
@@ -141,6 +149,33 @@ const columns: ColumnDef<LogbookEntry>[] = [
     enableHiding: false,
   },
   {
+    accessorKey: "project.name",
+    header: () => (
+      <div className="px-6 text-left text-xs font-semibold tracking-wide text-muted-foreground">
+        Project
+      </div>
+    ),
+    cell: ({ row }) => {
+      const project = row.original.project;
+
+      return (
+        <div className="px-6 py-3 max-w-sm">
+          <div className="flex flex-col gap-1 truncate">
+            {/* Project Name */}
+            <span className="font-medium text-foreground truncate">
+              {project.name}
+            </span>
+
+            {/* Role @ Company */}
+            <span className="text-xs text-muted-foreground truncate">
+              {project.position.role} @ {project.position.company.name}
+            </span>
+          </div>
+        </div>
+      );
+    }
+  },
+  {
     accessorKey: "title",
     header: "Title",
     cell: ({ row }) => <TableCellViewer item={row.original} />,
@@ -151,7 +186,7 @@ const columns: ColumnDef<LogbookEntry>[] = [
     cell: ({ row }) => (
       <div className="text-muted-foreground flex items-center gap-1.5 text-sm whitespace-nowrap">
         <IconCalendarEvent className="size-3.5 shrink-0" />
-        {format(row.original.logDate, "MMM d, yyyy")}
+        { format(row.original.logDate, "MMM d, yyyy") }
       </div>
     ),
   },
@@ -198,6 +233,7 @@ const columns: ColumnDef<LogbookEntry>[] = [
   }
 ];
 
+// ─── Table Actions ──────────────────────────────────────────────────────────
 function LogbookActions({ row }: { row: Row<Logbook> }) {
   const { mutateAsync: deleteLogbook } = useDeleteLogbook();
 
@@ -275,7 +311,6 @@ function LogbookActions({ row }: { row: Row<Logbook> }) {
 }
 
 // ─── Table Component ──────────────────────────────────────────────────────────
-
 interface LogbookDataTableProps {
   data: LogbookEntry[] | undefined;
   projectId?: string;
@@ -284,7 +319,10 @@ interface LogbookDataTableProps {
 export function LogbookDataTable({ data, projectId }: LogbookDataTableProps) {
   const [rowSelection, setRowSelection] = React.useState({});
   const [columnVisibility, setColumnVisibility] =
-    React.useState<VisibilityState>({});
+    React.useState<VisibilityState>({
+      position: false,
+      tags: false
+    });
   const [columnFilters, setColumnFilters] = React.useState<ColumnFiltersState>(
     [],
   );
@@ -332,6 +370,11 @@ export function LogbookDataTable({ data, projectId }: LogbookDataTableProps) {
       columnFilters,
       pagination,
       globalFilter,
+    },
+    initialState: {
+      columnVisibility: {
+        tags: false
+      }
     },
     globalFilterFn: (row, _columnId, filterValue: string): boolean => {
       const search = filterValue.toLowerCase();
@@ -427,7 +470,7 @@ export function LogbookDataTable({ data, projectId }: LogbookDataTableProps) {
                       column.toggleVisibility(!!value)
                     }
                   >
-                    {column.id}
+                    { column.id.split("_").map((c) => c.charAt(0).toUpperCase() + c.slice(1)).join(" ") }
                   </DropdownMenuCheckboxItem>
                 ))}
             </DropdownMenuContent>
@@ -619,9 +662,23 @@ function TableCellViewer({ item }: { item: LogbookEntry }) {
       <DrawerContent>
         <DrawerHeader className="gap-1">
           <DrawerTitle>{item.title ?? "Untitled Entry"}</DrawerTitle>
-          <DrawerDescription className="flex items-center gap-1.5">
-            <IconCalendarEvent className="size-3.5" />
-            {format(item.logDate, "EEEE, MMMM d, yyyy")}
+          <DrawerDescription className="flex flex-col gap-3 text-sm text-muted-foreground">
+            {/* Role @ Company */}
+            <div className="flex items-center gap-2">
+              <span className="font-medium text-foreground">
+                {item.project.position.role}
+              </span>
+              <span className="text-muted-foreground">@</span>
+              <span>{item.project.position.company.name}</span>
+            </div>
+
+            {/* Date */}
+            <div className="flex items-center gap-2 text-xs">
+              <IconCalendarEvent className="size-4 opacity-70" />
+              <span>
+                {format(item.logDate, "EEEE, MMMM d, yyyy")}
+              </span>
+            </div>
           </DrawerDescription>
         </DrawerHeader>
         <Separator />
