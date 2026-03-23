@@ -76,7 +76,6 @@ import { URLParamsBuilder } from "@/lib/url-params";
 import { Copy } from "lucide-react";
 import { toast } from "sonner";
 import { useDeleteLogbook } from "@/lib/query/logbook.query";
-import { Logbook } from "@/generated/prisma/browser";
 import { AlertModal } from "@/components/alert-modal";
 import { useState } from "react";
 
@@ -234,7 +233,7 @@ const columns: ColumnDef<LogbookEntry>[] = [
 ];
 
 // ─── Table Actions ──────────────────────────────────────────────────────────
-function LogbookActions({ row }: { row: Row<Logbook> }) {
+function LogbookActions({ row }: { row: Row<LogbookEntry> }) {
   const { mutateAsync: deleteLogbook } = useDeleteLogbook();
 
   const [modalOpen, setModalOpen] = useState(false);
