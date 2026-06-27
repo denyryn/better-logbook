@@ -36,20 +36,20 @@ export function PositionCards({ positions }: PositionCardsProps) {
   }
 
   return (
-    <div className="*:data-[slot=card]:from-primary/5 *:data-[slot=card]:to-card dark:*:data-[slot=card]:bg-card grid grid-cols-1 gap-4 px-4 *:data-[slot=card]:bg-linear-to-t *:data-[slot=card]:shadow-xs lg:px-6 @xl/main:grid-cols-2 @5xl/main:grid-cols-4">
+    <div className="grid grid-cols-1 gap-4 px-4 lg:px-6 @xl/main:grid-cols-2 @5xl/main:grid-cols-4">
       <PositionDialog>
-        <Card className="border-primary/30 hover:border-primary/60 @container/card h-full cursor-pointer border-2 border-dashed transition-all hover:shadow-md">
+        <Card className="@container/card h-full cursor-pointer border-2 border-dashed border-[#000]">
           <CardHeader>
-            <CardDescription>Add Position</CardDescription>
-            <CardTitle className="text-2xl font-semibold tabular-nums @[250px]/card:text-3xl">
+            <CardDescription className="font-helvetica text-xs font-bold uppercase tracking-wide">Add Position</CardDescription>
+            <CardTitle className="text-2xl font-arial-black font-black tabular-nums @[250px]/card:text-3xl">
               <IconPlus className="size-12" />
             </CardTitle>
           </CardHeader>
-          <CardFooter className="flex-col items-start gap-1.5 text-sm">
-            <div className="line-clamp-1 flex gap-2 font-medium">
+          <CardFooter className="flex-col items-start gap-1.5 font-serif text-sm">
+            <div className="line-clamp-1 flex gap-2 font-helvetica font-bold">
               Create new position <IconArrowRight className="size-4" />
             </div>
-            <div className="text-muted-foreground">
+            <div className="font-serif">
               Organize your work and positions
             </div>
           </CardFooter>
@@ -58,24 +58,21 @@ export function PositionCards({ positions }: PositionCardsProps) {
 
       {positions?.map((position) => (
         <Link key={position.id} href={`/dashboard/space/${position.spaceId}?position=${position.id}`}>
-          <Card className="group @container/card h-full cursor-pointer transition-all hover:shadow-md">
-            <CardHeader>
-              <CardDescription>Position</CardDescription>
-              <CardTitle className="text-2xl font-semibold tabular-nums @[250px]/card:text-3xl">
+          <Card className="group @container/card h-full cursor-pointer border-[#000]">
+            <div className="border-b border-[#000] bg-white px-3 py-1.5">
+              <span className="font-helvetica text-xs font-bold text-[#000]">Position</span>
+            </div>
+            <div className="px-4 py-3 font-serif text-sm" style={{ backgroundColor: 'var(--tint-periwinkle)' }}>
+              <CardTitle className="text-2xl font-arial-black font-black mb-2">
                 {position.role}
               </CardTitle>
-              <CardAction>
-                <IconArrowUpRight className="transition-transform group-hover:scale-125" />
-              </CardAction>
-            </CardHeader>
-            <CardFooter className="flex-col items-start gap-1.5 text-sm">
-              <div className="line-clamp-1 flex gap-2 font-medium">
+              <div className="line-clamp-1 flex gap-2 font-helvetica text-xs font-bold">
                 View position details <IconArrowRight className="size-4" />
               </div>
-              <div className="text-muted-foreground">
+              <div className="text-xs">
                 @ {position.space.name}
               </div>
-            </CardFooter>
+            </div>
           </Card>
         </Link>
       ))}

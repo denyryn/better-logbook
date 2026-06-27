@@ -70,43 +70,37 @@ export function LogbookHistory() {
 
   if (isLoading) {
     return (
-      <Card>
-        <CardHeader>
-          <CardTitle>Recent Entries</CardTitle>
-          <CardDescription>Your logbook history</CardDescription>
-        </CardHeader>
-        <CardContent className="space-y-4">
+      <div className="border border-[#000]">
+        <div className="border-b border-[#000] bg-white px-3 py-1.5">
+          <span className="font-helvetica text-sm font-bold">Recent Entries</span>
+        </div>
+        <div className="space-y-4 p-4 font-serif text-sm" style={{ backgroundColor: 'var(--tint-sky)' }}>
           {[1, 2, 3].map((i) => (
-            <div key={i} className="space-y-3 border-b pb-4 last:border-0">
+            <div key={i} className="space-y-3 border-b border-[#000] pb-4 last:border-0">
               <Skeleton className="h-5 w-3/4" />
               <Skeleton className="h-4 w-full" />
               <Skeleton className="h-4 w-2/3" />
             </div>
           ))}
-        </CardContent>
-      </Card>
+        </div>
+      </div>
     );
   }
 
   if (!allLogbooks || allLogbooks?.data.length === 0) {
     return (
-      <Card>
-        <CardHeader>
-          <CardTitle>Recent Entries</CardTitle>
-          <CardDescription>Your logbook history</CardDescription>
-        </CardHeader>
-        <CardContent>
-          <div className="flex flex-col items-center justify-center py-8 text-center">
-            <div className="bg-muted mb-4 rounded-full p-4">
-              <IconClock className="text-muted-foreground size-8" />
-            </div>
-            <h3 className="mb-2 text-lg font-semibold">No entries yet</h3>
-            <p className="text-muted-foreground max-w-sm text-sm">
-              Start creating logbook entries to see your history here
-            </p>
+      <div className="border border-[#000]">
+        <div className="border-b border-[#000] bg-white px-3 py-1.5">
+          <span className="font-helvetica text-sm font-bold">Recent Entries</span>
+        </div>
+        <div className="flex flex-col items-center justify-center p-8 text-center font-serif text-sm" style={{ backgroundColor: 'var(--tint-sky)' }}>
+          <div className="mb-4 border border-[#000] p-4">
+            <IconClock className="size-8" />
           </div>
-        </CardContent>
-      </Card>
+          <h3 className="mb-2 font-arial-black text-lg font-black">No entries yet</h3>
+          <p className="text-xs">Start creating logbook entries to see your history here</p>
+        </div>
+      </div>
     );
   }
 
@@ -115,97 +109,92 @@ export function LogbookHistory() {
   );
 
   return (
-    <Card>
-      <CardHeader>
-        <CardTitle className="flex items-center gap-2">
-          <IconClock className="size-5" />
+    <div className="border border-[#000]">
+      <div className="border-b border-[#000] bg-white px-3 py-1.5">
+        <span className="flex items-center gap-2 font-helvetica text-sm font-bold">
+          <IconClock className="size-4" />
           Recent Entries
-        </CardTitle>
-        <CardDescription>
-          {allLogbooks.data.length}{" "}
-          {allLogbooks.data.length === 1 ? "entry" : "entries"} in your logbook
-        </CardDescription>
-      </CardHeader>
-      <CardContent>
-        <div className="space-y-4">
-          {sortedLogbooks.slice(0, 10).map((logbook) => {
-            const logbookWithTags = logbook;
-            const hasTags =
-              logbookWithTags.tags && logbookWithTags.tags.length > 0;
+        </span>
+        <p className="font-serif text-xs">{allLogbooks.data.length} {allLogbooks.data.length === 1 ? "entry" : "entries"} in your logbook</p>
+      </div>
+      <div className="space-y-4 p-4 font-serif text-sm" style={{ backgroundColor: 'var(--tint-sky)' }}>
+        {sortedLogbooks.slice(0, 10).map((logbook) => {
+          const logbookWithTags = logbook;
+          const hasTags =
+            logbookWithTags.tags && logbookWithTags.tags.length > 0;
 
-            return (
-              <Link
-                key={logbook.id}
-                href={`/dashboard/logbook/edit?id=${logbook.id}`}
-                className="group block"
-              >
-                <div className="hover:border-primary/50 space-y-3 rounded-lg border p-4 transition-all duration-200 hover:shadow-md">
-                  {/* Header */}
-                  <div className="flex items-start justify-between gap-4">
-                    <div className="min-w-0 flex-1">
-                      {logbook.title && (
-                        <h4 className="group-hover:text-primary line-clamp-1 text-base font-semibold transition-colors">
-                          {logbook.title}
-                        </h4>
-                      )}
-                      <div className="text-muted-foreground mt-2 flex items-center gap-3 text-xs">
-                        <div className="flex items-center gap-1.5">
-                          <IconCalendar className="size-3.5" />
-                          <span>{formatDate(logbook.logDate)}</span>
-                        </div>
-                        <div className="flex items-center gap-1.5">
-                          <IconFolder className="size-3.5" />
-                          <span>{getProjectName(logbook.projectId)}</span>
-                        </div>
+          return (
+            <Link
+              key={logbook.id}
+              href={`/dashboard/logbook/edit?id=${logbook.id}`}
+              className="group block"
+            >
+              <div className="space-y-3 border border-[#000] bg-white p-4 transition-all duration-200">
+                {/* Header */}
+                <div className="flex items-start justify-between gap-4">
+                  <div className="min-w-0 flex-1">
+                    {logbook.title && (
+                      <h4 className="font-helvetica text-sm font-bold">
+                        {logbook.title}
+                      </h4>
+                    )}
+                    <div className="mt-2 flex items-center gap-3 text-xs">
+                      <div className="flex items-center gap-1.5">
+                        <IconCalendar className="size-3.5" />
+                        <span>{formatDate(logbook.logDate)}</span>
+                      </div>
+                      <div className="flex items-center gap-1.5">
+                        <IconFolder className="size-3.5" />
+                        <span>{getProjectName(logbook.projectId)}</span>
                       </div>
                     </div>
-                    <div className="text-muted-foreground text-xs whitespace-nowrap">
-                      {getRelativeTime(logbook.createdAt)}
-                    </div>
                   </div>
-
-                  {/* Content Preview */}
-                  <p className="text-muted-foreground line-clamp-2 text-sm leading-relaxed">
-                    {getContentPreview(logbook.content)}
-                  </p>
-
-                  {/* Tags - Optional, only show if available */}
-                  {hasTags && (
-                    <div className="flex flex-wrap items-center gap-2">
-                      <IconTag className="text-muted-foreground size-3.5" />
-                      {logbookWithTags.tags!.slice(0, 3).map((logbookTag) => (
-                        <Badge
-                          key={logbookTag.tagId}
-                          variant="secondary"
-                          className="text-xs"
-                        >
-                          {logbookTag.tag?.name || "tag"}
-                        </Badge>
-                      ))}
-                      {logbookWithTags.tags!.length > 3 && (
-                        <Badge variant="outline" className="text-xs">
-                          +{logbookWithTags.tags!.length - 3} more
-                        </Badge>
-                      )}
-                    </div>
-                  )}
+                  <div className="text-xs whitespace-nowrap">
+                    {getRelativeTime(logbook.createdAt)}
+                  </div>
                 </div>
-              </Link>
-            );
-          })}
-        </div>
+
+                {/* Content Preview */}
+                <p className="line-clamp-2 text-xs">
+                  {getContentPreview(logbook.content)}
+                </p>
+
+                {/* Tags */}
+                {hasTags && (
+                  <div className="flex flex-wrap items-center gap-2">
+                    <IconTag className="size-3.5" />
+                    {logbookWithTags.tags!.slice(0, 3).map((logbookTag) => (
+                      <Badge
+                        key={logbookTag.tagId}
+                        variant="outline"
+                        className="border-[#000] bg-white text-xs"
+                      >
+                        {logbookTag.tag?.name || "tag"}
+                      </Badge>
+                    ))}
+                    {logbookWithTags.tags!.length > 3 && (
+                      <Badge variant="outline" className="border-[#000] bg-white text-xs">
+                        +{logbookWithTags.tags!.length - 3} more
+                      </Badge>
+                    )}
+                  </div>
+                )}
+              </div>
+            </Link>
+          );
+        })}
 
         {allLogbooks.data.length > 10 && (
           <div className="mt-6 text-center">
             <Link
               href="/dashboard/logbook"
-              className="text-primary text-sm font-medium hover:underline"
+              className="text-[#0000ee] text-sm font-medium underline"
             >
               View all {allLogbooks.data.length} entries →
             </Link>
           </div>
         )}
-      </CardContent>
-    </Card>
+      </div>
+    </div>
   );
 }

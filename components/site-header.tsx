@@ -9,23 +9,24 @@ interface SiteHeaderProps {
   showBreadcrumb?: boolean;
 }
 
+// Dell 1996 top banner: black background, white Helvetica Bold, solid black borders
 export function SiteHeader({
   name,
   menu,
   showBreadcrumb = true,
 }: SiteHeaderProps) {
   return (
-    <header className="bg-background/95 supports-[backdrop-filter]:bg-background/60 flex h-(--header-height) shrink-0 items-center gap-2 border-b backdrop-blur transition-[width,height] ease-linear group-has-data-[collapsible=icon]/sidebar-wrapper:h-(--header-height)">
+    <header className="flex h-(--header-height) shrink-0 items-center gap-2 border-b border-[#000] bg-[#000] text-white transition-[width,height] ease-linear group-has-data-[collapsible=icon]/sidebar-wrapper:h-(--header-height)">
       <div className="flex w-full items-center gap-2 px-4 lg:gap-3 lg:px-6">
-        <SidebarTrigger className="-ml-1" />
+        <SidebarTrigger className="-ml-1 text-white" />
         <Separator
           orientation="vertical"
-          className="mx-1 data-[orientation=vertical]:h-5"
+          className="mx-1 bg-white data-[orientation=vertical]:h-5"
         />
         {showBreadcrumb ? (
           <AppBreadcrumb />
         ) : (
-          <h1 className="flex-1 text-base font-semibold">{name}</h1>
+          <h1 className="flex-1 font-helvetica text-base font-bold">{name}</h1>
         )}
         <div className="ml-auto flex items-center gap-2">{menu}</div>
       </div>

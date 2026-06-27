@@ -4,10 +4,14 @@
 
 @custom-variant dark (&:is(.dark *));
 
+/* ─── Dell 1996 Type Scale ─── */
 @theme inline {
   --color-background: var(--background);
   --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
+  --font-sans: Georgia, "Times New Roman", serif;
+  --font-serif: Georgia, "Times New Roman", serif;
+  --font-helvetica: Helvetica, Arial, sans-serif;
+  --font-arial-black: "Arial Black", Arial, Helvetica, sans-serif;
   --font-mono: var(--font-geist-mono);
   --color-sidebar-ring: var(--sidebar-ring);
   --color-sidebar-border: var(--sidebar-border);
@@ -38,89 +42,235 @@
   --color-popover: var(--popover);
   --color-card-foreground: var(--card-foreground);
   --color-card: var(--card);
-  --radius-sm: calc(var(--radius) - 4px);
-  --radius-md: calc(var(--radius) - 2px);
-  --radius-lg: var(--radius);
-  --radius-xl: calc(var(--radius) + 4px);
-  --radius-2xl: calc(var(--radius) + 8px);
-  --radius-3xl: calc(var(--radius) + 12px);
-  --radius-4xl: calc(var(--radius) + 16px);
+
+  --radius-sm: 0;
+  --radius-md: 0;
+  --radius-lg: 0;
+  --radius-xl: 0;
+  --radius-2xl: 0;
+  --radius-3xl: 0;
+  --radius-4xl: 0;
 }
 
 :root {
   --radius: 0;
-  --background: oklch(1 0 0);
-  --foreground: oklch(0.145 0 0);
-  --card: oklch(1 0 0);
-  --card-foreground: oklch(0.145 0 0);
-  --popover: oklch(1 0 0);
-  --popover-foreground: oklch(0.145 0 0);
-  --primary: oklch(0.205 0 0);
-  --primary-foreground: oklch(0.985 0 0);
-  --secondary: oklch(0.97 0 0);
-  --secondary-foreground: oklch(0.205 0 0);
-  --muted: oklch(0.97 0 0);
-  --muted-foreground: oklch(0.556 0 0);
-  --accent: oklch(0.97 0 0);
-  --accent-foreground: oklch(0.205 0 0);
-  --destructive: oklch(0.577 0.245 27.325);
-  --border: oklch(0.922 0 0);
-  --input: oklch(0.922 0 0);
-  --ring: oklch(0.708 0 0);
-  --chart-1: oklch(0.646 0.222 41.116);
-  --chart-2: oklch(0.6 0.118 184.704);
-  --chart-3: oklch(0.398 0.07 227.392);
-  --chart-4: oklch(0.828 0.189 84.429);
-  --chart-5: oklch(0.769 0.188 70.08);
-  --sidebar: oklch(0.985 0 0);
-  --sidebar-foreground: oklch(0.145 0 0);
-  --sidebar-primary: oklch(0.205 0 0);
-  --sidebar-primary-foreground: oklch(0.985 0 0);
-  --sidebar-accent: oklch(0.97 0 0);
-  --sidebar-accent-foreground: oklch(0.205 0 0);
-  --sidebar-border: oklch(0.922 0 0);
-  --sidebar-ring: oklch(0.708 0 0);
+
+  /* Dell 1996 core palette — pure ink on canvas */
+  --background: #ffffff;
+  --foreground: #000000;
+  --card: #ffffff;
+  --card-foreground: #000000;
+  --popover: #ffffff;
+  --popover-foreground: #000000;
+  --primary: #000000;
+  --primary-foreground: #ffffff;
+  --secondary: #ffffff;
+  --secondary-foreground: #000000;
+  --muted: #ffffff;
+  --muted-foreground: #000000;
+  --accent: #ffffff;
+  --accent-foreground: #000000;
+  --destructive: #e91d2a;
+  --border: #000000;
+  --input: #000000;
+  --ring: #000000;
+
+  /* Chart colors — Dell tint family */
+  --chart-1: #000000;
+  --chart-2: #b3bd95;
+  --chart-3: #d77a7a;
+  --chart-4: #9ab6c8;
+  --chart-5: #8c9ae0;
+
+  /* Sidebar — white canvas */
+  --sidebar: #ffffff;
+  --sidebar-foreground: #000000;
+  --sidebar-primary: #000000;
+  --sidebar-primary-foreground: #ffffff;
+  --sidebar-accent: #ffffff;
+  --sidebar-accent-foreground: #000000;
+  --sidebar-border: #000000;
+  --sidebar-ring: #000000;
+
+  /* Dell 1996 brand colors */
+  --dell-red: #e91d2a;
+  --dell-yellow: #fcc20f;
+  --dell-link: #0000ee;
+
+  /* Ribbon-card tint family */
+  --tint-olive: #8e8a25;
+  --tint-sage: #b3bd95;
+  --tint-salmon: #d77a7a;
+  --tint-peach: #e6915d;
+  --tint-lime: #c0d4a7;
+  --tint-sky: #9ab6c8;
+  --tint-steel: #a5b8c0;
+  --tint-periwinkle: #8c9ae0;
 }
 
 .dark {
-  --background: oklch(0.145 0 0);
-  --foreground: oklch(0.985 0 0);
-  --card: oklch(0.205 0 0);
-  --card-foreground: oklch(0.985 0 0);
-  --popover: oklch(0.205 0 0);
-  --popover-foreground: oklch(0.985 0 0);
-  --primary: oklch(0.922 0 0);
-  --primary-foreground: oklch(0.205 0 0);
-  --secondary: oklch(0.269 0 0);
-  --secondary-foreground: oklch(0.985 0 0);
-  --muted: oklch(0.269 0 0);
-  --muted-foreground: oklch(0.708 0 0);
-  --accent: oklch(0.269 0 0);
-  --accent-foreground: oklch(0.985 0 0);
-  --destructive: oklch(0.704 0.191 22.216);
-  --border: oklch(1 0 0 / 10%);
-  --input: oklch(1 0 0 / 15%);
-  --ring: oklch(0.556 0 0);
-  --chart-1: oklch(0.488 0.243 264.376);
-  --chart-2: oklch(0.696 0.17 162.48);
-  --chart-3: oklch(0.769 0.188 70.08);
-  --chart-4: oklch(0.627 0.265 303.9);
-  --chart-5: oklch(0.645 0.246 16.439);
-  --sidebar: oklch(0.205 0 0);
-  --sidebar-foreground: oklch(0.985 0 0);
-  --sidebar-primary: oklch(0.488 0.243 264.376);
-  --sidebar-primary-foreground: oklch(0.985 0 0);
-  --sidebar-accent: oklch(0.269 0 0);
-  --sidebar-accent-foreground: oklch(0.985 0 0);
-  --sidebar-border: oklch(1 0 0 / 10%);
-  --sidebar-ring: oklch(0.556 0 0);
+  --background: #000000;
+  --foreground: #ffffff;
+  --card: #111111;
+  --card-foreground: #ffffff;
+  --popover: #111111;
+  --popover-foreground: #ffffff;
+  --primary: #ffffff;
+  --primary-foreground: #000000;
+  --secondary: #111111;
+  --secondary-foreground: #ffffff;
+  --muted: #111111;
+  --muted-foreground: #cccccc;
+  --accent: #111111;
+  --accent-foreground: #ffffff;
+  --destructive: #e91d2a;
+  --border: #ffffff;
+  --input: #ffffff;
+  --ring: #ffffff;
+  --sidebar: #111111;
+  --sidebar-foreground: #ffffff;
+  --sidebar-primary: #ffffff;
+  --sidebar-primary-foreground: #000000;
+  --sidebar-accent: #111111;
+  --sidebar-accent-foreground: #ffffff;
+  --sidebar-border: #ffffff;
+  --sidebar-ring: #ffffff;
+  --dell-link: #6699ff;
+  --tint-olive: #5a5620;
+  --tint-sage: #7a8465;
+  --tint-salmon: #9a5a5a;
+  --tint-peach: #a6714d;
+  --tint-lime: #809470;
+  --tint-sky: #6a8698;
+  --tint-steel: #758890;
+  --tint-periwinkle: #6c7ab0;
 }
 
+/* ─── Dell 1996 Component Utilities ─── */
+
+/* Page frame — 8px solid black border around viewport */
+.page-frame {
+  border: 8px solid #000000;
+  min-height: 100vh;
+  background: #ffffff;
+}
+
+.dark .page-frame {
+  border-color: #ffffff;
+  background: #000000;
+}
+
+/* Ribbon card — white title bar + tint body */
+.ribbon-card {
+  border: 1px solid #000000;
+}
+
+.ribbon-card-title {
+  background: #ffffff;
+  border-bottom: 1px solid #000000;
+  padding: 6px 12px;
+  font-family: Helvetica, Arial, sans-serif;
+  font-weight: 700;
+  font-size: 14px;
+  line-height: 1.2;
+  color: #000000;
+}
+
+.ribbon-card-body {
+  padding: 12px 16px;
+  font-family: Georgia, "Times New Roman", serif;
+  font-size: 14px;
+  line-height: 1.4;
+  color: #000000;
+}
+
+/* Dell link — classic blue underlined */
+.dell-link {
+  color: #0000ee;
+  text-decoration: underline;
+}
+
+.dark .dell-link {
+  color: #6699ff;
+}
+
+/* Dell heading display */
+.dell-display {
+  font-family: Arial Black, Arial, Helvetica, sans-serif;
+  font-weight: 900;
+  font-size: 24px;
+  line-height: 1.05;
+  color: #000000;
+}
+
+.dark .dell-display {
+  color: #ffffff;
+}
+
+/* Dell table header */
+.dell-table-header {
+  background: #000000;
+  color: #ffffff;
+  font-family: Helvetica, Arial, sans-serif;
+  font-weight: 700;
+  font-size: 12px;
+  text-transform: uppercase;
+  letter-spacing: 0;
+}
+
+.dark .dell-table-header {
+  background: #ffffff;
+  color: #000000;
+}
+
+/* Dell button */
+.dell-btn-primary {
+  background: #000000;
+  color: #ffffff;
+  border: 1px solid #000000;
+  font-family: Helvetica, Arial, sans-serif;
+  font-weight: 700;
+  font-size: 12px;
+  padding: 6px 16px;
+}
+
+.dark .dell-btn-primary {
+  background: #ffffff;
+  color: #000000;
+  border-color: #ffffff;
+}
+
+.dell-btn-secondary {
+  background: #ffffff;
+  color: #000000;
+  border: 1px solid #000000;
+  font-family: Helvetica, Arial, sans-serif;
+  font-weight: 700;
+  font-size: 12px;
+  padding: 6px 16px;
+}
+
+.dark .dell-btn-secondary {
+  background: #111111;
+  color: #ffffff;
+  border-color: #ffffff;
+}
+
+/* ─── Global Base ─── */
 @layer base {
   * {
     @apply border-border outline-ring/50;
   }
   body {
     @apply bg-background text-foreground;
+    font-family: Georgia, "Times New Roman", serif;
+  }
+  h1, h2, h3, h4, h5, h6 {
+    font-family: Arial Black, Arial, Helvetica, sans-serif;
+    font-weight: 900;
+  }
+  /* All inputs keep sharp borders */
+  input, textarea, select, button {
+    border-radius: 0;
   }
 }

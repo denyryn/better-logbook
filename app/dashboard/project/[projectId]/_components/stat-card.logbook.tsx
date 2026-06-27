@@ -27,20 +27,20 @@ export function LogbookStatCard({
     return <Skeleton className="h-40 w-sm" />;
   }
 
+  const tints = ['var(--tint-sage)', 'var(--tint-salmon)', 'var(--tint-periwinkle)', 'var(--tint-sky)'];
+  const tintIdx = [...title].reduce((acc, c) => acc + c.charCodeAt(0), 0) % tints.length;
+
   return (
-    <Card className="@container/card">
-      <CardHeader>
-        <CardDescription>{title}</CardDescription>
-        <CardTitle className="text-2xl font-semibold tabular-nums @[250px]/card:text-3xl">
+    <Card className="@container/card border-[#000]">
+      <div className="border-b border-[#000] bg-white px-3 py-1.5">
+        <span className="font-helvetica text-xs font-bold">{title}</span>
+      </div>
+      <div className="px-4 py-3 font-serif text-sm" style={{ backgroundColor: tints[tintIdx] }}>
+        <CardTitle className="text-2xl font-arial-black font-black tabular-nums @[250px]/card:text-3xl">
           {value}
         </CardTitle>
-        <CardAction>
-          <Icon className="text-muted-foreground size-4" />
-        </CardAction>
-      </CardHeader>
-      <CardFooter className="flex-col items-start gap-1.5 text-sm">
-        <div className="line-clamp-1 flex gap-2 font-medium">{description}</div>
-      </CardFooter>
+        <div className="mt-1 line-clamp-1 font-helvetica text-xs font-bold">{description}</div>
+      </div>
     </Card>
   );
 }

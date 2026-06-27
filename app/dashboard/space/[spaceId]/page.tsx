@@ -51,7 +51,7 @@ export default function Page() {
               </div>
 
               <TabsContent value="all" className="flex flex-col">
-                <div className="aspect-video w-full flex-1 rounded-lg border border-dashed py-4 md:py-6">
+                <div className="aspect-video w-full flex-1 border border-dashed border-[#000] py-4 md:py-6">
                   <ProjectCards projects={spaceProjects?.data} />
                 </div>
               </TabsContent>

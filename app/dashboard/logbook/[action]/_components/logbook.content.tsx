@@ -36,60 +36,61 @@ export function LogbookContent({ form, improvedText, isPending }: LogbookContent
   }
 
   return (
-    <Card>
-      <CardHeader>
-        <CardTitle>Content</CardTitle>
-        <CardDescription>
+    <div className="border border-[#000]">
+      <div className="border-b border-[#000] bg-white px-3 py-1.5">
+        <span className="font-helvetica text-sm font-bold">Content</span>
+        <p className="font-serif text-xs">
           Write your logbook entry. Use AI to improve your text.
-        </CardDescription>
-      </CardHeader>
-      <CardContent>
+        </p>
+      </div>
+      <div className="p-4 font-serif text-sm" style={{ backgroundColor: 'var(--tint-sky)' }}>
         <Tabs value={activeTab} onValueChange={setActiveTab}>
-          <TabsList className="grid w-full grid-cols-2">
-            <TabsTrigger value="edit">Edit</TabsTrigger>
-            <TabsTrigger value="preview">Preview</TabsTrigger>
+          <TabsList className="grid w-full grid-cols-2 border-[#000] bg-white">
+            <TabsTrigger value="edit" className="data-[state=active]:bg-[#000] data-[state=active]:text-white">Edit</TabsTrigger>
+            <TabsTrigger value="preview" className="data-[state=active]:bg-[#000] data-[state=active]:text-white">Preview</TabsTrigger>
           </TabsList>
           <TabsContent value="edit" className="space-y-4">
             <Textarea
               disabled={isPending}
               {...register("content")}
               placeholder="Describe what you worked on today..."
-              className="min-h-75 resize-y"
+              className="min-h-75 resize-y border-[#000] bg-white"
             />
             {improvedText && improvedText !== content && (
-              <div className="border-primary/20 bg-primary/5 rounded-lg border p-4">
+              <div className="border border-[#000] bg-white p-4">
                 <div className="mb-2 flex items-center justify-between">
-                  <span className="flex items-center gap-2 text-sm font-medium">
-                    <Sparkles className="text-primary h-4 w-4" />
+                  <span className="flex items-center gap-2 font-helvetica text-xs font-bold">
+                    <Sparkles className="h-4 w-4" />
                     AI Improved Version
                   </span>
                   <Button
                     size="sm"
                     variant="outline"
+                    className="border-[#000]"
                     onClick={handleUseImprovedText}
                   >
                     Use This
                   </Button>
                 </div>
-                <p className="text-muted-foreground text-sm whitespace-pre-wrap">
+                <p className="font-serif text-sm whitespace-pre-wrap">
                   {improvedText}
                 </p>
               </div>
             )}
           </TabsContent>
           <TabsContent value="preview">
-            <div className="bg-muted/30 min-h-75 rounded-lg border p-4">
+            <div className="min-h-75 border border-[#000] bg-white p-4">
               {content ? (
-                <p className="text-sm whitespace-pre-wrap">{content}</p>
+                <p className="font-serif text-sm whitespace-pre-wrap">{content}</p>
               ) : (
-                <p className="text-muted-foreground text-sm">
+                <p className="font-serif text-xs">
                   No content to preview. Start writing in the Edit tab.
                 </p>
               )}
             </div>
           </TabsContent>
         </Tabs>
-      </CardContent>
-    </Card>
+      </div>
+    </div>
   );
 }

@@ -73,11 +73,11 @@ export function Sidebar({ form, improveLogbookText, isPending, isEditPage }: Sid
 
   return (
     <div className="flex flex-col gap-4">
-      <Card>
-        <CardHeader>
-          <CardTitle className="text-base">Actions</CardTitle>
-        </CardHeader>
-        <CardContent className="flex flex-col gap-3">
+      <div className="border border-[#000]">
+        <div className="border-b border-[#000] bg-white px-3 py-1.5">
+          <span className="font-helvetica text-sm font-bold">Actions</span>
+        </div>
+        <div className="flex flex-col gap-3 p-4 font-serif text-sm" style={{ backgroundColor: 'var(--tint-periwinkle)' }}>
           {isPending
             ? <Button
                 onClick={improveText}
@@ -91,7 +91,7 @@ export function Sidebar({ form, improveLogbookText, isPending, isEditPage }: Sid
              : <Button
                  onClick={improveText}
                  disabled={!formData?.content?.trim()}
-                 className="w-full"
+                 className="w-full border-[#000]"
                  variant="outline"
                >
                  <Sparkles className="mr-2 h-4 w-4" />
@@ -100,43 +100,43 @@ export function Sidebar({ form, improveLogbookText, isPending, isEditPage }: Sid
           }
 
           {isCreatingLogbook || isUpdatingLogbook
-            ? <Button onClick={handleSave} className="w-full" disabled>
+            ? <Button onClick={handleSave} className="w-full border-[#000] bg-[#000] text-white" disabled>
                 <LoaderCircle className="mr-2 h-4 w-4 animate-spin" />
                 Saving Entry
             </Button>
-            : <Button onClick={handleSave} className="w-full">
+            : <Button onClick={handleSave} className="w-full border-[#000] bg-[#000] text-white hover:bg-[#000]">
                 <Save className="mr-2 h-4 w-4" />
                 Save Entry
             </Button>
           }
-        </CardContent>
-      </Card>
+        </div>
+      </div>
 
-      <Card>
-        <CardHeader>
-          <CardTitle className="text-base">Tips</CardTitle>
-        </CardHeader>
-        <CardContent>
-          <ul className="text-muted-foreground space-y-2 text-sm">
+      <div className="border border-[#000]">
+        <div className="border-b border-[#000] bg-white px-3 py-1.5">
+          <span className="font-helvetica text-sm font-bold">Tips</span>
+        </div>
+        <div className="p-4 font-serif text-sm" style={{ backgroundColor: 'var(--tint-lime)' }}>
+          <ul className="space-y-2">
             <li className="flex gap-2">
-              <span className="text-primary">•</span>
+              <span className="font-bold">•</span>
               <span>Be specific about tasks and outcomes</span>
             </li>
             <li className="flex gap-2">
-              <span className="text-primary">•</span>
+              <span className="font-bold">•</span>
               <span>Include any blockers or challenges</span>
             </li>
             <li className="flex gap-2">
-              <span className="text-primary">•</span>
+              <span className="font-bold">•</span>
               <span>Mention collaborations and meetings</span>
             </li>
             <li className="flex gap-2">
-              <span className="text-primary">•</span>
+              <span className="font-bold">•</span>
               <span>Use AI to enhance clarity and professionalism</span>
             </li>
           </ul>
-        </CardContent>
-      </Card>
+        </div>
+      </div>
     </div>
   );
 }

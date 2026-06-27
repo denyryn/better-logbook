@@ -102,65 +102,61 @@ export function LogbookDetails({
   const ChevronIcon = isDetailsCollapsed ? ChevronDown : ChevronUp;
 
   return (
-    <Card>
-      <CardHeader>
-        <div className="flex items-center justify-between">
-          <div className="flex items-center gap-2">
-            <FileText className="h-5 w-5" />
-            <CardTitle>Logbook Details</CardTitle>
-          </div>
-
-          <div className="flex gap-4">
-            <Button
-              variant="default"
-              size="sm"
-              disabled={isPending}
-              onClick={handleProduceDetails}
-              className="h-8 w-8 p-0"
-            >
-              {isPending
-                ? <LoaderCircle className="h-4 w-4 animate-spin" />
-                : <Sparkles className="h-4 w-4" />
-              }
-            </Button>
-
-            <Button
-              variant="ghost"
-              size="sm"
-              onClick={() => setIsDetailsCollapsed(!isDetailsCollapsed)}
-              className="h-8 w-8 p-0"
-            >
-              <ChevronIcon className="h-4 w-4" />
-            </Button>
-          </div>
+    <div className="border border-[#000]">
+      <div className="flex items-center justify-between border-b border-[#000] bg-white px-3 py-1.5">
+        <div className="flex items-center gap-2">
+          <FileText className="h-5 w-5" />
+          <span className="font-helvetica text-sm font-bold">Logbook Details</span>
         </div>
-        <CardDescription>
-          Create a new logbook entry for your work activities
-        </CardDescription>
-      </CardHeader>
+
+        <div className="flex gap-4">
+          <Button
+            variant="outline"
+            size="sm"
+            disabled={isPending}
+            onClick={handleProduceDetails}
+            className="h-8 w-8 border-[#000] p-0"
+          >
+            {isPending
+              ? <LoaderCircle className="h-4 w-4 animate-spin" />
+              : <Sparkles className="h-4 w-4" />
+            }
+          </Button>
+
+          <Button
+            variant="ghost"
+            size="sm"
+            onClick={() => setIsDetailsCollapsed(!isDetailsCollapsed)}
+            className="h-8 w-8 p-0"
+          >
+            <ChevronIcon className="h-4 w-4" />
+          </Button>
+        </div>
+      </div>
       {!isDetailsCollapsed && (
-        <CardContent className="flex flex-col gap-6">
+        <div className="flex flex-col gap-6 p-4 font-serif text-sm" style={{ backgroundColor: 'var(--tint-salmon)' }}>
           <Field>
-            <FieldLabel htmlFor="title">Title (Optional)</FieldLabel>
+            <FieldLabel htmlFor="title" className="font-helvetica text-xs font-bold">Title (Optional)</FieldLabel>
             <Input
               id="title"
               type="text"
               placeholder="e.g., Sprint Planning Meeting"
+              className="border-[#000] bg-white"
               {...register("title")}
             />
           </Field>
 
           <div className="grid gap-6 sm:grid-cols-2">
             <Field>
-              <FieldLabel htmlFor="logDate">
+              <FieldLabel htmlFor="logDate" className="font-helvetica text-xs font-bold">
                 <Calendar className="mr-1 inline h-4 w-4" />
                 Date
               </FieldLabel>
-              <Input id="logDate" type="date" {...register("logDate")} />
+              <Input id="logDate" type="date" className="border-[#000] bg-white" {...register("logDate")} />
             </Field>
 
             <Field>
-              <FieldLabel htmlFor="project">
+              <FieldLabel htmlFor="project" className="font-helvetica text-xs font-bold">
                 <Briefcase className="mr-1 inline h-4 w-4" />
                 Project
               </FieldLabel>
@@ -168,7 +164,7 @@ export function LogbookDetails({
                 value={watch("projectId") || ""}
                 onValueChange={(value) => setValue("projectId", value)}
               >
-                <SelectTrigger id="project">
+                <SelectTrigger id="project" className="border-[#000] bg-white">
                   <SelectValue placeholder="Select project" />
                 </SelectTrigger>
                 <SelectContent>
@@ -183,7 +179,7 @@ export function LogbookDetails({
           </div>
 
           <Field>
-            <FieldLabel htmlFor="tags">
+            <FieldLabel htmlFor="tags" className="font-helvetica text-xs font-bold">
               <Tag className="mr-1 inline h-4 w-4" />
               Tags
             </FieldLabel>
@@ -192,6 +188,7 @@ export function LogbookDetails({
                 id="tags"
                 type="text"
                 placeholder="Add a tag..."
+                className="border-[#000] bg-white"
                 {...register("newTag")}
                 onKeyDown={(e) => {
                   if (e.key === "Enter") {
@@ -200,7 +197,7 @@ export function LogbookDetails({
                   }
                 }}
               />
-              <Button type="button" variant="outline" onClick={handleAddTag}>
+              <Button type="button" variant="outline" className="border-[#000]" onClick={handleAddTag}>
                 Add
               </Button>
             </div>
@@ -209,8 +206,8 @@ export function LogbookDetails({
                 {tags.map((tag) => (
                   <Badge
                     key={tag}
-                    variant="secondary"
-                    className="hover:bg-secondary/80 cursor-pointer"
+                    variant="outline"
+                    className="cursor-pointer border-[#000] bg-white"
                     onClick={() => handleRemoveTag(tag)}
                   >
                     {tag} ×
@@ -219,8 +216,8 @@ export function LogbookDetails({
               </div>
             )}
           </Field>
-        </CardContent>
+        </div>
       )}
-    </Card>
+    </div>
   );
 }

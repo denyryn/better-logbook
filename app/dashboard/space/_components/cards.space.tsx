@@ -30,6 +30,21 @@ interface SpaceCardsProps {
   settings?: SpaceCardsSettings;
 }
 
+const TINT_VARS = [
+  "var(--tint-sage)",
+  "var(--tint-salmon)",
+  "var(--tint-peach)",
+  "var(--tint-lime)",
+  "var(--tint-sky)",
+  "var(--tint-periwinkle)",
+  "var(--tint-steel)",
+  "var(--tint-olive)",
+];
+
+function getTintBg(index: number) {
+  return TINT_VARS[index % TINT_VARS.length];
+}
+
 export function SpaceCards({ spaces, settings }: SpaceCardsProps) {
   if (!spaces) {
     return (
@@ -42,48 +57,45 @@ export function SpaceCards({ spaces, settings }: SpaceCardsProps) {
   }
 
   return (
-    <div className={cn("*:data-[slot=card]:from-primary/5 *:data-[slot=card]:to-card dark:*:data-[slot=card]:bg-card grid grid-cols-1 gap-4 px-4 *:data-[slot=card]:bg-linear-to-t *:data-[slot=card]:shadow-xs lg:px-6 @xl/main:grid-cols-2 @5xl/main:grid-cols-4", {
+    <div className={cn("grid grid-cols-1 gap-4 px-4 lg:px-6 @xl/main:grid-cols-2 @5xl/main:grid-cols-4", {
       "overflow-x-auto": settings?.overflow === "enable",
     })}>
       <SpaceDialog>
-        <Card className="border-primary/30 hover:border-primary/60 @container/card h-full cursor-pointer border-2 border-dashed transition-all hover:shadow-md">
+        <Card className="border-[#000] group @container/card h-full cursor-pointer border-2 border-dashed">
           <CardHeader>
-            <CardDescription>Add Space</CardDescription>
-            <CardTitle className="text-2xl font-semibold tabular-nums @[250px]/card:text-3xl">
+            <CardDescription className="font-helvetica text-xs font-bold uppercase tracking-wide">Add Space</CardDescription>
+            <CardTitle className="text-2xl font-arial-black font-black tabular-nums @[250px]/card:text-3xl">
               <IconPlus className="size-12" />
             </CardTitle>
           </CardHeader>
-          <CardFooter className="flex-col items-start gap-1.5 text-sm">
-            <div className="line-clamp-1 flex gap-2 font-medium">
+          <CardFooter className="flex-col items-start gap-1.5 text-sm font-serif">
+            <div className="line-clamp-1 flex gap-2 font-helvetica font-bold">
               Create new space <IconArrowRight className="size-4" />
             </div>
-            <div className="text-muted-foreground">
+            <div className="text-[#000] font-serif">
               Organize your work and projects
             </div>
           </CardFooter>
         </Card>
       </SpaceDialog>
 
-      {spaces?.map((space) => (
+      {spaces?.map((space, index) => (
         <Link key={space.id} href={`/dashboard/space/${space.id}`}>
-          <Card className="group @container/card h-full cursor-pointer transition-all hover:shadow-md">
-            <CardHeader>
-              <CardDescription>Space</CardDescription>
-              <CardTitle className="text-2xl font-semibold tabular-nums @[250px]/card:text-3xl">
+          <Card className="group @container/card h-full cursor-pointer border-[#000]">
+            <div className="border-b border-[#000] bg-white px-3 py-1.5">
+              <span className="font-helvetica text-xs font-bold text-[#000]">Space</span>
+            </div>
+            <div className="px-4 py-3 font-serif text-sm" style={{ backgroundColor: getTintBg(index) }}>
+              <CardTitle className="text-2xl font-arial-black font-black tabular-nums @[250px]/card:text-3xl mb-2">
                 {space.name}
               </CardTitle>
-              <CardAction>
-                <IconArrowUpRight className="transition-transform group-hover:scale-125" />
-              </CardAction>
-            </CardHeader>
-            <CardFooter className="flex-col items-start gap-1.5 text-sm">
-              <div className="line-clamp-1 flex gap-2 font-medium">
-                Has {space.positions.length} positions
+              <div className="line-clamp-1 flex gap-2 font-helvetica text-xs font-bold">
+                {space.positions.length} position{space.positions.length !== 1 ? 's' : ''}
               </div>
-              <div className="text-muted-foreground">
+              <div className="text-xs font-serif">
                 Keep it moving
               </div>
-            </CardFooter>
+            </div>
           </Card>
         </Link>
       ))}

@@ -1,5 +1,5 @@
-import { Button } from "@/components/ui/components/ui/button";
-import { Input } from "@/components/ui/components/ui/input";
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
 import { Field, FieldDescription, FieldGroup, FieldLabel } from "@/components/ui/field";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { usePositions } from "@/lib/query/position.query";
