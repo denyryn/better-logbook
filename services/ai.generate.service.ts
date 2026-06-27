@@ -1,6 +1,7 @@
 import { improveLogbookEntryInstructions, produceLogbookDetailsInstructions } from "@/lib/ai/instructions/entry.logbook";
 import { ApiResponse, status } from "@/lib/api.response";
 import { api } from "@/lib/axios";
+import { AIProviderPrompts } from "@/lib/ai/providers/ai.provider.interface";
 
 export class LogbookAIService {
   private text?: string;
@@ -10,11 +11,9 @@ export class LogbookAIService {
   }
 
   private async callApi(
-    text: string | undefined,
+    prompts: AIProviderPrompts,
   ): Promise<ApiResponse<string>> {
-    const { data } = await api.post<ApiResponse<string>>("/api/ai", {
-      prompt: text,
-    });
+    const { data } = await api.post<ApiResponse<string>>("/api/ai", prompts);
 
     if (data.status === status.ERROR) {
       throw new Error("AI request failed");
@@ -25,29 +24,20 @@ export class LogbookAIService {
 
   async improveText(
     requestType: "server" | "client",
-  ): Promise<ApiResponse<string> | string> {
+  ): Promise<ApiResponse<string> | AIProviderPrompts> {
     if (!this.text) {
       throw new Error("No text provided for improvement");
     }
 
-    async function buildPrompt(text: string | undefined): Promise<string> {
-      if (!text) {
-        throw new Error("No text provided for prompt building");
-      }
-
-      return await improveLogbookEntryInstructions(text);
-    }
-
     const requests = {
       server: async () => {
-        const prompt = await buildPrompt(this.text);
-        return prompt;
+        const prompts = await improveLogbookEntryInstructions(this.text!);
+        return prompts;
       },
 
       client: async () => {
-        // process prompt on client side
-        const prompt = await buildPrompt(this.text); // this line can be removed for serverside processing
-        const response = await this.callApi(prompt);
+        const prompts = await improveLogbookEntryInstructions(this.text!);
+        const response = await this.callApi(prompts);
         return response;
       },
     };
@@ -57,29 +47,20 @@ export class LogbookAIService {
 
   async produceLogbookDetails(
     requestType: "server" | "client",
-  ): Promise<ApiResponse<string> | string> {
+  ): Promise<ApiResponse<string> | AIProviderPrompts> {
     if (!this.text) {
       throw new Error("No text provided for improvement");
     }
 
-    async function buildPrompt(text: string | undefined): Promise<string> {
-      if (!text) {
-        throw new Error("No text provided for prompt building");
-      }
-
-      return await produceLogbookDetailsInstructions(text);
-    }
-
     const requests = {
       server: async () => {
-        const prompt = await buildPrompt(this.text);
-        return prompt;
+        const prompts = await produceLogbookDetailsInstructions(this.text!);
+        return prompts;
       },
 
       client: async () => {
-        // process prompt on client side
-        const prompt = await buildPrompt(this.text); // this line can be removed for serverside processing
-        const response = await this.callApi(prompt);
+        const prompts = await produceLogbookDetailsInstructions(this.text!);
+        const response = await this.callApi(prompts);
         return response;
       },
     };

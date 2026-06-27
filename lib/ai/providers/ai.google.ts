@@ -1,6 +1,6 @@
 import { GenerateContentResponse, GoogleGenAI } from "@google/genai";
 
-import { AIProvider } from "./ai.provider.interface";
+import { AIProvider, AIProviderPrompts } from "./ai.provider.interface";
 import { config } from "@/lib/config";
 import { AiTokenUsage } from "@/generated/prisma/client";
 import { prisma } from "@/lib/prisma";
@@ -30,10 +30,13 @@ export class GoogleAIProvider implements AIProvider {
     })
   }
 
-  async generate(prompt: string): Promise<string | undefined> {
+  async generate(prompts: AIProviderPrompts): Promise<string | undefined> {
     const response: GenerateContentResponse = await this.instance.models.generateContent({
       model: config.ai.googleai.model,
-      contents: prompt,
+      contents: prompts.user.map(p => ({ role: "user", parts: [{ text: p }] })),
+      config: {
+        systemInstruction: prompts.system.map(s => ({ text: s })),
+      },
     });
 
     await this.log({
