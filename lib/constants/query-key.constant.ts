@@ -1,6 +1,6 @@
 export const queryKey = {
   AI_USAGE: "ai-usage",
-  COMPANIES: "companies",
+  SPACES: "spaces",
   LOGBOOKS: "logbooks",
   POSITIONS: "positions",
   PRODUCTIVITIES: "productivities",

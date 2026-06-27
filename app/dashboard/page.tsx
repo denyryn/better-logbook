@@ -3,7 +3,7 @@
 import { SpaceCards } from "@/app/dashboard/space/_components/cards.space";
 import { SiteHeader } from "@/components/site-header";
 import { Skeleton } from "@/components/ui/skeleton";
-import { useCompanies } from "@/lib/query/company.query";
+import { useSpaces } from "@/lib/query/space.query";
 import { useLogbooks } from "@/lib/query/logbook.query";
 import { useProductivitiesByLogbook } from "@/lib/query/productivity.query";
 
@@ -11,7 +11,7 @@ import { OverallChart } from "./_components/chart.overall";
 import { LogbookDataTable } from "./project/[projectId]/_components/data-table.logbook";
 
 export default function Page() {
-  const { data: allCompanies } = useCompanies();
+  const { data: allSpaces } = useSpaces();
   const { data: allLogbooks, isLoading: isLogbookLoading } = useLogbooks();
   const {
     data: allLogbookProductivities,
@@ -53,7 +53,7 @@ export default function Page() {
       <div className="flex flex-1 flex-col">
         <div className="@container/main flex flex-1 flex-col gap-2">
           <div className="flex flex-col gap-4 py-4 md:gap-6 md:py-6">
-            <SpaceCards spaces={allCompanies?.data} />
+            <SpaceCards spaces={allSpaces?.data} />
             {RenderOverallChart()}
             {RenderDataTable()}
           </div>

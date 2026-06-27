@@ -11,7 +11,7 @@ export async function GET(request: NextRequest) {
   try {
     const session = await auth.api.getSession({ headers: request.headers });
     const positions = await prisma.position.findMany({
-      where: { company: { userId: session?.user.id } },
+      where: { space: { userId: session?.user.id } },
       ...positionWithRelationsQuery,
     });
     return serverSuccessResponse(positions, "Positions fetched successfully", StatusCodes.OK);

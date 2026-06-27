@@ -7,8 +7,8 @@ import { useState } from "react";
 import { SiteHeader } from "@/components/site-header";
 import { Button } from "@/components/ui/button";
 import { Tabs, TabsContent } from "@/components/ui/tabs";
-import { usePositionsByCompany } from "@/lib/query/position.query";
-import { useProjectsByCompany } from "@/lib/query/project.query";
+import { usePositionsBySpace } from "@/lib/query/position.query";
+import { useProjectsBySpace } from "@/lib/query/project.query";
 
 import { ProjectCards } from "./_components/cards.project";
 import { PositionDialog } from "./_components/dialog.position";
@@ -21,10 +21,10 @@ export default function Page() {
   const initialTab = searchParams.get("position") || "all";
 
   const [activeTab, setActiveTab] = useState(initialTab);
-  const { data: companyPositions } = usePositionsByCompany(spaceId);
-  const { data: companyProjects } = useProjectsByCompany(spaceId);
+  const { data: spacePositions } = usePositionsBySpace(spaceId);
+  const { data: spaceProjects } = useProjectsBySpace(spaceId);
 
-  const positionProjects = companyProjects?.data.filter((project) =>
+  const positionProjects = spaceProjects?.data.filter((project) =>
     project.positionId.includes(activeTab),
   );
 
@@ -40,7 +40,7 @@ export default function Page() {
               className="w-full flex-col justify-start gap-6"
             >
               <div className="flex items-center justify-between">
-                <PositionTabsList positions={companyPositions?.data} />
+                <PositionTabsList positions={spacePositions?.data} />
 
                 <PositionDialog>
                   <Button variant="outline" size="sm">
@@ -52,11 +52,11 @@ export default function Page() {
 
               <TabsContent value="all" className="flex flex-col">
                 <div className="aspect-video w-full flex-1 rounded-lg border border-dashed py-4 md:py-6">
-                  <ProjectCards projects={companyProjects?.data} />
+                  <ProjectCards projects={spaceProjects?.data} />
                 </div>
               </TabsContent>
 
-              {companyPositions?.data.map((position) => (
+              {spacePositions?.data.map((position) => (
                 <TabsContent
                   key={position.id}
                   value={position.id}

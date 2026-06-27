@@ -16,7 +16,7 @@ import {
   CardTitle,
 } from "@/components/ui/card";
 import { Skeleton } from "@/components/ui/skeleton";
-import { CompanyWithPositions } from "@/types/prisma/companies";
+import { SpaceWithPositions } from "@/types/prisma/space";
 
 import { SpaceDialog } from "../../_components/dialog.space";
 import { cn } from "@/lib/utils";
@@ -26,7 +26,7 @@ export interface SpaceCardsSettings {
 }
 
 interface SpaceCardsProps {
-  spaces?: CompanyWithPositions[];
+  spaces?: SpaceWithPositions[];
   settings?: SpaceCardsSettings;
 }
 

@@ -8,7 +8,7 @@ export const logbookWithRelationsQuery = {
     project: {
       include: {
         position: {
-          include: {company: true}
+          include: {space: true}
         }
       }
     }

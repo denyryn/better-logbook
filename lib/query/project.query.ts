@@ -3,7 +3,7 @@ import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import {
   createProject,
   getProjects,
-  getProjectsByCompany,
+  getProjectsBySpace,
   getProjectsByPosition,
 } from "../api/project.api";
 import { Project } from "@/generated/prisma/client";
@@ -24,11 +24,11 @@ export function useProjectsByPosition(positionId: string) {
   });
 }
 
-export function useProjectsByCompany(companyId: string) {
+export function useProjectsBySpace(spaceId: string) {
   return useQuery({
-    queryKey: [queryKey.PROJECTS, companyId],
-    queryFn: () => getProjectsByCompany(companyId),
-    enabled: !!companyId,
+    queryKey: [queryKey.PROJECTS, spaceId],
+    queryFn: () => getProjectsBySpace(spaceId),
+    enabled: !!spaceId,
   });
 }
 

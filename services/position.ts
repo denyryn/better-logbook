@@ -4,11 +4,11 @@ import { api } from "@/lib/axios";
 
 export class PositionService {
   private userId: string;
-  private companyId?: string;
+  private spaceId?: string;
 
-  constructor(userId: string, companyId?: string) {
+  constructor(userId: string, spaceId?: string) {
     this.userId = userId;
-    this.companyId = companyId;
+    this.spaceId = spaceId;
   }
 
   private getBaseUrl() {

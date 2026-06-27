@@ -57,7 +57,7 @@ export function PositionCards({ positions }: PositionCardsProps) {
       </PositionDialog>
 
       {positions?.map((position) => (
-        <Link key={position.id} href={`/dashboard/space/${position.companyId}?position=${position.id}`}>
+        <Link key={position.id} href={`/dashboard/space/${position.spaceId}?position=${position.id}`}>
           <Card className="group @container/card h-full cursor-pointer transition-all hover:shadow-md">
             <CardHeader>
               <CardDescription>Position</CardDescription>
@@ -73,7 +73,7 @@ export function PositionCards({ positions }: PositionCardsProps) {
                 View position details <IconArrowRight className="size-4" />
               </div>
               <div className="text-muted-foreground">
-                @ {position.company.name}
+                @ {position.space.name}
               </div>
             </CardFooter>
           </Card>

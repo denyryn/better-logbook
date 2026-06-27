@@ -19,7 +19,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import { useCompanies } from "@/lib/query/company.query";
+import { useSpaces } from "@/lib/query/space.query";
 import { useCreatePosition } from "@/lib/query/position.query";
 import { PositionFormData, positionSchema } from "@/schemas/position";
 import { LoaderCircle } from "lucide-react";
@@ -41,14 +41,14 @@ export function PositionFormDialog({ onSuccess }: PositionFormDialogProps) {
   });
 
   const { mutateAsync: createPosition } = useCreatePosition();
-  const { data: allSpaces } = useCompanies();
+  const { data: allSpaces } = useSpaces();
   const [isLoading, setIsLoading] = useState(false);
 
   const onSubmit = async (data: PositionFormData) => {
     try {
       setIsLoading(true);
       await createPosition({
-        companyId: data.companyId,
+        spaceId: data.spaceId,
         positionData: data,
       });
       reset();
@@ -88,16 +88,16 @@ export function PositionFormDialog({ onSuccess }: PositionFormDialogProps) {
 
       <FieldGroup>
         <Field className="space-y-1">
-          <FieldLabel htmlFor="companyId" className="text-base font-semibold">
-            Company / Space
+          <FieldLabel htmlFor="spaceId" className="text-base font-semibold">
+            Space
           </FieldLabel>
           <Controller
-            name="companyId"
+            name="spaceId"
             control={control}
             render={({ field }) => (
               <Select value={field.value} onValueChange={field.onChange}>
                 <SelectTrigger >
-                  <SelectValue placeholder="Select a company" />
+                  <SelectValue placeholder="Select a space" />
                 </SelectTrigger>
                 <SelectContent>
                   {allSpaces?.data.map((space) => (
@@ -109,14 +109,14 @@ export function PositionFormDialog({ onSuccess }: PositionFormDialogProps) {
               </Select>
             )}
           />
-          {errors.companyId && (
+          {errors.spaceId && (
             <FieldDescription className="text-destructive">
-              {errors.companyId.message}
+              {errors.spaceId.message}
             </FieldDescription>
           )}
-          {!errors.companyId && (
+          {!errors.spaceId && (
             <FieldDescription className="text-muted-foreground">
-              Select the company or space for this position
+              Select the space for this position
             </FieldDescription>
           )}
         </Field>

@@ -12,7 +12,7 @@ export async function GET(request: NextRequest) {
     const session = await auth.api.getSession({ headers: request.headers });
 
     const projects = await prisma.project.findMany({
-      where: { position: { company: { userId: session?.user.id } } },
+      where: { position: { space: { userId: session?.user.id } } },
       ...projectWithRelationsQuery
     });
 

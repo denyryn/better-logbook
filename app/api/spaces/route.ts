@@ -1,24 +1,24 @@
 import { StatusCodes } from "http-status-codes";
 import { NextRequest } from "next/server";
 
-import { Company } from "@/generated/prisma/client";
+import { Space } from "@/generated/prisma/client";
 import { serverErrorResponse, serverSuccessResponse } from "@/lib/api.response";
 import { auth } from "@/lib/auth";
 import { prisma } from "@/lib/prisma";
-import { companyWithPositionsQuery } from "@/types/prisma/companies";
+import { spaceWithPositionsQuery } from "@/types/prisma/space";
 
 export async function GET(request: NextRequest) {
   try {
     const session = await auth.api.getSession({ headers: request.headers });
 
-    const companies = await prisma.company.findMany({
+    const spaces = await prisma.space.findMany({
       where: { userId: session?.user.id },
-      ...companyWithPositionsQuery,
+      ...spaceWithPositionsQuery,
     });
 
-    return serverSuccessResponse(companies, "Companies fetched successfully", StatusCodes.OK);
+    return serverSuccessResponse(spaces, "Spaces fetched successfully", StatusCodes.OK);
   } catch (err) {
-    console.error("Error fetching companies:", err);
+    console.error("Error fetching spaces:", err);
     return serverErrorResponse(
       undefined,
       "Something went wrong",
@@ -32,13 +32,13 @@ export async function POST(request: NextRequest) {
     const body = await request.json();
     const session = await auth.api.getSession({ headers: request.headers });
 
-    const company = await prisma.company.create({
-      data: { ...body, userId: session?.user.id } as Company,
+    const space = await prisma.space.create({
+      data: { ...body, userId: session?.user.id } as Space,
     });
 
-    return serverSuccessResponse(company, "Company created successfully", StatusCodes.CREATED);
+    return serverSuccessResponse(space, "Space created successfully", StatusCodes.CREATED);
   } catch (err) {
-    console.error("Error creating company:", err);
+    console.error("Error creating space:", err);
     return serverErrorResponse(
       undefined,
       "Something went wrong",

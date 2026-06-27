@@ -3,20 +3,26 @@ import { NextRequest } from "next/server";
 
 import { serverErrorResponse, serverSuccessResponse } from "@/lib/api.response";
 import { prisma } from "@/lib/prisma";
+import { projectWithRelationsQuery } from "@/types/prisma/project";
 
 export async function GET(
   request: NextRequest,
-  { params }: { params: Promise<{ companyId: string }> },
+  { params }: { params: Promise<{ spaceId: string }> },
 ) {
   try {
-    const { companyId } = await params;
-    const position = await prisma.position.findMany({ where: { companyId } });
+    const { spaceId } = await params;
+    const projects = await prisma.project.findMany({
+      where: { position: { spaceId } },
+      ...projectWithRelationsQuery
+    });
 
     return serverSuccessResponse(
-      position, "Position fetched successfully", StatusCodes.OK
+      projects,
+      "Projects fetched successfully",
+      StatusCodes.OK,
     );
   } catch (err) {
-    console.error("Error fetching position:", err);
+    console.error("Error fetching projects:", err);
     return serverErrorResponse(
       undefined,
       "Something went wrong",

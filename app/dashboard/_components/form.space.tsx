@@ -12,7 +12,7 @@ import {
   FieldLabel,
 } from "@/components/ui/field";
 import { Input } from "@/components/ui/input";
-import { useCreateCompany } from "@/lib/query/company.query";
+import { useCreateSpace } from "@/lib/query/space.query";
 import { SpaceFormData, spaceSchema } from "@/schemas/space";
 import { toast } from "sonner";
 
@@ -31,11 +31,11 @@ export function SpaceFormDialog({ onSuccess }: SpaceFormDialogProps) {
     mode: "onSubmit",
   });
 
-  const { mutateAsync: createCompany, isPending: isLoading } = useCreateCompany();
+  const { mutateAsync: createSpace, isPending: isLoading } = useCreateSpace();
 
   const onSubmit = async (data: SpaceFormData) => {
     try {
-      await createCompany({ name: data.name });
+      await createSpace({ name: data.name });
       reset();
       toast.success("Space created successfully!");
       onSuccess?.();

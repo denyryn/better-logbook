@@ -72,7 +72,7 @@ export function ProjectCards({ projects }: ProjectCardsProps) {
                 View project details <IconArrowRight className="size-4" />
               </div>
               <div className="text-muted-foreground">
-                as {project.position.role}  @ {project.position.company.name}
+                as {project.position.role}  @ {project.position.space.name}
               </div>
             </CardFooter>
           </Card>

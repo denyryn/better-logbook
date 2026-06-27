@@ -3,8 +3,8 @@ import { PositionWithRelations } from "@/types/prisma/positions";
 import { ApiResponse } from "../api.response";
 import { api } from "../axios";
 
-function getBaseUrl(companyId?: string) {
-  if (companyId) return `/api/companies/${companyId}/positions`;
+function getBaseUrl(spaceId?: string) {
+  if (spaceId) return `/api/spaces/${spaceId}/positions`;
   return `/api/positions`;
 }
 
@@ -13,24 +13,24 @@ export async function getPositions() {
   return data;
 }
 
-export async function getPositionsByCompany(companyId: string) {
-  if (!companyId) throw new Error("Company ID is required");
+export async function getPositionsBySpace(spaceId: string) {
+  if (!spaceId) throw new Error("Space ID is required");
 
   const { data } = await api.get<ApiResponse<PositionWithRelations[]>>(
-    `${getBaseUrl(companyId)}`,
+    `${getBaseUrl(spaceId)}`,
   );
   return data;
 }
 
 export async function createPosition(
-  companyId: string,
+  spaceId: string,
   positionData: Partial<PositionWithRelations>,
 ) {
-  if (!companyId) throw new Error("Company ID is required");
+  if (!spaceId) throw new Error("Space ID is required");
 
   const { data } = await api.post<ApiResponse<PositionWithRelations>>(
     `${getBaseUrl()}`,
-    { ...positionData, companyId },
+    { ...positionData, spaceId },
   );
   return data;
 }

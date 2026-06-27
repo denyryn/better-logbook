@@ -69,7 +69,7 @@ export function ProjectFormDialog({ onSuccess }: ProjectFormDialogProps) {
         <FieldGroup>
           <Field className="space-y-1">
             <FieldLabel htmlFor="positionId" className="text-base font-semibold">
-              Position at Company
+              Position at Space
             </FieldLabel>
             <Controller
               name="positionId"
@@ -77,12 +77,12 @@ export function ProjectFormDialog({ onSuccess }: ProjectFormDialogProps) {
               render={({ field }) => (
                 <Select value={field.value} onValueChange={field.onChange}>
                   <SelectTrigger >
-                    <SelectValue placeholder="Select a company" />
+                    <SelectValue placeholder="Select a space" />
                   </SelectTrigger>
                   <SelectContent>
                     {allPositions?.data.map((position) => (
                       <SelectItem key={position.id} value={position.id}>
-                        {position.role} @ {position.company.name}
+                        {position.role} @ {position.space.name}
                       </SelectItem>
                     ))}
                   </SelectContent>
@@ -96,7 +96,7 @@ export function ProjectFormDialog({ onSuccess }: ProjectFormDialogProps) {
             )}
             {!errors.positionId && (
               <FieldDescription className="text-muted-foreground">
-                Select the company or space for this position
+                Select the space for this position
               </FieldDescription>
             )}
           </Field>

@@ -4,7 +4,7 @@ export const projectWithRelationsQuery = {
   include: {
     position: {
       include: {
-        company: true,
+        space: true,
       }
     }
   }
