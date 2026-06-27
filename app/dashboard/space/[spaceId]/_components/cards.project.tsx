@@ -37,19 +37,19 @@ export function ProjectCards({ projects }: ProjectCardsProps) {
   return (
     <div className="grid grid-cols-1 gap-4 px-4 lg:px-6 @xl/main:grid-cols-2 @5xl/main:grid-cols-4">
       <ProjectDialog>
-        <Card className="@container/card h-full cursor-pointer border-2 border-dashed border-[#000]">
-          <CardHeader>
-            <CardDescription className="font-helvetica text-xs font-bold uppercase tracking-wide">Add Project</CardDescription>
-            <CardTitle className="text-2xl font-arial-black font-black tabular-nums @[250px]/card:text-3xl">
-              <IconPlus className="size-12" />
+        <Card className="@container/card h-full cursor-pointer border-2 border-dashed border-border py-3 gap-3">
+          <CardHeader className="px-3 py-0">
+            <CardDescription className="font-helvetica text-xs font-bold uppercase tracking-wide">New Project</CardDescription>
+            <CardTitle className="text-xl font-arial-black font-black tabular-nums @[250px]/card:text-2xl">
+              <IconPlus className="size-8" />
             </CardTitle>
           </CardHeader>
-          <CardFooter className="flex-col items-start gap-1.5 font-serif text-sm">
-            <div className="line-clamp-1 flex gap-2 font-helvetica font-bold">
-              Create new project <IconArrowRight className="size-4" />
+          <CardFooter className="flex-col items-start gap-1 px-3 py-0 font-serif text-xs">
+            <div className="line-clamp-1 flex gap-2 font-helvetica font-bold text-xs">
+              Start a new project <IconArrowRight className="size-3" />
             </div>
-            <div className="font-serif">
-              Organize your work and projects
+            <div className="font-serif text-xs">
+              Manage your deliverables
             </div>
           </CardFooter>
         </Card>
@@ -57,18 +57,18 @@ export function ProjectCards({ projects }: ProjectCardsProps) {
 
       {projects?.map((project, index) => (
         <Link key={project.id} href={`/dashboard/project/${project.id}`}>
-          <Card className="group @container/card h-full cursor-pointer border-[#000]">
-            <div className="border-b border-[#000] bg-white px-3 py-1.5">
-              <span className="font-helvetica text-xs font-bold text-[#000]">Project</span>
+          <Card className="group @container/card h-full cursor-pointer border-border py-0 gap-0">
+            <div className="border-b border-border bg-card px-2 py-1">
+              <span className="font-helvetica text-[10px] font-bold text-foreground uppercase tracking-wider">Project</span>
             </div>
-            <div className="px-4 py-3 font-serif text-sm" style={{ backgroundColor: index % 2 === 0 ? 'var(--tint-sage)' : 'var(--tint-salmon)' }}>
-              <CardTitle className="text-2xl font-arial-black font-black mb-2">
+            <div className="px-2 py-2 font-serif text-xs">
+              <CardTitle className="text-base font-arial-black font-black mb-1 leading-tight">
                 {project.name}
               </CardTitle>
-              <div className="line-clamp-1 flex gap-2 font-helvetica text-xs font-bold">
-                View project details <IconArrowRight className="size-4" />
+              <div className="line-clamp-1 flex gap-2 font-helvetica text-[10px] font-bold">
+                View project details <IconArrowRight className="size-3" />
               </div>
-              <div className="text-xs">
+              <div className="text-[10px] font-serif">
                 as {project.position.role}  @ {project.position.space.name}
               </div>
             </div>

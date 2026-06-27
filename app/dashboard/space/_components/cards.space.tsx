@@ -30,21 +30,6 @@ interface SpaceCardsProps {
   settings?: SpaceCardsSettings;
 }
 
-const TINT_VARS = [
-  "var(--tint-sage)",
-  "var(--tint-salmon)",
-  "var(--tint-peach)",
-  "var(--tint-lime)",
-  "var(--tint-sky)",
-  "var(--tint-periwinkle)",
-  "var(--tint-steel)",
-  "var(--tint-olive)",
-];
-
-function getTintBg(index: number) {
-  return TINT_VARS[index % TINT_VARS.length];
-}
-
 export function SpaceCards({ spaces, settings }: SpaceCardsProps) {
   if (!spaces) {
     return (
@@ -61,19 +46,19 @@ export function SpaceCards({ spaces, settings }: SpaceCardsProps) {
       "overflow-x-auto": settings?.overflow === "enable",
     })}>
       <SpaceDialog>
-        <Card className="border-[#000] group @container/card h-full cursor-pointer border-2 border-dashed">
-          <CardHeader>
-            <CardDescription className="font-helvetica text-xs font-bold uppercase tracking-wide">Add Space</CardDescription>
-            <CardTitle className="text-2xl font-arial-black font-black tabular-nums @[250px]/card:text-3xl">
-              <IconPlus className="size-12" />
+        <Card className="border-border group @container/card h-full cursor-pointer border-2 border-dashed py-3 gap-3">
+          <CardHeader className="px-3 py-0">
+            <CardDescription className="font-helvetica text-xs font-bold uppercase tracking-wide">New Space</CardDescription>
+            <CardTitle className="text-xl font-arial-black font-black tabular-nums @[250px]/card:text-2xl">
+              <IconPlus className="size-8" />
             </CardTitle>
           </CardHeader>
-          <CardFooter className="flex-col items-start gap-1.5 text-sm font-serif">
-            <div className="line-clamp-1 flex gap-2 font-helvetica font-bold">
-              Create new space <IconArrowRight className="size-4" />
+          <CardFooter className="flex-col items-start gap-1 px-3 py-0 font-serif text-xs">
+            <div className="line-clamp-1 flex gap-2 font-helvetica font-bold text-xs">
+              Set up a new workspace <IconArrowRight className="size-3" />
             </div>
-            <div className="text-[#000] font-serif">
-              Organize your work and projects
+            <div className="text-foreground font-serif text-xs">
+              Track and manage your work
             </div>
           </CardFooter>
         </Card>
@@ -81,19 +66,19 @@ export function SpaceCards({ spaces, settings }: SpaceCardsProps) {
 
       {spaces?.map((space, index) => (
         <Link key={space.id} href={`/dashboard/space/${space.id}`}>
-          <Card className="group @container/card h-full cursor-pointer border-[#000]">
-            <div className="border-b border-[#000] bg-white px-3 py-1.5">
-              <span className="font-helvetica text-xs font-bold text-[#000]">Space</span>
+          <Card className="group @container/card h-full cursor-pointer border-border py-0 gap-0">
+            <div className="border-b border-border bg-card px-2 py-1">
+              <span className="font-helvetica text-[10px] font-bold text-foreground uppercase tracking-wider">Space</span>
             </div>
-            <div className="px-4 py-3 font-serif text-sm" style={{ backgroundColor: getTintBg(index) }}>
-              <CardTitle className="text-2xl font-arial-black font-black tabular-nums @[250px]/card:text-3xl mb-2">
+            <div className="px-2 py-2 font-serif text-xs">
+              <CardTitle className="text-base font-arial-black font-black mb-1 leading-tight">
                 {space.name}
               </CardTitle>
-              <div className="line-clamp-1 flex gap-2 font-helvetica text-xs font-bold">
+              <div className="line-clamp-1 flex gap-2 font-helvetica text-[10px] font-bold">
                 {space.positions.length} position{space.positions.length !== 1 ? 's' : ''}
               </div>
-              <div className="text-xs font-serif">
-                Keep it moving
+              <div className="text-[10px] font-serif text-muted-foreground">
+                Active
               </div>
             </div>
           </Card>

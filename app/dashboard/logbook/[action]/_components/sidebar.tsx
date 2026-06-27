@@ -30,11 +30,11 @@ export function Sidebar({ form, improveLogbookText, isPending, isEditPage }: Sid
 
   async function handleSave() {
     if (!formData?.content?.trim()) {
-      toast.error("Please enter logbook content");
+      toast.error("Log content is required before saving");
       return;
     }
     if (!formData.projectId) {
-      toast.error("Please select a project");
+      toast.error("Select a project to associate this entry with");
       return;
     }
     try {
@@ -54,7 +54,7 @@ export function Sidebar({ form, improveLogbookText, isPending, isEditPage }: Sid
 
   async function improveText() {
     if (!formData?.content?.trim()) {
-      toast.error("Please enter some content to improve");
+      toast.error("Write some content first before polishing with AI");
       return;
     }
     await improveLogbookText(formData.content);
@@ -73,11 +73,11 @@ export function Sidebar({ form, improveLogbookText, isPending, isEditPage }: Sid
 
   return (
     <div className="flex flex-col gap-4">
-      <div className="border border-[#000]">
-        <div className="border-b border-[#000] bg-white px-3 py-1.5">
+      <div className="border border-border">
+        <div className="border-b border-border bg-card px-2 py-1">
           <span className="font-helvetica text-sm font-bold">Actions</span>
         </div>
-        <div className="flex flex-col gap-3 p-4 font-serif text-sm" style={{ backgroundColor: 'var(--tint-periwinkle)' }}>
+        <div className="flex flex-col gap-3 p-3 font-serif text-xs">
           {isPending
             ? <Button
                 onClick={improveText}
@@ -91,7 +91,7 @@ export function Sidebar({ form, improveLogbookText, isPending, isEditPage }: Sid
              : <Button
                  onClick={improveText}
                  disabled={!formData?.content?.trim()}
-                 className="w-full border-[#000]"
+                 className="w-full border-border"
                  variant="outline"
                >
                  <Sparkles className="mr-2 h-4 w-4" />
@@ -100,39 +100,39 @@ export function Sidebar({ form, improveLogbookText, isPending, isEditPage }: Sid
           }
 
           {isCreatingLogbook || isUpdatingLogbook
-            ? <Button onClick={handleSave} className="w-full border-[#000] bg-[#000] text-white" disabled>
+            ? <Button onClick={handleSave} className="w-full border-border bg-primary text-primary-foreground" disabled>
                 <LoaderCircle className="mr-2 h-4 w-4 animate-spin" />
-                Saving Entry
+                Saving...
             </Button>
-            : <Button onClick={handleSave} className="w-full border-[#000] bg-[#000] text-white hover:bg-[#000]">
+            : <Button onClick={handleSave} className="w-full border-border bg-primary text-primary-foreground hover:bg-primary">
                 <Save className="mr-2 h-4 w-4" />
-                Save Entry
+                Save
             </Button>
           }
         </div>
       </div>
 
-      <div className="border border-[#000]">
-        <div className="border-b border-[#000] bg-white px-3 py-1.5">
+      <div className="border border-border">
+        <div className="border-b border-border bg-card px-2 py-1">
           <span className="font-helvetica text-sm font-bold">Tips</span>
         </div>
-        <div className="p-4 font-serif text-sm" style={{ backgroundColor: 'var(--tint-lime)' }}>
+        <div className="p-3 font-serif text-xs">
           <ul className="space-y-2">
             <li className="flex gap-2">
               <span className="font-bold">•</span>
-              <span>Be specific about tasks and outcomes</span>
+              <span>Describe tasks and impact, not just activity</span>
             </li>
             <li className="flex gap-2">
               <span className="font-bold">•</span>
-              <span>Include any blockers or challenges</span>
+              <span>Note blockers, risks, and decisions made</span>
             </li>
             <li className="flex gap-2">
               <span className="font-bold">•</span>
-              <span>Mention collaborations and meetings</span>
+              <span>Document key discussions and stakeholder input</span>
             </li>
             <li className="flex gap-2">
               <span className="font-bold">•</span>
-              <span>Use AI to enhance clarity and professionalism</span>
+              <span>Use AI to sharpen clarity and professionalism</span>
             </li>
           </ul>
         </div>

@@ -2,6 +2,7 @@
 
 import { type Icon, IconCirclePlusFilled } from "@tabler/icons-react";
 import Link from "next/link";
+import { usePathname } from "next/navigation";
 
 import {
   SidebarGroup,
@@ -22,6 +23,8 @@ export function NavMain({
     onClick?: () => void;
   }[];
 }) {
+  const pathname = usePathname();
+
   return (
     <SidebarGroup>
       <SidebarGroupContent className="flex flex-col gap-2">
@@ -42,7 +45,7 @@ export function NavMain({
           {items.map((item) => (
             <SidebarMenuItem key={item.title}>
               <Link href={item.url}>
-                <SidebarMenuButton onClick={item?.onClick} tooltip={item.title}>
+                <SidebarMenuButton isActive={pathname === item.url || pathname.startsWith(item.url + "/")} onClick={item?.onClick} tooltip={item.title}>
                   {item.icon && <item.icon />}
                   <span>{item.title}</span>
                 </SidebarMenuButton>

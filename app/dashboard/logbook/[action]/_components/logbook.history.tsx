@@ -9,13 +9,6 @@ import {
 import Link from "next/link";
 
 import { Badge } from "@/components/ui/badge";
-import {
-  Card,
-  CardContent,
-  CardDescription,
-  CardHeader,
-  CardTitle,
-} from "@/components/ui/card";
 import { Skeleton } from "@/components/ui/skeleton";
 import { useLogbooks } from "@/lib/query/logbook.query";
 import { useProjects } from "@/lib/query/project.query";
@@ -70,13 +63,13 @@ export function LogbookHistory() {
 
   if (isLoading) {
     return (
-      <div className="border border-[#000]">
-        <div className="border-b border-[#000] bg-white px-3 py-1.5">
+      <div className="border border-border">
+        <div className="border-b border-border bg-card px-2 py-1">
           <span className="font-helvetica text-sm font-bold">Recent Entries</span>
         </div>
-        <div className="space-y-4 p-4 font-serif text-sm" style={{ backgroundColor: 'var(--tint-sky)' }}>
+        <div className="p-3 gap-3 font-serif text-sm">
           {[1, 2, 3].map((i) => (
-            <div key={i} className="space-y-3 border-b border-[#000] pb-4 last:border-0">
+            <div key={i} className="space-y-3 border-b border-border pb-4 last:border-0">
               <Skeleton className="h-5 w-3/4" />
               <Skeleton className="h-4 w-full" />
               <Skeleton className="h-4 w-2/3" />
@@ -89,16 +82,16 @@ export function LogbookHistory() {
 
   if (!allLogbooks || allLogbooks?.data.length === 0) {
     return (
-      <div className="border border-[#000]">
-        <div className="border-b border-[#000] bg-white px-3 py-1.5">
+      <div className="border border-border">
+        <div className="border-b border-border bg-card px-2 py-1">
           <span className="font-helvetica text-sm font-bold">Recent Entries</span>
         </div>
-        <div className="flex flex-col items-center justify-center p-8 text-center font-serif text-sm" style={{ backgroundColor: 'var(--tint-sky)' }}>
-          <div className="mb-4 border border-[#000] p-4">
+        <div className="flex flex-col items-center justify-center p-8 text-center font-serif text-sm">
+          <div className="mb-4 border border-border p-4">
             <IconClock className="size-8" />
           </div>
           <h3 className="mb-2 font-arial-black text-lg font-black">No entries yet</h3>
-          <p className="text-xs">Start creating logbook entries to see your history here</p>
+          <p className="text-xs">Your log history will appear here once you start documenting</p>
         </div>
       </div>
     );
@@ -109,15 +102,15 @@ export function LogbookHistory() {
   );
 
   return (
-    <div className="border border-[#000]">
-      <div className="border-b border-[#000] bg-white px-3 py-1.5">
+    <div className="border border-border">
+      <div className="border-b border-border bg-card px-2 py-1">
         <span className="flex items-center gap-2 font-helvetica text-sm font-bold">
           <IconClock className="size-4" />
           Recent Entries
         </span>
         <p className="font-serif text-xs">{allLogbooks.data.length} {allLogbooks.data.length === 1 ? "entry" : "entries"} in your logbook</p>
       </div>
-      <div className="space-y-4 p-4 font-serif text-sm" style={{ backgroundColor: 'var(--tint-sky)' }}>
+      <div className="p-3 gap-3 font-serif text-sm">
         {sortedLogbooks.slice(0, 10).map((logbook) => {
           const logbookWithTags = logbook;
           const hasTags =
@@ -129,7 +122,7 @@ export function LogbookHistory() {
               href={`/dashboard/logbook/edit?id=${logbook.id}`}
               className="group block"
             >
-              <div className="space-y-3 border border-[#000] bg-white p-4 transition-all duration-200">
+              <div className="space-y-3 border border-border bg-card p-4 transition-all duration-200">
                 {/* Header */}
                 <div className="flex items-start justify-between gap-4">
                   <div className="min-w-0 flex-1">
@@ -167,13 +160,13 @@ export function LogbookHistory() {
                       <Badge
                         key={logbookTag.tagId}
                         variant="outline"
-                        className="border-[#000] bg-white text-xs"
+                        className="border-border bg-card text-xs"
                       >
                         {logbookTag.tag?.name || "tag"}
                       </Badge>
                     ))}
                     {logbookWithTags.tags!.length > 3 && (
-                      <Badge variant="outline" className="border-[#000] bg-white text-xs">
+                      <Badge variant="outline" className="border-border bg-card text-xs">
                         +{logbookWithTags.tags!.length - 3} more
                       </Badge>
                     )}
@@ -190,7 +183,7 @@ export function LogbookHistory() {
               href="/dashboard/logbook"
               className="text-[#0000ee] text-sm font-medium underline"
             >
-              View all {allLogbooks.data.length} entries →
+              Browse all {allLogbooks.data.length} entries →
             </Link>
           </div>
         )}

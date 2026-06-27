@@ -70,7 +70,7 @@ export function LogbookDetails({
   function handleProduceDetails() {
     if (isPending) return;
     if (!watch("content").trim()) {
-      toast.error("Please enter some content to generate details");
+      toast.error("Write some content first to auto-generate details");
       return;
     }
 
@@ -102,8 +102,8 @@ export function LogbookDetails({
   const ChevronIcon = isDetailsCollapsed ? ChevronDown : ChevronUp;
 
   return (
-    <div className="border border-[#000]">
-      <div className="flex items-center justify-between border-b border-[#000] bg-white px-3 py-1.5">
+    <div className="border border-border">
+      <div className="flex items-center justify-between border-b border-border bg-card px-2 py-1">
         <div className="flex items-center gap-2">
           <FileText className="h-5 w-5" />
           <span className="font-helvetica text-sm font-bold">Logbook Details</span>
@@ -115,7 +115,7 @@ export function LogbookDetails({
             size="sm"
             disabled={isPending}
             onClick={handleProduceDetails}
-            className="h-11 w-11 border-[#000] p-0"
+            className="h-11 w-11 border-border p-0"
           >
             {isPending
               ? <LoaderCircle className="h-4 w-4 animate-spin" />
@@ -134,25 +134,25 @@ export function LogbookDetails({
         </div>
       </div>
       {!isDetailsCollapsed && (
-        <div className="flex flex-col gap-6 p-4 font-serif text-sm" style={{ backgroundColor: 'var(--tint-salmon)' }}>
+        <div className="flex flex-col gap-3 p-3 font-serif text-sm">
           <Field>
             <FieldLabel htmlFor="title" className="font-helvetica text-xs font-bold">Title (Optional)</FieldLabel>
             <Input
               id="title"
               type="text"
               placeholder="e.g., Sprint Planning Meeting"
-              className="border-[#000] bg-white"
+              className="border-border bg-card"
               {...register("title")}
             />
           </Field>
 
-          <div className="grid gap-6 sm:grid-cols-2">
+          <div className="grid gap-3 sm:grid-cols-2">
             <Field>
               <FieldLabel htmlFor="logDate" className="font-helvetica text-xs font-bold">
                 <Calendar className="mr-1 inline h-4 w-4" />
                 Date
               </FieldLabel>
-              <Input id="logDate" type="date" className="border-[#000] bg-white" {...register("logDate")} />
+              <Input id="logDate" type="date" className="border-border bg-card" {...register("logDate")} />
             </Field>
 
             <Field>
@@ -164,7 +164,7 @@ export function LogbookDetails({
                 value={watch("projectId") || ""}
                 onValueChange={(value) => setValue("projectId", value)}
               >
-                <SelectTrigger id="project" className="border-[#000] bg-white">
+                <SelectTrigger id="project" className="border-border bg-card">
                   <SelectValue placeholder="Select project" />
                 </SelectTrigger>
                 <SelectContent>
@@ -188,7 +188,7 @@ export function LogbookDetails({
                 id="tags"
                 type="text"
                 placeholder="Add a tag..."
-                className="border-[#000] bg-white"
+                className="border-border bg-card"
                 {...register("newTag")}
                 onKeyDown={(e) => {
                   if (e.key === "Enter") {
@@ -197,7 +197,7 @@ export function LogbookDetails({
                   }
                 }}
               />
-              <Button type="button" variant="outline" className="border-[#000]" onClick={handleAddTag}>
+              <Button type="button" variant="outline" className="border-border" onClick={handleAddTag}>
                 Add
               </Button>
             </div>
@@ -208,7 +208,7 @@ export function LogbookDetails({
                     key={tag}
                     type="button"
                     onClick={() => handleRemoveTag(tag)}
-                    className="inline-flex items-center border border-[#000] bg-white px-2 py-0.5 text-xs font-medium cursor-pointer"
+                    className="inline-flex items-center border border-border bg-card px-2 py-0.5 text-xs font-medium cursor-pointer"
                     aria-label={`Remove tag ${tag}`}
                   >
                     {tag} ×
