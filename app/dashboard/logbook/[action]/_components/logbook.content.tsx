@@ -1,28 +1,23 @@
-import { Sparkles } from "lucide-react";
+import { Loader2, Sparkles } from "lucide-react";
+import { UseMutateAsyncFunction } from "@tanstack/react-query";
 import { useState } from "react";
 import { UseFormReturn } from "react-hook-form";
 import { toast } from "sonner";
 
 import { Button } from "@/components/ui/button";
-import {
-  Card,
-  CardContent,
-  CardDescription,
-  CardHeader,
-  CardTitle,
-} from "@/components/ui/card";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Textarea } from "@/components/ui/textarea";
-
+import { ApiResponse } from "@/lib/api.response";
 import { FormData } from "../page";
 
 interface LogbookContentProps {
   form: UseFormReturn<FormData>;
   improvedText?: string;
   isPending?: boolean;
+  improveLogbookText?: UseMutateAsyncFunction<ApiResponse<string>, Error, string, unknown>;
 }
 
-export function LogbookContent({ form, improvedText, isPending }: LogbookContentProps) {
+export function LogbookContent({ form, improvedText, isPending, improveLogbookText }: LogbookContentProps) {
   const { register, watch, setValue } = form;
   const content = watch("content");
   const [activeTab, setActiveTab] = useState("edit");
@@ -36,60 +31,84 @@ export function LogbookContent({ form, improvedText, isPending }: LogbookContent
   }
 
   return (
-    <Card>
-      <CardHeader>
-        <CardTitle>Content</CardTitle>
-        <CardDescription>
-          Write your logbook entry. Use AI to improve your text.
-        </CardDescription>
-      </CardHeader>
-      <CardContent>
+    <div className="border border-border">
+      <div className="border-b border-border bg-card px-2 py-1">
+        <span className="font-helvetica text-sm font-bold">Content</span>
+        <p className="font-serif text-sm">
+          Document your work. AI can help refine your writing.
+        </p>
+      </div>
+      <div className="p-3 font-serif text-sm">
         <Tabs value={activeTab} onValueChange={setActiveTab}>
-          <TabsList className="grid w-full grid-cols-2">
-            <TabsTrigger value="edit">Edit</TabsTrigger>
-            <TabsTrigger value="preview">Preview</TabsTrigger>
+          <TabsList className="grid w-full grid-cols-2 border-border bg-card">
+            <TabsTrigger value="edit" className="data-[state=active]:bg-primary data-[state=active]:text-primary-foreground">Edit</TabsTrigger>
+            <TabsTrigger value="preview" className="data-[state=active]:bg-primary data-[state=active]:text-primary-foreground">Preview</TabsTrigger>
           </TabsList>
-          <TabsContent value="edit" className="space-y-4">
-            <Textarea
-              disabled={isPending}
-              {...register("content")}
-              placeholder="Describe what you worked on today..."
-              className="min-h-75 resize-y"
-            />
+          <TabsContent value="edit" className="space-y-3">
+            <div className="relative">
+              <Textarea
+                disabled={isPending}
+                {...register("content")}
+                placeholder="Detail your accomplishments, decisions, and next steps..."
+                className="min-h-75 resize-y border-border bg-card"
+              />
+              <Button
+                type="button"
+                variant="outline"
+                size="sm"
+                disabled={isPending || !form.watch("content")?.trim()}
+                onClick={async () => {
+                  const content = form.watch("content");
+                  if (!content?.trim()) {
+                    toast.error("Write some content first before polishing with AI");
+                    return;
+                  }
+                  if (improveLogbookText) await improveLogbookText(content);
+                }}
+                className="absolute bottom-2 right-2 border-border"
+              >
+                {isPending
+                  ? <Loader2 className="mr-1 h-3 w-3 animate-spin" />
+                  : <Sparkles className="mr-1 h-3 w-3" />
+                }
+                {isPending ? "Improving..." : "Improve with AI"}
+              </Button>
+            </div>
             {improvedText && improvedText !== content && (
-              <div className="border-primary/20 bg-primary/5 rounded-lg border p-4">
+              <div className="border border-border bg-card p-4">
                 <div className="mb-2 flex items-center justify-between">
-                  <span className="flex items-center gap-2 text-sm font-medium">
-                    <Sparkles className="text-primary h-4 w-4" />
-                    AI Improved Version
+                  <span className="flex items-center gap-2 font-helvetica text-sm font-bold">
+                    <Sparkles className="h-4 w-4" />
+                    AI-suggested revision
                   </span>
                   <Button
                     size="sm"
                     variant="outline"
+                    className="border-border"
                     onClick={handleUseImprovedText}
                   >
-                    Use This
+                    Apply
                   </Button>
                 </div>
-                <p className="text-muted-foreground text-sm whitespace-pre-wrap">
+                <p className="font-serif text-sm whitespace-pre-wrap">
                   {improvedText}
                 </p>
               </div>
             )}
           </TabsContent>
           <TabsContent value="preview">
-            <div className="bg-muted/30 min-h-75 rounded-lg border p-4">
+            <div className="min-h-75 border border-border bg-card p-4">
               {content ? (
-                <p className="text-sm whitespace-pre-wrap">{content}</p>
+                <p className="font-serif text-sm whitespace-pre-wrap">{content}</p>
               ) : (
-                <p className="text-muted-foreground text-sm">
-                  No content to preview. Start writing in the Edit tab.
+                <p className="font-serif text-sm">
+                  Nothing to preview yet. Write something in the editor above.
                 </p>
               )}
             </div>
           </TabsContent>
         </Tabs>
-      </CardContent>
-    </Card>
+      </div>
+    </div>
   );
 }

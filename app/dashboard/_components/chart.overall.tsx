@@ -56,7 +56,7 @@ export function OverallChart({ data, isLoading }: OverallChartProps) {
   }, [isMobile]);
 
   if (isLoading) {
-    <Skeleton className="aspect-auto h-[250px] w-full" />;
+    return <Skeleton className="aspect-auto h-[250px] w-full mx-4 lg:mx-6" />;
   }
 
   const filteredData = data?.filter((item) => {
@@ -74,50 +74,41 @@ export function OverallChart({ data, isLoading }: OverallChartProps) {
   });
 
   return (
-    <Card className="@container/card mx-4 lg:mx-6">
-      <CardHeader>
-        <CardTitle>Overall Productivity</CardTitle>
-        <CardDescription>
-          <span className="hidden @[540px]/card:block">
-            Overall for the last 3 months
-          </span>
-          <span className="@[540px]/card:hidden">Last 3 months</span>
-        </CardDescription>
-        <CardAction>
+    <Card className="@container/card mx-4 border-border lg:mx-6 pt-2 pb-6">
+      <div className="flex items-start justify-between border-b border-border bg-card px-3 py-2">
+        <div>
+          <span className="font-helvetica text-xl font-bold">Overall Productivity</span>
+          <p className="font-serif text-sm">Overall for the selected period</p>
+        </div>
+        <div className="flex items-center gap-2">
           <ToggleGroup
             type="single"
             value={timeRange}
             onValueChange={setTimeRange}
             variant="outline"
-            className="hidden *:data-[slot=toggle-group-item]:!px-4 @[767px]/card:flex"
+            className="hidden *:data-[slot=toggle-group-item]:!px-3 @[767px]/card:flex"
           >
-            <ToggleGroupItem value="90d">Last 3 months</ToggleGroupItem>
-            <ToggleGroupItem value="30d">Last 30 days</ToggleGroupItem>
-            <ToggleGroupItem value="7d">Last 7 days</ToggleGroupItem>
+            <ToggleGroupItem value="90d" className="border-border data-[state=on]:bg-primary data-[state=on]:text-primary-foreground text-xs">3m</ToggleGroupItem>
+            <ToggleGroupItem value="30d" className="border-border data-[state=on]:bg-primary data-[state=on]:text-primary-foreground text-xs">30d</ToggleGroupItem>
+            <ToggleGroupItem value="7d" className="border-border data-[state=on]:bg-primary data-[state=on]:text-primary-foreground text-xs">7d</ToggleGroupItem>
           </ToggleGroup>
           <Select value={timeRange} onValueChange={setTimeRange}>
             <SelectTrigger
-              className="flex w-40 **:data-[slot=select-value]:block **:data-[slot=select-value]:truncate @[767px]/card:hidden"
+              className="flex w-32 border-border **:data-[slot=select-value]:block **:data-[slot=select-value]:truncate @[767px]/card:hidden"
               size="sm"
               aria-label="Select a value"
             >
-              <SelectValue placeholder="Last 3 months" />
+              <SelectValue placeholder="3m" />
             </SelectTrigger>
-            <SelectContent className="rounded-xl">
-              <SelectItem value="90d" className="rounded-lg">
-                Last 3 months
-              </SelectItem>
-              <SelectItem value="30d" className="rounded-lg">
-                Last 30 days
-              </SelectItem>
-              <SelectItem value="7d" className="rounded-lg">
-                Last 7 days
-              </SelectItem>
+            <SelectContent className="rounded-none border-border">
+              <SelectItem value="90d">3 months</SelectItem>
+              <SelectItem value="30d">30 days</SelectItem>
+              <SelectItem value="7d">7 days</SelectItem>
             </SelectContent>
           </Select>
-        </CardAction>
-      </CardHeader>
-      <CardContent className="px-2 pt-4 sm:px-6 sm:pt-6">
+        </div>
+      </div>
+      <div className="p-4 font-serif text-sm">
         <ChartContainer
           config={chartConfig}
           className="aspect-auto h-[250px] w-full"
@@ -138,7 +129,7 @@ export function OverallChart({ data, isLoading }: OverallChartProps) {
               </linearGradient>
             </defs>
 
-            <CartesianGrid vertical={false} />
+            <CartesianGrid vertical={false} stroke="currentColor" />
 
             <YAxis
               tickLine={false}
@@ -186,7 +177,7 @@ export function OverallChart({ data, isLoading }: OverallChartProps) {
             />
           </AreaChart>
         </ChartContainer>
-      </CardContent>
+      </div>
     </Card>
   );
 }

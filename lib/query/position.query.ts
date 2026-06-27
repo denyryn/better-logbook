@@ -1,6 +1,6 @@
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 
-import { createPosition, getPositions, getPositionsByCompany } from "../api/position.api";
+import { createPosition, getPositions, getPositionsBySpace } from "../api/position.api";
 import { Position } from "@/generated/prisma/browser";
 import { queryKey } from "../constants/query-key.constant";
 
@@ -11,19 +11,19 @@ export function usePositions() {
   });
 }
 
-export function usePositionsByCompany(companyId: string) {
+export function usePositionsBySpace(spaceId: string) {
   return useQuery({
-    queryKey: [queryKey.POSITIONS, companyId],
-    queryFn: () => getPositionsByCompany(companyId),
-    enabled: !!companyId,
+    queryKey: [queryKey.POSITIONS, spaceId],
+    queryFn: () => getPositionsBySpace(spaceId),
+    enabled: !!spaceId,
   });
 }
 
 export function useCreatePosition() {
   const queryClient = useQueryClient();
   return useMutation({
-    mutationFn: ({ companyId, positionData }: { companyId: string; positionData: Partial<Position> }) =>
-      createPosition(companyId, positionData),
+    mutationFn: ({ spaceId, positionData }: { spaceId: string; positionData: Partial<Position> }) =>
+      createPosition(spaceId, positionData),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: [queryKey.POSITIONS] });
     },

@@ -1,11 +1,4 @@
-import {
-  Card,
-  CardAction,
-  CardDescription,
-  CardFooter,
-  CardHeader,
-  CardTitle,
-} from "@/components/ui/card";
+import { Card, CardTitle } from "@/components/ui/card";
 import { Skeleton } from "@/components/ui/skeleton";
 
 interface LogbookStatCardProps {
@@ -28,19 +21,16 @@ export function LogbookStatCard({
   }
 
   return (
-    <Card className="@container/card">
-      <CardHeader>
-        <CardDescription>{title}</CardDescription>
-        <CardTitle className="text-2xl font-semibold tabular-nums @[250px]/card:text-3xl">
+    <Card className="@container/card border-border py-0 gap-0">
+      <div className="border-b border-border bg-card px-2 py-1">
+        <span className="font-helvetica text-sm font-bold uppercase tracking-wider">{title}</span>
+      </div>
+      <div className="px-2 py-2 font-serif text-sm">
+        <span className="text-xl font-arial-black font-black tabular-nums @[250px]/card:text-2xl">
           {value}
-        </CardTitle>
-        <CardAction>
-          <Icon className="text-muted-foreground size-4" />
-        </CardAction>
-      </CardHeader>
-      <CardFooter className="flex-col items-start gap-1.5 text-sm">
-        <div className="line-clamp-1 flex gap-2 font-medium">{description}</div>
-      </CardFooter>
+        </span>
+        <div className="mt-0.5 line-clamp-1 font-helvetica text-sm font-bold">{description}</div>
+      </div>
     </Card>
   );
 }

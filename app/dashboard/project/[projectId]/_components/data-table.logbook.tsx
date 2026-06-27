@@ -89,7 +89,7 @@ export const schema = z.object({
     name: z.string(),
     position: z.object({
       role: z.string(),
-      company: z.object({
+      space: z.object({
         name: z.string()
       })
     })
@@ -165,9 +165,9 @@ const columns: ColumnDef<LogbookEntry>[] = [
               {project.name}
             </span>
 
-            {/* Role @ Company */}
+            {/* Role @ Space */}
             <span className="text-xs text-muted-foreground truncate">
-              {project.position.role} @ {project.position.company.name}
+              {project.position.role} @ {project.position.space.name}
             </span>
           </div>
         </div>
@@ -430,7 +430,7 @@ export function LogbookDataTable({ data, projectId }: LogbookDataTableProps) {
         </Select>
 
         {/* Desktop tabs */}
-        <TabsList className="**:data-[slot=badge]:bg-muted-foreground/30 hidden **:data-[slot=badge]:size-5 **:data-[slot=badge]:rounded-full **:data-[slot=badge]:px-1 @4xl/main:flex">
+        <TabsList className="**:data-[slot=badge]:bg-muted-foreground/30 hidden **:data-[slot=badge]:size-5 **:data-[slot=badge]:rounded-none **:data-[slot=badge]:px-1 @4xl/main:flex">
           <TabsTrigger value="all">
             All Entries <Badge variant="secondary">{data?.length}</Badge>
           </TabsTrigger>
@@ -488,6 +488,7 @@ export function LogbookDataTable({ data, projectId }: LogbookDataTableProps) {
       <div className="px-4 md:hidden lg:px-6">
         <div className="relative">
           <Input
+            aria-label="Search entries"
             placeholder="Search entries..."
             value={globalFilter}
             onChange={(e) => setGlobalFilter(e.target.value)}
@@ -500,13 +501,13 @@ export function LogbookDataTable({ data, projectId }: LogbookDataTableProps) {
       {(["all", "week", "month"] as const).map((tab) => (
         <TabsContent key={tab} value={tab} className="flex flex-col gap-4">
           <div className="relative flex flex-col gap-4 overflow-auto px-4 lg:px-6">
-            <div className="overflow-hidden rounded-lg border">
+            <div className="overflow-hidden border border-border">
               <Table>
-                <TableHeader className="bg-muted sticky top-0 z-10">
+                <TableHeader className="bg-[#000] dark:bg-[#000] sticky top-0 z-10">
                   {table.getHeaderGroups().map((headerGroup) => (
                     <TableRow key={headerGroup.id}>
                       {headerGroup.headers.map((header) => (
-                        <TableHead key={header.id} colSpan={header.colSpan}>
+                        <TableHead key={header.id} colSpan={header.colSpan} className="text-white dark:text-white font-helvetica text-sm font-bold uppercase">
                           {header.isPlaceholder
                             ? null
                             : flexRender(
@@ -526,7 +527,7 @@ export function LogbookDataTable({ data, projectId }: LogbookDataTableProps) {
                         data-state={row.getIsSelected() && "selected"}
                       >
                         {row.getVisibleCells().map((cell) => (
-                          <TableCell key={cell.id}>
+                          <TableCell key={cell.id} className="border-t border-border font-serif text-sm">
                             {flexRender(
                               cell.column.columnDef.cell,
                               cell.getContext(),
@@ -539,7 +540,7 @@ export function LogbookDataTable({ data, projectId }: LogbookDataTableProps) {
                     <TableRow>
                       <TableCell
                         colSpan={columns.length}
-                        className="text-muted-foreground h-24 text-center"
+                        className="h-24 text-center font-serif text-sm"
                       >
                         No logbook entries found.
                       </TableCell>
@@ -662,13 +663,13 @@ function TableCellViewer({ item }: { item: LogbookEntry }) {
         <DrawerHeader className="gap-1">
           <DrawerTitle>{item.title ?? "Untitled Entry"}</DrawerTitle>
           <DrawerDescription className="flex flex-col gap-3 text-sm text-muted-foreground">
-            {/* Role @ Company */}
+            {/* Role @ Space */}
             <div className="flex items-center gap-2">
               <span className="font-medium text-foreground">
                 {item.project.position.role}
               </span>
               <span className="text-muted-foreground">@</span>
-              <span>{item.project.position.company.name}</span>
+              <span>{item.project.position.space.name}</span>
             </div>
 
             {/* Date */}

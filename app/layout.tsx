@@ -39,7 +39,9 @@ export default function RootLayout({
       <body
         className={`${geistSans.variable} ${geistMono.variable} antialiased`}
       >
-        <Providers>{children}</Providers>
+        <div className="page-frame">
+          <Providers>{children}</Providers>
+        </div>
         <Toaster />
       </body>
     </html>

@@ -16,7 +16,7 @@ export async function GET(request: NextRequest) {
     by: ["logDate"],
     where: {
       deletedAt: null,
-      project: { position: { company: { userId: session.user.id } } }
+      project: { position: { space: { userId: session.user.id } } }
     },
     _count: {
       id: true,

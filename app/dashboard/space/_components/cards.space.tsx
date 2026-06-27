@@ -16,7 +16,7 @@ import {
   CardTitle,
 } from "@/components/ui/card";
 import { Skeleton } from "@/components/ui/skeleton";
-import { CompanyWithPositions } from "@/types/prisma/companies";
+import { SpaceWithPositions } from "@/types/prisma/space";
 
 import { SpaceDialog } from "../../_components/dialog.space";
 import { cn } from "@/lib/utils";
@@ -26,7 +26,7 @@ export interface SpaceCardsSettings {
 }
 
 interface SpaceCardsProps {
-  spaces?: CompanyWithPositions[];
+  spaces?: SpaceWithPositions[];
   settings?: SpaceCardsSettings;
 }
 
@@ -42,48 +42,42 @@ export function SpaceCards({ spaces, settings }: SpaceCardsProps) {
   }
 
   return (
-    <div className={cn("*:data-[slot=card]:from-primary/5 *:data-[slot=card]:to-card dark:*:data-[slot=card]:bg-card grid grid-cols-1 gap-4 px-4 *:data-[slot=card]:bg-linear-to-t *:data-[slot=card]:shadow-xs lg:px-6 @xl/main:grid-cols-2 @5xl/main:grid-cols-4", {
+    <div className={cn("grid grid-cols-1 gap-4 px-4 lg:px-6 @xl/main:grid-cols-2 @5xl/main:grid-cols-4", {
       "overflow-x-auto": settings?.overflow === "enable",
     })}>
       <SpaceDialog>
-        <Card className="border-primary/30 hover:border-primary/60 @container/card h-full cursor-pointer border-2 border-dashed transition-all hover:shadow-md">
-          <CardHeader>
-            <CardDescription>Add Space</CardDescription>
-            <CardTitle className="text-2xl font-semibold tabular-nums @[250px]/card:text-3xl">
-              <IconPlus className="size-12" />
+        <Card className="border-border group @container/card h-full cursor-pointer border-2 border-dashed py-3 gap-3">
+          <CardHeader className="px-3 py-0">
+            <CardDescription className="font-helvetica text-sm font-bold uppercase tracking-wide">New Space</CardDescription>
+            <CardTitle className="text-xl font-arial-black font-black tabular-nums @[250px]/card:text-2xl">
+              <IconPlus className="size-8" />
             </CardTitle>
           </CardHeader>
-          <CardFooter className="flex-col items-start gap-1.5 text-sm">
-            <div className="line-clamp-1 flex gap-2 font-medium">
-              Create new space <IconArrowRight className="size-4" />
+          <CardFooter className="flex-col items-start gap-1 px-3 py-0 font-serif text-sm">
+            <div className="line-clamp-1 flex gap-2 font-helvetica font-bold text-sm">
+              Set up a new workspace <IconArrowRight className="size-3" />
             </div>
-            <div className="text-muted-foreground">
-              Organize your work and projects
+            <div className="text-foreground font-serif text-sm">
+              Track and manage your work
             </div>
           </CardFooter>
         </Card>
       </SpaceDialog>
 
-      {spaces?.map((space) => (
+      {spaces?.map((space, index) => (
         <Link key={space.id} href={`/dashboard/space/${space.id}`}>
-          <Card className="group @container/card h-full cursor-pointer transition-all hover:shadow-md">
-            <CardHeader>
-              <CardDescription>Space</CardDescription>
-              <CardTitle className="text-2xl font-semibold tabular-nums @[250px]/card:text-3xl">
+          <Card className="group @container/card h-full cursor-pointer border-border py-0 gap-0">
+            <div className="border-b border-border bg-card px-2 py-1">
+              <span className="font-helvetica text-sm font-bold text-foreground uppercase tracking-wider">Space</span>
+            </div>
+            <div className="px-2 py-3 font-serif text-sm">
+              <CardTitle className="text-3xl font-arial-black font-black leading-tight mb-1">
                 {space.name}
               </CardTitle>
-              <CardAction>
-                <IconArrowUpRight className="transition-transform group-hover:scale-125" />
-              </CardAction>
-            </CardHeader>
-            <CardFooter className="flex-col items-start gap-1.5 text-sm">
-              <div className="line-clamp-1 flex gap-2 font-medium">
-                Has {space.positions.length} positions
+              <div className="line-clamp-1 flex gap-2 font-helvetica text-xs font-bold text-muted-foreground">
+                {space.positions.length} position{space.positions.length !== 1 ? 's' : ''}
               </div>
-              <div className="text-muted-foreground">
-                Keep it moving
-              </div>
-            </CardFooter>
+            </div>
           </Card>
         </Link>
       ))}

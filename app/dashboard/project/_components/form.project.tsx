@@ -1,5 +1,5 @@
-import { Button } from "@/components/ui/components/ui/button";
-import { Input } from "@/components/ui/components/ui/input";
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
 import { Field, FieldDescription, FieldGroup, FieldLabel } from "@/components/ui/field";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { usePositions } from "@/lib/query/position.query";
@@ -69,22 +69,29 @@ export function ProjectFormDialog({ onSuccess }: ProjectFormDialogProps) {
         <FieldGroup>
           <Field className="space-y-1">
             <FieldLabel htmlFor="positionId" className="text-base font-semibold">
-              Position at Company
+              Position at Space
             </FieldLabel>
             <Controller
               name="positionId"
               control={control}
               render={({ field }) => (
-                <Select value={field.value} onValueChange={field.onChange}>
+                <Select value={field.value} onValueChange={(value) => {
+                  if (value === "__create__") {
+                    window.location.href = "/dashboard/space";
+                    return;
+                  }
+                  field.onChange(value);
+                }}>
                   <SelectTrigger >
-                    <SelectValue placeholder="Select a company" />
+                    <SelectValue placeholder="Select a space" />
                   </SelectTrigger>
                   <SelectContent>
                     {allPositions?.data.map((position) => (
                       <SelectItem key={position.id} value={position.id}>
-                        {position.role} @ {position.company.name}
+                        {position.role} @ {position.space.name}
                       </SelectItem>
                     ))}
+                    <SelectItem value="__create__">+ Create New Space</SelectItem>
                   </SelectContent>
                 </Select>
               )}
@@ -96,7 +103,7 @@ export function ProjectFormDialog({ onSuccess }: ProjectFormDialogProps) {
             )}
             {!errors.positionId && (
               <FieldDescription className="text-muted-foreground">
-                Select the company or space for this position
+                Select the space for this position
               </FieldDescription>
             )}
           </Field>

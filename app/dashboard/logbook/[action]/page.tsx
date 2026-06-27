@@ -51,7 +51,7 @@ export default function Page() {
 
   return (
     <>
-      <SiteHeader name="Create Logbook Entry" />
+      <SiteHeader name="New Log Entry" />
       <div className="flex flex-1 flex-col">
         <div className="@container/main flex flex-1 flex-col gap-2">
           <div className="flex flex-col gap-4 p-4 md:gap-6 md:p-6">
@@ -65,14 +65,14 @@ export default function Page() {
                 />
 
                 {/* Logbook Content */}
-                <LogbookContent form={form} improvedText={improvedText?.data} />
+                <LogbookContent form={form} improvedText={improvedText?.data} isPending={isPending} improveLogbookText={improveLogbookText} />
 
                 {/* Logbook Histories */}
                 <LogbookHistory />
               </div>
 
               {/* Sidebar Actions */}
-              <Sidebar form={form} improveLogbookText={improveLogbookText} isPending={isPending} isEditPage={isEditPage} />
+              <Sidebar form={form} isEditPage={isEditPage} />
             </div>
           </div>
         </div>

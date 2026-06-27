@@ -1,5 +1,6 @@
 
 import { config } from "../config";
+import { AIProviderPrompts } from "./providers/ai.provider.interface";
 
 type Role = "system" | "user" | "administrator";
 
@@ -22,10 +23,6 @@ export class AIPromptBuilder {
     return this;
   }
 
-  initialize(): AIPromptBuilder {
-    return this;
-  }
-
   addInstruction(instruction: { role: Role; content: string }): AIPromptBuilder {
     this.prompt.push(instruction);
     return this;
@@ -42,6 +39,21 @@ export class AIPromptBuilder {
       );
     }
     return this;
+  }
+
+  systemMessages(): string[] {
+    return this.prompt.filter(p => p.role === "system").map(p => p.content);
+  }
+
+  userMessages(): string[] {
+    return this.prompt.filter(p => p.role === "user").map(p => p.content);
+  }
+
+  toPrompts(): AIProviderPrompts {
+    return {
+      system: this.systemMessages(),
+      user: this.userMessages(),
+    };
   }
 
   async execute(): Promise<string> {

@@ -1,4 +1,4 @@
-import { Button } from "@/components/ui/components/ui/button";
+import { Button } from "@/components/ui/button";
 import { DialogClose, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import { Field, FieldDescription, FieldGroup, FieldLabel } from "@/components/ui/field";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
@@ -75,7 +75,13 @@ export function QuickCreateFormDialog({ onSuccess }: QuickCreateFormDialogProps)
               name="projectId"
               control={control}
               render={({ field }) => (
-                <Select value={field.value} onValueChange={field.onChange} disabled={isSubmitting}>
+                <Select value={field.value} onValueChange={(value) => {
+                  if (value === "__create__") {
+                    window.location.href = "/dashboard/project";
+                    return;
+                  }
+                  field.onChange(value);
+                }} disabled={isSubmitting}>
                   <SelectTrigger >
                     <SelectValue placeholder="Select a project" />
                   </SelectTrigger>
@@ -85,6 +91,7 @@ export function QuickCreateFormDialog({ onSuccess }: QuickCreateFormDialogProps)
                         {project.name}
                       </SelectItem>
                     ))}
+                    <SelectItem value="__create__">+ Create New Project</SelectItem>
                   </SelectContent>
                 </Select>
               )}

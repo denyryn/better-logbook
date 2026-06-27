@@ -5,10 +5,10 @@ import { ProjectWithRelations } from "@/types/prisma/project";
 
 function getBaseUrl({
   positionId,
-  companyId,
-}: { positionId?: string; companyId?: string } = {}) {
+  spaceId,
+}: { positionId?: string; spaceId?: string } = {}) {
   if (positionId) return `/api/positions/${positionId}/projects`;
-  if (companyId) return `/api/companies/${companyId}/projects`;
+  if (spaceId) return `/api/spaces/${spaceId}/projects`;
   return `/api/projects`;
 }
 
@@ -26,11 +26,11 @@ export async function getProjectsByPosition(positionId: string) {
   return data;
 }
 
-export async function getProjectsByCompany(companyId: string) {
-  if (!companyId) throw new Error("Company ID is required");
+export async function getProjectsBySpace(spaceId: string) {
+  if (!spaceId) throw new Error("Space ID is required");
 
   const { data } = await api.get<ApiResponse<ProjectWithRelations[]>>(
-    getBaseUrl({ companyId: companyId }),
+    getBaseUrl({ spaceId: spaceId }),
   );
   return data;
 }
