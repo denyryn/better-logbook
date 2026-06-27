@@ -1,4 +1,4 @@
-import { Loader2, LoaderCircle, Save, Sparkles } from "lucide-react";
+import { LoaderCircle, Save } from "lucide-react";
 import { UseFormReturn } from "react-hook-form";
 import { toast } from "sonner";
 
@@ -7,18 +7,14 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { useCreateLogbook, useUpdateLogbook } from "@/lib/query/logbook.query";
 
 import { FormData } from "../page";
-import { UseMutateAsyncFunction } from "@tanstack/react-query";
-import { ApiResponse } from "@/lib/api.response";
 import { useSearchParams } from "next/navigation";
 
 interface SidebarProps {
   form: UseFormReturn<FormData>;
-  improveLogbookText: UseMutateAsyncFunction<ApiResponse<string>, Error, string, unknown>
-  isPending: boolean;
   isEditPage: boolean;
 }
 
-export function Sidebar({ form, improveLogbookText, isPending, isEditPage }: SidebarProps) {
+export function Sidebar({ form, isEditPage }: SidebarProps) {
   const searchParams = useSearchParams();
   const logbookId = searchParams.get("id") || undefined;
 
@@ -52,53 +48,13 @@ export function Sidebar({ form, improveLogbookText, isPending, isEditPage }: Sid
     }
   }
 
-  async function improveText() {
-    if (!formData?.content?.trim()) {
-      toast.error("Write some content first before polishing with AI");
-      return;
-    }
-    await improveLogbookText(formData.content);
-  }
-
-  const improveButtonProperty = {
-    loading: {
-      icon: <Loader2 className="mr-2 h-4 w-4 animate-spin" />,
-      text: "Improving...",
-    },
-    default: {
-      icon: <Sparkles className="mr-2 h-4 w-4" />,
-      text: "Improve with AI",
-    },
-  };
-
   return (
     <div className="flex flex-col gap-4">
       <div className="border border-border">
         <div className="border-b border-border bg-card px-2 py-1">
           <span className="font-helvetica text-sm font-bold">Actions</span>
         </div>
-        <div className="flex flex-col gap-3 p-3 font-serif text-xs">
-          {isPending
-            ? <Button
-                onClick={improveText}
-                disabled
-                className="w-full"
-                variant="outline"
-              >
-                <Loader2 className="mr-2 h-4 w-4 animate-spin" />
-                Improving...
-              </Button>
-             : <Button
-                 onClick={improveText}
-                 disabled={!formData?.content?.trim()}
-                 className="w-full border-border"
-                 variant="outline"
-               >
-                 <Sparkles className="mr-2 h-4 w-4" />
-                 Improve with AI
-               </Button>
-          }
-
+        <div className="flex flex-col gap-3 p-3 font-serif text-sm">
           {isCreatingLogbook || isUpdatingLogbook
             ? <Button onClick={handleSave} className="w-full border-border bg-primary text-primary-foreground" disabled>
                 <LoaderCircle className="mr-2 h-4 w-4 animate-spin" />
@@ -116,7 +72,7 @@ export function Sidebar({ form, improveLogbookText, isPending, isEditPage }: Sid
         <div className="border-b border-border bg-card px-2 py-1">
           <span className="font-helvetica text-sm font-bold">Tips</span>
         </div>
-        <div className="p-3 font-serif text-xs">
+        <div className="p-3 font-serif text-sm">
           <ul className="space-y-2">
             <li className="flex gap-2">
               <span className="font-bold">•</span>

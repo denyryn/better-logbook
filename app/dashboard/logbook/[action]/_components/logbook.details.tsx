@@ -136,7 +136,7 @@ export function LogbookDetails({
       {!isDetailsCollapsed && (
         <div className="flex flex-col gap-3 p-3 font-serif text-sm">
           <Field>
-            <FieldLabel htmlFor="title" className="font-helvetica text-xs font-bold">Title (Optional)</FieldLabel>
+            <FieldLabel htmlFor="title" className="font-helvetica text-sm font-bold">Title (Optional)</FieldLabel>
             <Input
               id="title"
               type="text"
@@ -148,7 +148,7 @@ export function LogbookDetails({
 
           <div className="grid gap-3 sm:grid-cols-2">
             <Field>
-              <FieldLabel htmlFor="logDate" className="font-helvetica text-xs font-bold">
+              <FieldLabel htmlFor="logDate" className="font-helvetica text-sm font-bold">
                 <Calendar className="mr-1 inline h-4 w-4" />
                 Date
               </FieldLabel>
@@ -156,13 +156,19 @@ export function LogbookDetails({
             </Field>
 
             <Field>
-              <FieldLabel htmlFor="project" className="font-helvetica text-xs font-bold">
+              <FieldLabel htmlFor="project" className="font-helvetica text-sm font-bold">
                 <Briefcase className="mr-1 inline h-4 w-4" />
                 Project
               </FieldLabel>
               <Select
                 value={watch("projectId") || ""}
-                onValueChange={(value) => setValue("projectId", value)}
+                onValueChange={(value) => {
+                  if (value === "__create__") {
+                    window.location.href = "/dashboard/project";
+                    return;
+                  }
+                  setValue("projectId", value);
+                }}
               >
                 <SelectTrigger id="project" className="border-border bg-card">
                   <SelectValue placeholder="Select project" />
@@ -173,13 +179,14 @@ export function LogbookDetails({
                       {project.name}
                     </SelectItem>
                   ))}
+                  <SelectItem value="__create__">+ Create New Project</SelectItem>
                 </SelectContent>
               </Select>
             </Field>
           </div>
 
           <Field>
-            <FieldLabel htmlFor="tags" className="font-helvetica text-xs font-bold">
+            <FieldLabel htmlFor="tags" className="font-helvetica text-sm font-bold">
               <Tag className="mr-1 inline h-4 w-4" />
               Tags
             </FieldLabel>

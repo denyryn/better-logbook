@@ -95,7 +95,13 @@ export function PositionFormDialog({ onSuccess }: PositionFormDialogProps) {
             name="spaceId"
             control={control}
             render={({ field }) => (
-              <Select value={field.value} onValueChange={field.onChange}>
+              <Select value={field.value} onValueChange={(value) => {
+                if (value === "__create__") {
+                  window.location.href = "/dashboard/space";
+                  return;
+                }
+                field.onChange(value);
+              }}>
                 <SelectTrigger >
                   <SelectValue placeholder="Select a space" />
                 </SelectTrigger>
@@ -105,6 +111,7 @@ export function PositionFormDialog({ onSuccess }: PositionFormDialogProps) {
                       {space.name}
                     </SelectItem>
                   ))}
+                  <SelectItem value="__create__">+ Create New Space</SelectItem>
                 </SelectContent>
               </Select>
             )}

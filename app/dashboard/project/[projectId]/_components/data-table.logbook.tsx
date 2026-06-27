@@ -507,7 +507,7 @@ export function LogbookDataTable({ data, projectId }: LogbookDataTableProps) {
                   {table.getHeaderGroups().map((headerGroup) => (
                     <TableRow key={headerGroup.id}>
                       {headerGroup.headers.map((header) => (
-                        <TableHead key={header.id} colSpan={header.colSpan} className="text-white dark:text-white font-helvetica text-xs font-bold uppercase">
+                        <TableHead key={header.id} colSpan={header.colSpan} className="text-white dark:text-white font-helvetica text-sm font-bold uppercase">
                           {header.isPlaceholder
                             ? null
                             : flexRender(

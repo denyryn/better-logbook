@@ -39,16 +39,16 @@ export function ProjectCards({ projects }: ProjectCardsProps) {
       <ProjectDialog>
         <Card className="@container/card h-full cursor-pointer border-2 border-dashed border-border py-3 gap-3">
           <CardHeader className="px-3 py-0">
-            <CardDescription className="font-helvetica text-xs font-bold uppercase tracking-wide">New Project</CardDescription>
+            <CardDescription className="font-helvetica text-sm font-bold uppercase tracking-wide">New Project</CardDescription>
             <CardTitle className="text-xl font-arial-black font-black tabular-nums @[250px]/card:text-2xl">
               <IconPlus className="size-8" />
             </CardTitle>
           </CardHeader>
-          <CardFooter className="flex-col items-start gap-1 px-3 py-0 font-serif text-xs">
-            <div className="line-clamp-1 flex gap-2 font-helvetica font-bold text-xs">
+          <CardFooter className="flex-col items-start gap-1 px-3 py-0 font-serif text-sm">
+            <div className="line-clamp-1 flex gap-2 font-helvetica font-bold text-sm">
               Start a new project <IconArrowRight className="size-3" />
             </div>
-            <div className="font-serif text-xs">
+            <div className="font-serif text-sm">
               Manage your deliverables
             </div>
           </CardFooter>
@@ -59,17 +59,14 @@ export function ProjectCards({ projects }: ProjectCardsProps) {
         <Link key={project.id} href={`/dashboard/project/${project.id}`}>
           <Card className="group @container/card h-full cursor-pointer border-border py-0 gap-0">
             <div className="border-b border-border bg-card px-2 py-1">
-              <span className="font-helvetica text-[10px] font-bold text-foreground uppercase tracking-wider">Project</span>
+              <span className="font-helvetica text-sm font-bold text-foreground uppercase tracking-wider">Project</span>
             </div>
-            <div className="px-2 py-2 font-serif text-xs">
-              <CardTitle className="text-base font-arial-black font-black mb-1 leading-tight">
+            <div className="px-2 py-3 font-serif text-sm">
+              <CardTitle className="text-3xl font-arial-black font-black leading-tight mb-1">
                 {project.name}
               </CardTitle>
-              <div className="line-clamp-1 flex gap-2 font-helvetica text-[10px] font-bold">
-                View project details <IconArrowRight className="size-3" />
-              </div>
-              <div className="text-[10px] font-serif">
-                as {project.position.role}  @ {project.position.space.name}
+              <div className="line-clamp-1 flex gap-2 font-helvetica text-xs font-bold text-muted-foreground">
+                {project.position.role}  @ {project.position.space.name}
               </div>
             </div>
           </Card>

@@ -65,14 +65,14 @@ export default function Page() {
                 />
 
                 {/* Logbook Content */}
-                <LogbookContent form={form} improvedText={improvedText?.data} />
+                <LogbookContent form={form} improvedText={improvedText?.data} isPending={isPending} improveLogbookText={improveLogbookText} />
 
                 {/* Logbook Histories */}
                 <LogbookHistory />
               </div>
 
               {/* Sidebar Actions */}
-              <Sidebar form={form} improveLogbookText={improveLogbookText} isPending={isPending} isEditPage={isEditPage} />
+              <Sidebar form={form} isEditPage={isEditPage} />
             </div>
           </div>
         </div>

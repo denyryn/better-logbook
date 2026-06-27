@@ -75,7 +75,13 @@ export function QuickCreateFormDialog({ onSuccess }: QuickCreateFormDialogProps)
               name="projectId"
               control={control}
               render={({ field }) => (
-                <Select value={field.value} onValueChange={field.onChange} disabled={isSubmitting}>
+                <Select value={field.value} onValueChange={(value) => {
+                  if (value === "__create__") {
+                    window.location.href = "/dashboard/project";
+                    return;
+                  }
+                  field.onChange(value);
+                }} disabled={isSubmitting}>
                   <SelectTrigger >
                     <SelectValue placeholder="Select a project" />
                   </SelectTrigger>
@@ -85,6 +91,7 @@ export function QuickCreateFormDialog({ onSuccess }: QuickCreateFormDialogProps)
                         {project.name}
                       </SelectItem>
                     ))}
+                    <SelectItem value="__create__">+ Create New Project</SelectItem>
                   </SelectContent>
                 </Select>
               )}

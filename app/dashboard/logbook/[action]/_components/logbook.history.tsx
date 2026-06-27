@@ -91,7 +91,7 @@ export function LogbookHistory() {
             <IconClock className="size-8" />
           </div>
           <h3 className="mb-2 font-arial-black text-lg font-black">No entries yet</h3>
-          <p className="text-xs">Your log history will appear here once you start documenting</p>
+          <p className="text-sm">Your log history will appear here once you start documenting</p>
         </div>
       </div>
     );
@@ -108,7 +108,7 @@ export function LogbookHistory() {
           <IconClock className="size-4" />
           Recent Entries
         </span>
-        <p className="font-serif text-xs">{allLogbooks.data.length} {allLogbooks.data.length === 1 ? "entry" : "entries"} in your logbook</p>
+        <p className="font-serif text-sm">{allLogbooks.data.length} {allLogbooks.data.length === 1 ? "entry" : "entries"} in your logbook</p>
       </div>
       <div className="p-3 gap-3 font-serif text-sm">
         {sortedLogbooks.slice(0, 10).map((logbook) => {
@@ -131,7 +131,7 @@ export function LogbookHistory() {
                         {logbook.title}
                       </h4>
                     )}
-                    <div className="mt-2 flex items-center gap-3 text-xs">
+                    <div className="mt-2 flex items-center gap-3 text-sm">
                       <div className="flex items-center gap-1.5">
                         <IconCalendar className="size-3.5" />
                         <span>{formatDate(logbook.logDate)}</span>
@@ -142,13 +142,13 @@ export function LogbookHistory() {
                       </div>
                     </div>
                   </div>
-                  <div className="text-xs whitespace-nowrap">
+                  <div className="text-sm whitespace-nowrap">
                     {getRelativeTime(logbook.createdAt)}
                   </div>
                 </div>
 
                 {/* Content Preview */}
-                <p className="line-clamp-2 text-xs">
+                <p className="line-clamp-2 text-sm">
                   {getContentPreview(logbook.content)}
                 </p>
 

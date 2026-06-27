@@ -75,7 +75,13 @@ export function ProjectFormDialog({ onSuccess }: ProjectFormDialogProps) {
               name="positionId"
               control={control}
               render={({ field }) => (
-                <Select value={field.value} onValueChange={field.onChange}>
+                <Select value={field.value} onValueChange={(value) => {
+                  if (value === "__create__") {
+                    window.location.href = "/dashboard/space";
+                    return;
+                  }
+                  field.onChange(value);
+                }}>
                   <SelectTrigger >
                     <SelectValue placeholder="Select a space" />
                   </SelectTrigger>
@@ -85,6 +91,7 @@ export function ProjectFormDialog({ onSuccess }: ProjectFormDialogProps) {
                         {position.role} @ {position.space.name}
                       </SelectItem>
                     ))}
+                    <SelectItem value="__create__">+ Create New Space</SelectItem>
                   </SelectContent>
                 </Select>
               )}
