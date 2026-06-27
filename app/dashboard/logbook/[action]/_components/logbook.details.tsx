@@ -115,7 +115,7 @@ export function LogbookDetails({
             size="sm"
             disabled={isPending}
             onClick={handleProduceDetails}
-            className="h-8 w-8 border-[#000] p-0"
+            className="h-11 w-11 border-[#000] p-0"
           >
             {isPending
               ? <LoaderCircle className="h-4 w-4 animate-spin" />
@@ -127,7 +127,7 @@ export function LogbookDetails({
             variant="ghost"
             size="sm"
             onClick={() => setIsDetailsCollapsed(!isDetailsCollapsed)}
-            className="h-8 w-8 p-0"
+            className="h-11 w-11 p-0"
           >
             <ChevronIcon className="h-4 w-4" />
           </Button>
@@ -204,14 +204,15 @@ export function LogbookDetails({
             {tags?.length > 0 && (
               <div className="mt-2 flex flex-wrap gap-2">
                 {tags.map((tag) => (
-                  <Badge
+                  <button
                     key={tag}
-                    variant="outline"
-                    className="cursor-pointer border-[#000] bg-white"
+                    type="button"
                     onClick={() => handleRemoveTag(tag)}
+                    className="inline-flex items-center border border-[#000] bg-white px-2 py-0.5 text-xs font-medium cursor-pointer"
+                    aria-label={`Remove tag ${tag}`}
                   >
                     {tag} ×
-                  </Badge>
+                  </button>
                 ))}
               </div>
             )}

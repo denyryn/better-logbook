@@ -56,7 +56,7 @@ export function OverallChart({ data, isLoading }: OverallChartProps) {
   }, [isMobile]);
 
   if (isLoading) {
-    <Skeleton className="aspect-auto h-[250px] w-full" />;
+    return <Skeleton className="aspect-auto h-[250px] w-full mx-4 lg:mx-6" />;
   }
 
   const filteredData = data?.filter((item) => {

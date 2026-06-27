@@ -69,6 +69,7 @@ export function useSignUp() {
     mutationFn: async (credentials: UserSignUp) => signUpWithEmail(credentials),
     onSuccess: () => {
       toast.success("Signed up successfully")
+      window.location.href = "/dashboard"
     },
     onError: (error) => {
       console.error("Error signing up: " + error.message)

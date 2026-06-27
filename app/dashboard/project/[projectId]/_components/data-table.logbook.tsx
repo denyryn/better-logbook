@@ -488,6 +488,7 @@ export function LogbookDataTable({ data, projectId }: LogbookDataTableProps) {
       <div className="px-4 md:hidden lg:px-6">
         <div className="relative">
           <Input
+            aria-label="Search entries"
             placeholder="Search entries..."
             value={globalFilter}
             onChange={(e) => setGlobalFilter(e.target.value)}
